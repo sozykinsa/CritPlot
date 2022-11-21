@@ -1,0 +1,1 @@
+pyside2-uic critplotform.ui -o ./form.py
