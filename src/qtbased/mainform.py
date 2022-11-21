@@ -1394,6 +1394,8 @@ class MainForm(QMainWindow):
             text += str(model.bcp[selected_cp].get_property("text"))
 
             self.ui.selectedCP.setText(str(selected_cp))
+            f = model.bcp[selected_cp].get_property("title")
+            self.ui.selected_cp_title.setText(f)
             f = model.bcp[selected_cp].get_property("field")
             self.ui.FormSelectedCP_f.setText(f)
             g = model.bcp[selected_cp].get_property("grad")

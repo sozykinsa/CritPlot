@@ -1287,6 +1287,77 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>CP View</string>
+       </attribute>
+       <widget class="QFrame" name="frame_160">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>104</y>
+          <width>371</width>
+          <height>44</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_178">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="show_bcp_text">
+           <property name="text">
+            <string>Show BCP property</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="PropertyForBCPtext"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QCheckBox" name="show_bond_path">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>77</y>
+          <width>371</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Show bond path</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="show_bcp">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>50</y>
+          <width>371</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Show BCP</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </widget>
       <widget class="QWidget" name="tab_51">
        <attribute name="title">
         <string>QTAIM</string>
@@ -1342,6 +1413,44 @@
               </item>
               <item>
                <widget class="QLabel" name="selectedCP">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_2">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_88">
+                <property name="text">
+                 <string>Title:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="selected_cp_title">
                 <property name="text">
                  <string>...</string>
                 </property>
@@ -1420,7 +1529,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_10">
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="tab_45">
            <attribute name="title">
@@ -1595,26 +1704,6 @@
                </item>
               </layout>
              </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab_55">
-           <attribute name="title">
-            <string>Show</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_27">
-            <item>
-             <spacer name="verticalSpacer_33">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>527</height>
-               </size>
-              </property>
-             </spacer>
             </item>
            </layout>
           </widget>
@@ -2828,54 +2917,6 @@
                   <string>GL_CULL_FACE</string>
                  </property>
                 </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="show_bcp">
-              <property name="text">
-               <string>Show BCP</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="show_bond_path">
-              <property name="text">
-               <string>Show bond path</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QFrame" name="frame_160">
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_178">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QCheckBox" name="show_bcp_text">
-                 <property name="text">
-                  <string>Show BCP property</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QComboBox" name="PropertyForBCPtext"/>
                </item>
               </layout>
              </widget>
