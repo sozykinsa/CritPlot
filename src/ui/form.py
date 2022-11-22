@@ -205,6 +205,9 @@ class Ui_MainWindow(object):
 
         self.model_scale = QDoubleSpinBox(self.frame_168)
         self.model_scale.setObjectName(u"model_scale")
+        self.model_scale.setMinimum(0.010000000000000)
+        self.model_scale.setSingleStep(0.100000000000000)
+        self.model_scale.setValue(1.000000000000000)
 
         self.horizontalLayout_183.addWidget(self.model_scale)
 
@@ -2584,7 +2587,7 @@ class Ui_MainWindow(object):
         self.tabWidget_10.setCurrentIndex(0)
         self.tabWidget_15.setCurrentIndex(0)
         self.tabWidget_14.setCurrentIndex(0)
-        self.tabWidget_9.setCurrentIndex(0)
+        self.tabWidget_9.setCurrentIndex(2)
         self.tabWidget_12.setCurrentIndex(0)
         self.Form3Dand2DTabs.setCurrentIndex(0)
 

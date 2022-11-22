@@ -27,6 +27,10 @@ class GuiOpenGLCP(GuiOpenGLBase):
 
         self.main_model = AtomicModelCP()
 
+    def init_params(self, the_object) -> None:
+        super().init_params(the_object)
+        self.selected_cp = the_object.selected_cp
+
     def add_all_elements(self):
         super().add_all_elements()
         self.add_bcp()

@@ -312,7 +312,17 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="model_scale"/>
+               <widget class="QDoubleSpinBox" name="model_scale">
+                <property name="minimum">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
               </item>
               <item>
                <spacer name="horizontalSpacer_126">
@@ -2300,7 +2310,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_9">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="tab_32">
            <attribute name="title">

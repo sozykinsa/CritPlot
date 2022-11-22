@@ -92,6 +92,62 @@ class GuiOpenGLBase(QOpenGLWidget):
                 self.can_atom_search = True
             self.set_xy(event.x(), event.y())
 
+    def init_params(self, the_object) -> None:
+        self.is_orthographic = the_object.is_orthographic
+        self.is_view_atoms = the_object.is_view_atoms
+        self.is_atomic_numbers_visible = the_object.is_atomic_numbers_visible
+        self.background_color = the_object.background_color
+        self.is_view_box = the_object.is_view_box
+        self.is_view_bonds = the_object.is_view_bonds
+        self.property_x_shift = the_object.property_x_shift
+        self.property_y_shift = the_object.property_y_shift
+        self.font_size = the_object.font_size
+        self.active = the_object.active
+        self.scale_factor = the_object.scale_factor
+        self.bond_width = the_object.bond_width
+        self.x_scr_old = the_object.x_scr_old
+        self.y_scr_old = the_object.y_scr_old
+        self.x_scene = the_object.x_scene
+        self.y_scene = the_object.y_scene
+        self.camera_position = the_object.camera_position
+        self.rotation_angles[:] = the_object.rotation_angles
+        self.selected_atom = the_object.selected_atom
+        self.prop = the_object.prop
+        self.selected_fragment_mode = the_object.selected_fragment_mode
+        self.SelectedFragmentAtomsListView = the_object.SelectedFragmentAtomsListView
+        self.SelectedFragmentAtomsTransp = the_object.SelectedFragmentAtomsTransp
+        self.main_model = the_object.main_model
+        self.color_of_atoms = the_object.color_of_atoms
+        self.color_of_bonds = the_object.color_of_bonds
+        self.color_of_bonds_by_atoms = the_object.color_of_bonds_by_atoms
+        self.color_of_box = the_object.color_of_box
+        self.is_view_axes = the_object.is_view_axes
+        self.perspective_angle = the_object.perspective_angle
+
+    def copy_state(self, ogl_model):
+        self.init_params(ogl_model)
+        self.add_all_elements()
+        self.update()
+
+    def set_selected_fragment_mode(self, selected_fragment_atoms_list_view, selected_fragment_atoms_transp):
+        if selected_fragment_atoms_list_view is None:
+            if self.selected_fragment_mode:
+                self.SelectedFragmentAtomsListView.clear()
+            self.SelectedFragmentAtomsListView = None
+            self.selected_fragment_mode = False
+        else:
+            self.selected_fragment_mode = True
+            self.SelectedFragmentAtomsListView = selected_fragment_atoms_list_view
+            self.SelectedFragmentAtomsTransp = selected_fragment_atoms_transp
+            self.atoms_of_selected_fragment_to_form()
+
+    def atoms_of_selected_fragment_to_form(self):
+        self.SelectedFragmentAtomsListView.clear()
+        self.SelectedFragmentAtomsListView.addItems(['Atoms'])
+        for i in range(0, len(self.main_model.atoms)):
+            if (self.main_model.atoms[i]).fragment1:
+                self.SelectedFragmentAtomsListView.addItems([str(i)])
+
     @property
     def is_camera_ortho(self) -> bool:
         return self.is_orthographic
@@ -668,6 +724,7 @@ class GuiOpenGLBase(QOpenGLWidget):
             else:
                 self.camera_position[2] -= 0.5 * (wheel / 120)
             self.update()
+            self.model_orientation_to_form()
             return True
         return False
 
@@ -718,6 +775,8 @@ class GuiOpenGLBase(QOpenGLWidget):
             dist = max(dist, y_dist)
             self.camera_position[:] = np.array([0, 0, -z_max - dist / 10])
             self.light0_position[2] = z_max + 2 * dist
+        if self.scale_factor < 1e-2:
+            self.scale_factor = 1e-2
 
     def image3d_to_file(self, f_name):
         self.grabFramebuffer().save(f_name)

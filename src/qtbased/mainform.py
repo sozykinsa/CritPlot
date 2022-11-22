@@ -1492,6 +1492,8 @@ class MainForm(QMainWindow):
     def leave_cp_in_model(self):
         model = self.models[self.active_model]
         model.bcp = self.selected_cp()
+        self.ui.openGLWidget.selected_cp = -1
+        self.ui.FormCPlist.clear()
         self.plot_model(self.active_model)
 
     @staticmethod
