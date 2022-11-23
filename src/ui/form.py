@@ -96,7 +96,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_108.setContentsMargins(0, -1, 0, 0)
         self.frame_166 = QFrame(self.groupBox_32)
         self.frame_166.setObjectName(u"frame_166")
-        self.frame_166.setFrameShape(QFrame.StyledPanel)
+        self.frame_166.setFrameShape(QFrame.NoFrame)
         self.frame_166.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_181 = QHBoxLayout(self.frame_166)
         self.horizontalLayout_181.setObjectName(u"horizontalLayout_181")
@@ -146,7 +146,7 @@ class Ui_MainWindow(object):
 
         self.frame_167 = QFrame(self.groupBox_32)
         self.frame_167.setObjectName(u"frame_167")
-        self.frame_167.setFrameShape(QFrame.StyledPanel)
+        self.frame_167.setFrameShape(QFrame.NoFrame)
         self.frame_167.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_182 = QHBoxLayout(self.frame_167)
         self.horizontalLayout_182.setObjectName(u"horizontalLayout_182")
@@ -193,7 +193,7 @@ class Ui_MainWindow(object):
 
         self.frame_168 = QFrame(self.groupBox_32)
         self.frame_168.setObjectName(u"frame_168")
-        self.frame_168.setFrameShape(QFrame.StyledPanel)
+        self.frame_168.setFrameShape(QFrame.NoFrame)
         self.frame_168.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_183 = QHBoxLayout(self.frame_168)
         self.horizontalLayout_183.setObjectName(u"horizontalLayout_183")
@@ -502,17 +502,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addItem(self.verticalSpacer_2)
 
         self.tabWidget.addTab(self.FormTabActions, "")
-        self.tab = QWidget()
-        self.tab.setObjectName(u"tab")
-        self.verticalLayout_8 = QVBoxLayout(self.tab)
-        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.tabWidget_6 = QTabWidget(self.tab)
-        self.tabWidget_6.setObjectName(u"tabWidget_6")
-        self.tab_16 = QWidget()
-        self.tab_16.setObjectName(u"tab_16")
-        self.verticalLayout_25 = QVBoxLayout(self.tab_16)
-        self.verticalLayout_25.setObjectName(u"verticalLayout_25")
-        self.frame_60 = QFrame(self.tab_16)
+        self.tab_5 = QWidget()
+        self.tab_5.setObjectName(u"tab_5")
+        self.verticalLayout_12 = QVBoxLayout(self.tab_5)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.frame_60 = QFrame(self.tab_5)
         self.frame_60.setObjectName(u"frame_60")
         self.frame_60.setFrameShape(QFrame.NoFrame)
         self.frame_60.setFrameShadow(QFrame.Raised)
@@ -533,14 +527,14 @@ class Ui_MainWindow(object):
         self.horizontalLayout_51.addItem(self.horizontalSpacer_23)
 
 
-        self.verticalLayout_25.addWidget(self.frame_60)
+        self.verticalLayout_12.addWidget(self.frame_60)
 
-        self.FormActionsPosTableBonds = QTableWidget(self.tab_16)
+        self.FormActionsPosTableBonds = QTableWidget(self.tab_5)
         self.FormActionsPosTableBonds.setObjectName(u"FormActionsPosTableBonds")
 
-        self.verticalLayout_25.addWidget(self.FormActionsPosTableBonds)
+        self.verticalLayout_12.addWidget(self.FormActionsPosTableBonds)
 
-        self.frame_8 = QFrame(self.tab_16)
+        self.frame_8 = QFrame(self.tab_5)
         self.frame_8.setObjectName(u"frame_8")
         self.frame_8.setMinimumSize(QSize(0, 80))
         self.frame_8.setFrameShape(QFrame.StyledPanel)
@@ -563,9 +557,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_30.addWidget(self.FormActionsPostLabelMeanBond)
 
 
-        self.verticalLayout_25.addWidget(self.frame_8)
+        self.verticalLayout_12.addWidget(self.frame_8)
 
-        self.groupBox_52 = QGroupBox(self.tab_16)
+        self.groupBox_52 = QGroupBox(self.tab_5)
         self.groupBox_52.setObjectName(u"groupBox_52")
         self.groupBox_52.setMinimumSize(QSize(0, 0))
         self.verticalLayout_101 = QVBoxLayout(self.groupBox_52)
@@ -663,19 +657,19 @@ class Ui_MainWindow(object):
         self.verticalLayout_101.addWidget(self.frame_7)
 
 
-        self.verticalLayout_25.addWidget(self.groupBox_52)
+        self.verticalLayout_12.addWidget(self.groupBox_52)
 
-        self.tabWidget_6.addTab(self.tab_16, "")
-        self.tab_21 = QWidget()
-        self.tab_21.setObjectName(u"tab_21")
-        self.verticalLayout_59 = QVBoxLayout(self.tab_21)
-        self.verticalLayout_59.setObjectName(u"verticalLayout_59")
-        self.AtomPropertiesText = QTextBrowser(self.tab_21)
+        self.tabWidget.addTab(self.tab_5, "")
+        self.tab_4 = QWidget()
+        self.tab_4.setObjectName(u"tab_4")
+        self.verticalLayout_10 = QVBoxLayout(self.tab_4)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.AtomPropertiesText = QTextBrowser(self.tab_4)
         self.AtomPropertiesText.setObjectName(u"AtomPropertiesText")
 
-        self.verticalLayout_59.addWidget(self.AtomPropertiesText)
+        self.verticalLayout_10.addWidget(self.AtomPropertiesText)
 
-        self.groupBox_20 = QGroupBox(self.tab_21)
+        self.groupBox_20 = QGroupBox(self.tab_4)
         self.groupBox_20.setObjectName(u"groupBox_20")
         self.groupBox_20.setMinimumSize(QSize(0, 60))
         self.horizontalLayout_66 = QHBoxLayout(self.groupBox_20)
@@ -718,13 +712,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_66.addWidget(self.PropertyAtomAtomDistanceGet)
 
 
-        self.verticalLayout_59.addWidget(self.groupBox_20)
+        self.verticalLayout_10.addWidget(self.groupBox_20)
 
-        self.tabWidget_6.addTab(self.tab_21, "")
-
-        self.verticalLayout_8.addWidget(self.tabWidget_6)
-
-        self.tabWidget.addTab(self.tab, "")
+        self.tabWidget.addTab(self.tab_4, "")
         self.tab_3 = QWidget()
         self.tab_3.setObjectName(u"tab_3")
         self.frame_160 = QFrame(self.tab_3)
@@ -2583,11 +2573,10 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget.setCurrentIndex(0)
-        self.tabWidget_6.setCurrentIndex(0)
         self.tabWidget_10.setCurrentIndex(0)
         self.tabWidget_15.setCurrentIndex(0)
         self.tabWidget_14.setCurrentIndex(0)
-        self.tabWidget_9.setCurrentIndex(2)
+        self.tabWidget_9.setCurrentIndex(0)
         self.tabWidget_12.setCurrentIndex(0)
         self.Form3Dand2DTabs.setCurrentIndex(0)
 
@@ -2641,13 +2630,12 @@ class Ui_MainWindow(object):
         self.label_127.setText(QCoreApplication.translate("MainWindow", u"Y label", None))
         self.bonds_y_label.setText(QCoreApplication.translate("MainWindow", u"Number of bonds", None))
         self.FormActionsPostButPlotBondsHistogram.setText(QCoreApplication.translate("MainWindow", u"Plot histogram", None))
-        self.tabWidget_6.setTabText(self.tabWidget_6.indexOf(self.tab_16), QCoreApplication.translate("MainWindow", u"Bonds", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("MainWindow", u"Bonds", None))
         self.groupBox_20.setTitle(QCoreApplication.translate("MainWindow", u"Atom - atom distance", None))
         self.label_56.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.label_62.setText(QCoreApplication.translate("MainWindow", u":", None))
         self.PropertyAtomAtomDistanceGet.setText(QCoreApplication.translate("MainWindow", u"Get", None))
-        self.tabWidget_6.setTabText(self.tabWidget_6.indexOf(self.tab_21), QCoreApplication.translate("MainWindow", u"Selection history", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Postprocessing", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Selection history", None))
         self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"Show BCP property", None))
         self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Show bond path", None))
         self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"Show BCP", None))

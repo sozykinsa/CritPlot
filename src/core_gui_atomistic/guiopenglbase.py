@@ -52,6 +52,8 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.property_x_shift: int = 0
         self.property_y_shift: int = 0
 
+        self.is_atomic_numbers_visible: bool = False
+
         # lighting
         self.light0_position = np.array((0.0, 0.0, 100.0, 1))
         self.light_color_ambient = (0.2, 0.2, 0.2, 1.0)
@@ -159,6 +161,7 @@ class GuiOpenGLBase(QOpenGLWidget):
             return
         self.auto_zoom()
         self.add_all_elements()
+        self.model_orientation_to_form()
 
     def set_perspective_angle(self, perspective_angle: int) -> None:
         self.perspective_angle = perspective_angle
@@ -169,6 +172,10 @@ class GuiOpenGLBase(QOpenGLWidget):
     def screen2space(self, x, y, width, height):
         radius = min(width, height) * float(self.scale_factor)
         return (2.0 * x - width)/radius, -(2.0 * y - height)/radius
+
+    def set_atoms_numbred(self, state):
+        self.is_atomic_numbers_visible = state
+        self.update()
 
     def rotate_vector(self, vect, al, bet, gam):
         mx, my, mz = self.rotation_matrix_elements(al, bet, gam)
@@ -748,7 +755,9 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.property_y_shift = dy
 
     def set_orientation(self, rotation, camera_pos, scale):
-        self.scale_factor = scale
+        if self.scale_factor != scale:
+            self.scale_factor = scale
+            self.scale(0)
         self.camera_position = np.array(camera_pos)
         self.rotation_angles = np.array(rotation)
         self.update()
