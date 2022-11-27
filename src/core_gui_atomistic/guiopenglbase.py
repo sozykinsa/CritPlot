@@ -21,8 +21,14 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.background_color = np.array((1.0, 1.0, 1.0), dtype=float)
         self.is_check_atom_selection: bool = False
         self.quality: int = 1
+        # opengl lists
         self.object = None
         self.NLists = 8
+        self.list_for_atoms: int = 0
+        self.list_for_bonds: int = 2
+        self.list_for_box: int = 3
+        self.list_for_axes: int = 7
+
         self.can_atom_search = False
         self.x_scr_old = 0
         self.y_scr_old = 0
@@ -53,6 +59,7 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.property_y_shift: int = 0
 
         self.is_atomic_numbers_visible: bool = False
+        self.selected_atom: int = -1
 
         # lighting
         self.light0_position = np.array((0.0, 0.0, 100.0, 1))
@@ -261,14 +268,17 @@ class GuiOpenGLBase(QOpenGLWidget):
 
     def initializeGL(self):
         self.makeCurrent()
+        self.configure_gl()
+        self.object = gl.glGenLists(self.NLists)
+        gl.glNewList(self.object, gl.GL_COMPILE)
+        gl.glEndList()
+
+    def configure_gl(self):
         gl.glEnable(gl.GL_BLEND)
         gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
         gl.glEnable(gl.GL_DEPTH_TEST)
         gl.glDepthMask(1)
         gl.glDepthFunc(gl.GL_LEQUAL)
-        self.object = gl.glGenLists(self.NLists)
-        gl.glNewList(self.object, gl.GL_COMPILE)
-        gl.glEndList()
 
     def set_color_of_box(self, color):
         self.color_of_box = color
@@ -402,7 +412,7 @@ class GuiOpenGLBase(QOpenGLWidget):
     def add_atoms(self):
         prop = self.prop
         mendeley = TPeriodTable()
-        gl.glNewList(self.object, gl.GL_COMPILE)
+        gl.glNewList(self.object + self.list_for_atoms, gl.GL_COMPILE)
 
         min_val = 0
         max_val = 0
@@ -630,7 +640,7 @@ class GuiOpenGLBase(QOpenGLWidget):
             if self.active:
                 self.prepare_orientation()
                 if self.is_view_atoms:
-                    gl.glCallList(self.object)  # atoms
+                    gl.glCallList(self.object + self.list_for_atoms)  # atoms
 
                 if self.can_atom_search:
                     self.get_atom_on_screen()
@@ -656,8 +666,10 @@ class GuiOpenGLBase(QOpenGLWidget):
 
         # Render text
         font.setPointSize(self.font_size * self.quality)
+
         painter = QPainter(self)
         painter.setPen(font_color)
+        
         painter.setFont(font)
         for row in text_to_render:
             fl = True
@@ -688,15 +700,21 @@ class GuiOpenGLBase(QOpenGLWidget):
 
     def get_atom_on_screen(self):
         point = self.get_point_in_3d(self.x_scene, self.y_scene)
-
         old_selected = self.selected_atom
         need_for_update = False
-
         ind, min_r = self.nearest_point(self.scale_factor, self.main_model.atoms, point)
+        self.update_selected_atom(ind, min_r)
 
+        self.can_atom_search = False
+        if old_selected != self.selected_atom:
+            need_for_update = True
+
+        if need_for_update:
+            self.selected_atom_changed()
+            self.update()
+
+    def update_selected_atom(self, ind, min_r):
         if min_r < 1.4:
-            if self.selected_atom >= 0:
-                self.is_view_voronoi = False
             if self.selected_atom != ind:
                 if self.selected_atom >= 0:
                     self.main_model.atoms[self.selected_atom].set_selected(False)
@@ -708,14 +726,6 @@ class GuiOpenGLBase(QOpenGLWidget):
                 self.selected_atom = -1
             self.add_atoms()
             self.add_bonds()
-
-        self.can_atom_search = False
-        if old_selected != self.selected_atom:
-            need_for_update = True
-
-        if need_for_update:
-            self.selected_atom_changed()
-            self.update()
 
     def new_atom_for_model(self, charge, let, position):
         x = position[0] + self.coord0[0]

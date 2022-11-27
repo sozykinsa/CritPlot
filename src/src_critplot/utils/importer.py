@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import os
-from program.topond import atomic_data_from_output
-from program.critic2 import atoms_from_xyz
 from core_gui_atomistic import helpers
-from utils.critplot_project_file import CritPlotProjectFile
+from src_critplot.program.topond import atomic_data_from_output
+from src_critplot.program.critic2 import atoms_from_xyz
+from src_critplot.utils.critplot_project_file import CritPlotProjectFile
 
 
 class Importer(object):

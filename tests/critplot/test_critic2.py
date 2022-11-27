@@ -1,7 +1,7 @@
-from program.critic2 import check_cro_file, create_critic2_xyz_file, create_cri_file, parse_cp_properties
-from program.critic2 import create_csv_file_cp
-from utils.importer import Importer
-from models.atomic_model_cp import AtomicModelCP
+from src.src_critplot.program.critic2 import check_cro_file, create_critic2_xyz_file, create_cri_file, parse_cp_properties
+from src.src_critplot.program.critic2 import create_csv_file_cp
+from src.src_critplot.utils.importer import Importer
+from src.src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 def test_open_xyz_critic_file(tests_path):

@@ -1,4 +1,4 @@
-from program.topond import number_of_atoms_from_outp, get_cell, atomic_data_from_output
+from src.src_critplot.program.topond import number_of_atoms_from_outp, get_cell, atomic_data_from_output
 import numpy as np
 import pytest
 

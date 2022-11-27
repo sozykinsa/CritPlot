@@ -12,9 +12,9 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from qtbased.guiopengl_cp import GuiOpenGLCP
-from qtbased.pyqtgraphwidget import PyqtGraphWidget
-from qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
+from src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
+from src_critplot.qtbased.pyqtgraphwidget import PyqtGraphWidget
+from src_critplot.qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
 
 
 class Ui_MainWindow(object):

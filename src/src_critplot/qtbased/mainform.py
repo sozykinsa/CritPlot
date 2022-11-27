@@ -13,21 +13,20 @@ import numpy as np
 from core_gui_atomistic import helpers
 from core_gui_atomistic.atom import Atom
 from core_gui_atomistic.periodic_table import TPeriodTable
-from utils.critplot_project_file import CritPlotProjectFile
-from utils.importer import Importer
 from PySide2.QtCore import QSettings, Qt, QSize
 from PySide2.QtGui import QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel
 from PySide2.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QMessageBox, QColorDialog
 from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem, QTreeWidgetItem
 from PySide2.QtWidgets import QTreeWidgetItemIterator
-from qtbased.image3dexporter import Image3Dexporter
 
-from program import critic2
+from src_critplot.utils.critplot_project_file import CritPlotProjectFile
+from src_critplot.utils.importer import Importer
+from src_critplot.program import critic2
+from src_critplot.qtbased.image3dexporter import Image3Dexporter
+from src_critplot.ui.about import Ui_DialogAbout as Ui_about
+from src_critplot.ui.form import Ui_MainWindow as Ui_form
 
-from ui.about import Ui_DialogAbout as Ui_about
-from ui.form import Ui_MainWindow as Ui_form
-
-sys.path.append('.')
+sys.path.append('')
 
 is_with_figure = True
 

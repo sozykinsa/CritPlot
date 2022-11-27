@@ -4,9 +4,8 @@ import os
 import math
 import numpy as np
 from core_gui_atomistic import helpers
-from models.atomic_model_cp import AtomicModelCP
-from core_gui_atomistic.periodic_table import TPeriodTable
-sys.path.append('.')
+from src_critplot.models.atomic_model_cp import AtomicModelCP
+sys.path.append('')
 
 
 def parse_cp_properties(filename, model):

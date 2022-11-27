@@ -4,15 +4,19 @@ from typing import Callable
 
 import OpenGL.GL as gl
 import OpenGL.GLU as glu
-from models.atomic_model_cp import AtomicModelCP
-from core_gui_atomistic.guiopenglbase import GuiOpenGLBase
-from core_gui_atomistic.helpers import is_number
 import numpy as np
+from src.core_gui_atomistic.guiopenglbase import GuiOpenGLBase
+from src.core_gui_atomistic.helpers import is_number
+from src.src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 class GuiOpenGLCP(GuiOpenGLBase):
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        # opengl lists
+        self.list_for_bcp: int = 8
+        self.list_for_bondpath: int = 9
 
         self.is_bcp_available: bool = False
         self.is_bond_path_available: bool = False
@@ -49,7 +53,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
                 quality: ... .
         """
         super().set_form_elements(check_atom_selection, orientation_model_changed, selected_atom_position,
-                                  selected_atom_changed, quality=1)
+                                  selected_atom_changed, quality)
         self.selected_cp_callback = selected_cp_changed
 
     def set_property_show_bcp(self, show_bcp):
@@ -72,17 +76,18 @@ class GuiOpenGLCP(GuiOpenGLBase):
             self.is_bcp_property_visible = True
         self.update()
 
-    def init_params(self, the_object) -> None:
-        super().init_params(the_object)
-        self.is_bcp_property_visible = the_object.is_bcp_property_visible
-        self.is_bcp_available = the_object.is_bcp_available
-        self.is_bond_path_available = the_object.is_bond_path_available
-        self.is_show_bcp = the_object.is_show_bcp
-        self.is_show_bond_path = the_object.is_show_bond_path
+    def init_params(self, ogl_model) -> None:
+        super().init_params(ogl_model)
+        self.selected_cp = ogl_model.selected_cp
+        self.is_bcp_property_visible = ogl_model.is_bcp_property_visible
+        self.bcp_property = ogl_model.bcp_property
+        self.is_bcp_available = ogl_model.is_bcp_available
+        self.is_bond_path_available = ogl_model.is_bond_path_available
+        self.is_show_bcp = ogl_model.is_show_bcp
+        self.is_show_bond_path = ogl_model.is_show_bond_path
 
     def copy_state(self, ogl_model):
         super().copy_state(ogl_model)
-        self.selected_cp = ogl_model.selected_cp
         self.add_bcp()
         self.add_bond_path()
         self.update()
@@ -145,13 +150,14 @@ class GuiOpenGLCP(GuiOpenGLBase):
 
     def paintGL(self):
         self.makeCurrent()
+        self.configure_gl()
         try:
             self.prepere_scene()
             self.light_prepare()
             if self.active:
                 self.prepare_orientation()
                 if self.is_view_atoms:
-                    gl.glCallList(self.object)  # atoms
+                    gl.glCallList(self.object + self.list_for_atoms)  # atoms
 
                 if self.is_bcp_available and self.is_show_bcp:
                     gl.glCallList(self.object + 8)  # BCP
@@ -204,7 +210,6 @@ class GuiOpenGLCP(GuiOpenGLBase):
 
     def get_atom_on_screen(self):
         point = self.get_point_in_3d(self.x_scene, self.y_scene)
-
         old_selected = self.selected_atom
         need_for_update = False
 
@@ -222,20 +227,8 @@ class GuiOpenGLCP(GuiOpenGLBase):
             need_for_update = True
             self.add_bcp()
 
-        if (min_r < 1.4) and (min_r <= cp_min_r):
-            if self.selected_atom >= 0:
-                self.is_view_voronoi = False
-            if self.selected_atom != ind:
-                if self.selected_atom >= 0:
-                    self.main_model.atoms[self.selected_atom].set_selected(False)
-                self.selected_atom = ind
-                self.main_model.atoms[self.selected_atom].set_selected(True)
-            else:
-                if self.selected_atom >= 0:
-                    self.main_model.atoms[self.selected_atom].set_selected(False)
-                self.selected_atom = -1
-            self.add_atoms()
-            self.add_bonds()
+        if min_r <= cp_min_r:
+            self.update_selected_atom(ind, min_r)
 
         self.can_atom_search = False
         if old_selected != self.selected_atom:

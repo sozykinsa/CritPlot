@@ -1,6 +1,5 @@
-from core_gui_atomistic import helpers
 from core_gui_atomistic.gui4dft_project_file import GUI4dftProjectFile
-from models.atomic_model_cp import AtomicModelCP
+from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 class CritPlotProjectFile(GUI4dftProjectFile):

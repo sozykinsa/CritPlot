@@ -1,9 +1,9 @@
 from pathlib import Path
-from qtbased.pyqtgraphwidget import PyqtGraphWidget
-from qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
 from core_gui_atomistic.atomic_model import AtomicModel
 from core_gui_atomistic.periodic_table import TPeriodTable
-from models.atomic_model_cp import AtomicModelCP
+from src.src_critplot.qtbased.pyqtgraphwidget import PyqtGraphWidget
+from src.src_critplot.qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
+from src.src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 import pytest

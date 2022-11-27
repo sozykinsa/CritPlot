@@ -1,5 +1,5 @@
 import pytest
-from program.critic2 import parse_cp_properties
+from src.src_critplot.program.critic2 import parse_cp_properties
 
 
 def test_critic2_section(critplot_application, tests_path):

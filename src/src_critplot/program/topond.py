@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import sys
-sys.path.append('../')
 import os
 import numpy as np
 from core_gui_atomistic import helpers
 from core_gui_atomistic.periodic_table import TPeriodTable
 from core_gui_atomistic.atom import Atom
-from models.atomic_model_cp import AtomicModelCP
+from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 def number_of_atoms_from_outp(filename):
