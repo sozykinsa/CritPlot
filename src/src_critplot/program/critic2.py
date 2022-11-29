@@ -65,16 +65,16 @@ def structure_from_cro_file(filename):
                 model.add_critical_point_bond(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
             if data[0] == "ring":
                 ring.append(data)
-                let = "Cu"
+                let = "xr"
                 charge = period_table.get_charge_by_letter(let)
                 model.add_critical_point_ring(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
             if data[0] == "cage":
                 cage.append(data)
-                let = "Al"
+                let = "xc"
                 charge = period_table.get_charge_by_letter(let)
                 model.add_critical_point_cage(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
-            if not ((data[0] == "nucleus") or (data[0] == "bond") or (data[0] == "ring") or (data[0] == "cage")):
-                print("---: ", data[3], "  --  ", str1)
+            # if not ((data[0] == "nucleus") or (data[0] == "bond") or (data[0] == "ring") or (data[0] == "cage")):
+            #     print("---: ", data[3], "  --  ", str1)
             str1 = f.readline()
 
         while str1.find("* Complete CP list, bcp and rcp connectivity table") < 0:

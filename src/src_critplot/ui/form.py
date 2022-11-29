@@ -14,7 +14,7 @@ from PySide2.QtWidgets import *
 
 from src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
 from src_critplot.qtbased.pyqtgraphwidget import PyqtGraphWidget
-from src_critplot.qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
+from core_gui_atomistic.pyqtgraphwidgetimage import PyqtGraphWidgetImage
 
 
 class Ui_MainWindow(object):
@@ -719,7 +719,7 @@ class Ui_MainWindow(object):
         self.tab_3.setObjectName(u"tab_3")
         self.frame_160 = QFrame(self.tab_3)
         self.frame_160.setObjectName(u"frame_160")
-        self.frame_160.setGeometry(QRect(20, 104, 371, 44))
+        self.frame_160.setGeometry(QRect(20, 80, 371, 44))
         self.frame_160.setFrameShape(QFrame.NoFrame)
         self.frame_160.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_178 = QHBoxLayout(self.frame_160)
@@ -737,12 +737,20 @@ class Ui_MainWindow(object):
 
         self.show_bond_path = QCheckBox(self.tab_3)
         self.show_bond_path.setObjectName(u"show_bond_path")
-        self.show_bond_path.setGeometry(QRect(20, 77, 371, 20))
+        self.show_bond_path.setGeometry(QRect(20, 60, 371, 20))
         self.show_bond_path.setChecked(True)
         self.show_bcp = QCheckBox(self.tab_3)
         self.show_bcp.setObjectName(u"show_bcp")
-        self.show_bcp.setGeometry(QRect(20, 50, 371, 20))
+        self.show_bcp.setGeometry(QRect(20, 30, 371, 20))
         self.show_bcp.setChecked(True)
+        self.show_rcp = QCheckBox(self.tab_3)
+        self.show_rcp.setObjectName(u"show_rcp")
+        self.show_rcp.setGeometry(QRect(20, 170, 371, 20))
+        self.show_rcp.setChecked(True)
+        self.show_ccp = QCheckBox(self.tab_3)
+        self.show_ccp.setObjectName(u"show_ccp")
+        self.show_ccp.setGeometry(QRect(20, 130, 371, 20))
+        self.show_ccp.setChecked(True)
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_51 = QWidget()
         self.tab_51.setObjectName(u"tab_51")
@@ -2638,7 +2646,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Selection history", None))
         self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"Show BCP property", None))
         self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Show bond path", None))
-        self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"Show BCP", None))
+        self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"Show bond CP", None))
+        self.show_rcp.setText(QCoreApplication.translate("MainWindow", u"Show ring CP", None))
+        self.show_ccp.setText(QCoreApplication.translate("MainWindow", u"Show cage CP", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"CP View", None))
         self.label_124.setText(QCoreApplication.translate("MainWindow", u"Interface to Critic2 and TOPOND programs", None))
         self.FormButtonAddCroData.setText(QCoreApplication.translate("MainWindow", u"Add data from *.cro file (for opened *.xyz file)", None))
