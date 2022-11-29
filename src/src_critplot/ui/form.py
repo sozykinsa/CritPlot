@@ -14,7 +14,7 @@ from PySide2.QtWidgets import *
 
 from src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
 from src_critplot.qtbased.pyqtgraphwidget import PyqtGraphWidget
-from core_gui_atomistic.pyqtgraphwidgetimage import PyqtGraphWidgetImage
+from src_critplot.qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
 
 
 class Ui_MainWindow(object):
@@ -504,8 +504,8 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.FormTabActions, "")
         self.tab_5 = QWidget()
         self.tab_5.setObjectName(u"tab_5")
-        self.verticalLayout_12 = QVBoxLayout(self.tab_5)
-        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.verticalLayout_8 = QVBoxLayout(self.tab_5)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.frame_60 = QFrame(self.tab_5)
         self.frame_60.setObjectName(u"frame_60")
         self.frame_60.setFrameShape(QFrame.NoFrame)
@@ -527,12 +527,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_51.addItem(self.horizontalSpacer_23)
 
 
-        self.verticalLayout_12.addWidget(self.frame_60)
+        self.verticalLayout_8.addWidget(self.frame_60)
 
         self.FormActionsPosTableBonds = QTableWidget(self.tab_5)
         self.FormActionsPosTableBonds.setObjectName(u"FormActionsPosTableBonds")
 
-        self.verticalLayout_12.addWidget(self.FormActionsPosTableBonds)
+        self.verticalLayout_8.addWidget(self.FormActionsPosTableBonds)
 
         self.frame_8 = QFrame(self.tab_5)
         self.frame_8.setObjectName(u"frame_8")
@@ -557,7 +557,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_30.addWidget(self.FormActionsPostLabelMeanBond)
 
 
-        self.verticalLayout_12.addWidget(self.frame_8)
+        self.verticalLayout_8.addWidget(self.frame_8)
 
         self.groupBox_52 = QGroupBox(self.tab_5)
         self.groupBox_52.setObjectName(u"groupBox_52")
@@ -657,19 +657,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_101.addWidget(self.frame_7)
 
 
-        self.verticalLayout_12.addWidget(self.groupBox_52)
+        self.verticalLayout_8.addWidget(self.groupBox_52)
 
-        self.tabWidget.addTab(self.tab_5, "")
-        self.tab_4 = QWidget()
-        self.tab_4.setObjectName(u"tab_4")
-        self.verticalLayout_10 = QVBoxLayout(self.tab_4)
-        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
-        self.AtomPropertiesText = QTextBrowser(self.tab_4)
-        self.AtomPropertiesText.setObjectName(u"AtomPropertiesText")
-
-        self.verticalLayout_10.addWidget(self.AtomPropertiesText)
-
-        self.groupBox_20 = QGroupBox(self.tab_4)
+        self.groupBox_20 = QGroupBox(self.tab_5)
         self.groupBox_20.setObjectName(u"groupBox_20")
         self.groupBox_20.setMinimumSize(QSize(0, 60))
         self.horizontalLayout_66 = QHBoxLayout(self.groupBox_20)
@@ -712,14 +702,52 @@ class Ui_MainWindow(object):
         self.horizontalLayout_66.addWidget(self.PropertyAtomAtomDistanceGet)
 
 
-        self.verticalLayout_10.addWidget(self.groupBox_20)
+        self.verticalLayout_8.addWidget(self.groupBox_20)
+
+        self.tabWidget.addTab(self.tab_5, "")
+        self.tab_4 = QWidget()
+        self.tab_4.setObjectName(u"tab_4")
+        self.verticalLayout_10 = QVBoxLayout(self.tab_4)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.label = QLabel(self.tab_4)
+        self.label.setObjectName(u"label")
+
+        self.verticalLayout_10.addWidget(self.label)
+
+        self.AtomPropertiesText = QTextBrowser(self.tab_4)
+        self.AtomPropertiesText.setObjectName(u"AtomPropertiesText")
+
+        self.verticalLayout_10.addWidget(self.AtomPropertiesText)
+
+        self.label_3 = QLabel(self.tab_4)
+        self.label_3.setObjectName(u"label_3")
+
+        self.verticalLayout_10.addWidget(self.label_3)
+
+        self.criticalPointProp = QTextBrowser(self.tab_4)
+        self.criticalPointProp.setObjectName(u"criticalPointProp")
+
+        self.verticalLayout_10.addWidget(self.criticalPointProp)
 
         self.tabWidget.addTab(self.tab_4, "")
         self.tab_3 = QWidget()
         self.tab_3.setObjectName(u"tab_3")
+        self.verticalLayout_12 = QVBoxLayout(self.tab_3)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.show_bcp = QCheckBox(self.tab_3)
+        self.show_bcp.setObjectName(u"show_bcp")
+        self.show_bcp.setChecked(True)
+
+        self.verticalLayout_12.addWidget(self.show_bcp)
+
+        self.show_bond_path = QCheckBox(self.tab_3)
+        self.show_bond_path.setObjectName(u"show_bond_path")
+        self.show_bond_path.setChecked(True)
+
+        self.verticalLayout_12.addWidget(self.show_bond_path)
+
         self.frame_160 = QFrame(self.tab_3)
         self.frame_160.setObjectName(u"frame_160")
-        self.frame_160.setGeometry(QRect(20, 80, 371, 44))
         self.frame_160.setFrameShape(QFrame.NoFrame)
         self.frame_160.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_178 = QHBoxLayout(self.frame_160)
@@ -735,42 +763,45 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_178.addWidget(self.PropertyForBCPtext)
 
-        self.show_bond_path = QCheckBox(self.tab_3)
-        self.show_bond_path.setObjectName(u"show_bond_path")
-        self.show_bond_path.setGeometry(QRect(20, 60, 371, 20))
-        self.show_bond_path.setChecked(True)
-        self.show_bcp = QCheckBox(self.tab_3)
-        self.show_bcp.setObjectName(u"show_bcp")
-        self.show_bcp.setGeometry(QRect(20, 30, 371, 20))
-        self.show_bcp.setChecked(True)
-        self.show_rcp = QCheckBox(self.tab_3)
-        self.show_rcp.setObjectName(u"show_rcp")
-        self.show_rcp.setGeometry(QRect(20, 170, 371, 20))
-        self.show_rcp.setChecked(True)
+
+        self.verticalLayout_12.addWidget(self.frame_160)
+
         self.show_ccp = QCheckBox(self.tab_3)
         self.show_ccp.setObjectName(u"show_ccp")
-        self.show_ccp.setGeometry(QRect(20, 130, 371, 20))
         self.show_ccp.setChecked(True)
+
+        self.verticalLayout_12.addWidget(self.show_ccp)
+
+        self.show_rcp = QCheckBox(self.tab_3)
+        self.show_rcp.setObjectName(u"show_rcp")
+        self.show_rcp.setChecked(True)
+
+        self.verticalLayout_12.addWidget(self.show_rcp)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 637, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_12.addItem(self.verticalSpacer_3)
+
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_51 = QWidget()
         self.tab_51.setObjectName(u"tab_51")
-        self.verticalLayout_105 = QVBoxLayout(self.tab_51)
-        self.verticalLayout_105.setObjectName(u"verticalLayout_105")
+        self.verticalLayout_15 = QVBoxLayout(self.tab_51)
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.label_124 = QLabel(self.tab_51)
         self.label_124.setObjectName(u"label_124")
 
-        self.verticalLayout_105.addWidget(self.label_124)
+        self.verticalLayout_15.addWidget(self.label_124)
 
         self.FormButtonAddCroData = QPushButton(self.tab_51)
         self.FormButtonAddCroData.setObjectName(u"FormButtonAddCroData")
 
-        self.verticalLayout_105.addWidget(self.FormButtonAddCroData)
+        self.verticalLayout_15.addWidget(self.FormButtonAddCroData)
 
         self.groupBox_30 = QGroupBox(self.tab_51)
         self.groupBox_30.setObjectName(u"groupBox_30")
         self.groupBox_30.setMinimumSize(QSize(0, 0))
-        self.verticalLayout_71 = QVBoxLayout(self.groupBox_30)
-        self.verticalLayout_71.setObjectName(u"verticalLayout_71")
+        self.verticalLayout_16 = QVBoxLayout(self.groupBox_30)
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
         self.frame_110 = QFrame(self.groupBox_30)
         self.frame_110.setObjectName(u"frame_110")
         self.frame_110.setFrameShape(QFrame.NoFrame)
@@ -789,7 +820,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_112.addWidget(self.selectedCP)
 
 
-        self.verticalLayout_71.addWidget(self.frame_110)
+        self.verticalLayout_16.addWidget(self.frame_110)
 
         self.frame_2 = QFrame(self.groupBox_30)
         self.frame_2.setObjectName(u"frame_2")
@@ -810,7 +841,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addWidget(self.selected_cp_title)
 
 
-        self.verticalLayout_71.addWidget(self.frame_2)
+        self.verticalLayout_16.addWidget(self.frame_2)
 
         self.frame_87 = QFrame(self.groupBox_30)
         self.frame_87.setObjectName(u"frame_87")
@@ -830,7 +861,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_88.addWidget(self.selectedCP_nuclei)
 
 
-        self.verticalLayout_71.addWidget(self.frame_87)
+        self.verticalLayout_16.addWidget(self.frame_87)
 
         self.frame_109 = QFrame(self.groupBox_30)
         self.frame_109.setObjectName(u"frame_109")
@@ -850,18 +881,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_156.addWidget(self.selectedCP_bpLenLine)
 
 
-        self.verticalLayout_71.addWidget(self.frame_109)
+        self.verticalLayout_16.addWidget(self.frame_109)
 
-
-        self.verticalLayout_105.addWidget(self.groupBox_30)
-
-        self.tabWidget_10 = QTabWidget(self.tab_51)
-        self.tabWidget_10.setObjectName(u"tabWidget_10")
-        self.tab_45 = QWidget()
-        self.tab_45.setObjectName(u"tab_45")
-        self.verticalLayout_72 = QVBoxLayout(self.tab_45)
-        self.verticalLayout_72.setObjectName(u"verticalLayout_72")
-        self.frame_111 = QFrame(self.tab_45)
+        self.frame_111 = QFrame(self.groupBox_30)
         self.frame_111.setObjectName(u"frame_111")
         self.frame_111.setFrameShape(QFrame.NoFrame)
         self.frame_111.setFrameShadow(QFrame.Raised)
@@ -879,9 +901,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_113.addWidget(self.FormSelectedCP_f)
 
 
-        self.verticalLayout_72.addWidget(self.frame_111)
+        self.verticalLayout_16.addWidget(self.frame_111)
 
-        self.frame_112 = QFrame(self.tab_45)
+        self.frame_112 = QFrame(self.groupBox_30)
         self.frame_112.setObjectName(u"frame_112")
         self.frame_112.setFrameShape(QFrame.NoFrame)
         self.frame_112.setFrameShadow(QFrame.Raised)
@@ -899,9 +921,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_114.addWidget(self.FormSelectedCP_g)
 
 
-        self.verticalLayout_72.addWidget(self.frame_112)
+        self.verticalLayout_16.addWidget(self.frame_112)
 
-        self.frame_113 = QFrame(self.tab_45)
+        self.frame_113 = QFrame(self.groupBox_30)
         self.frame_113.setObjectName(u"frame_113")
         self.frame_113.setFrameShape(QFrame.NoFrame)
         self.frame_113.setFrameShadow(QFrame.Raised)
@@ -919,25 +941,22 @@ class Ui_MainWindow(object):
         self.horizontalLayout_115.addWidget(self.FormSelectedCP_lap)
 
 
-        self.verticalLayout_72.addWidget(self.frame_113)
+        self.verticalLayout_16.addWidget(self.frame_113)
 
-        self.criticalPointProp = QTextBrowser(self.tab_45)
-        self.criticalPointProp.setObjectName(u"criticalPointProp")
 
-        self.verticalLayout_72.addWidget(self.criticalPointProp)
+        self.verticalLayout_15.addWidget(self.groupBox_30)
 
-        self.tabWidget_10.addTab(self.tab_45, "")
-        self.tab_35 = QWidget()
-        self.tab_35.setObjectName(u"tab_35")
-        self.horizontalLayout_87 = QHBoxLayout(self.tab_35)
-        self.horizontalLayout_87.setObjectName(u"horizontalLayout_87")
-        self.FormCPlist = QListWidget(self.tab_35)
+        self.groupBox_5 = QGroupBox(self.tab_51)
+        self.groupBox_5.setObjectName(u"groupBox_5")
+        self.horizontalLayout_6 = QHBoxLayout(self.groupBox_5)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.FormCPlist = QListWidget(self.groupBox_5)
         self.FormCPlist.setObjectName(u"FormCPlist")
         self.FormCPlist.setMaximumSize(QSize(100, 16777215))
 
-        self.horizontalLayout_87.addWidget(self.FormCPlist)
+        self.horizontalLayout_6.addWidget(self.FormCPlist)
 
-        self.frame_16 = QFrame(self.tab_35)
+        self.frame_16 = QFrame(self.groupBox_5)
         self.frame_16.setObjectName(u"frame_16")
         self.frame_16.setFrameShape(QFrame.StyledPanel)
         self.frame_16.setFrameShadow(QFrame.Raised)
@@ -968,11 +987,10 @@ class Ui_MainWindow(object):
         self.verticalLayout_11.addItem(self.verticalSpacer_20)
 
 
-        self.horizontalLayout_87.addWidget(self.frame_16)
+        self.horizontalLayout_6.addWidget(self.frame_16)
 
-        self.tabWidget_10.addTab(self.tab_35, "")
 
-        self.verticalLayout_105.addWidget(self.tabWidget_10)
+        self.verticalLayout_15.addWidget(self.groupBox_5)
 
         self.tabWidget.addTab(self.tab_51, "")
         self.tab_2 = QWidget()
@@ -2581,7 +2599,6 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget.setCurrentIndex(0)
-        self.tabWidget_10.setCurrentIndex(0)
         self.tabWidget_15.setCurrentIndex(0)
         self.tabWidget_14.setCurrentIndex(0)
         self.tabWidget_9.setCurrentIndex(0)
@@ -2638,17 +2655,19 @@ class Ui_MainWindow(object):
         self.label_127.setText(QCoreApplication.translate("MainWindow", u"Y label", None))
         self.bonds_y_label.setText(QCoreApplication.translate("MainWindow", u"Number of bonds", None))
         self.FormActionsPostButPlotBondsHistogram.setText(QCoreApplication.translate("MainWindow", u"Plot histogram", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("MainWindow", u"Bonds", None))
         self.groupBox_20.setTitle(QCoreApplication.translate("MainWindow", u"Atom - atom distance", None))
         self.label_56.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.label_62.setText(QCoreApplication.translate("MainWindow", u":", None))
         self.PropertyAtomAtomDistanceGet.setText(QCoreApplication.translate("MainWindow", u"Get", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Selection history", None))
-        self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"Show BCP property", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("MainWindow", u"Bonds", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Atoms", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Critical points", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Selection", None))
+        self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"Show BCP", None))
         self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Show bond path", None))
-        self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"Show bond CP", None))
-        self.show_rcp.setText(QCoreApplication.translate("MainWindow", u"Show ring CP", None))
+        self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"Show BCP property", None))
         self.show_ccp.setText(QCoreApplication.translate("MainWindow", u"Show cage CP", None))
+        self.show_rcp.setText(QCoreApplication.translate("MainWindow", u"Show ring CP", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"CP View", None))
         self.label_124.setText(QCoreApplication.translate("MainWindow", u"Interface to Critic2 and TOPOND programs", None))
         self.FormButtonAddCroData.setText(QCoreApplication.translate("MainWindow", u"Add data from *.cro file (for opened *.xyz file)", None))
@@ -2667,12 +2686,11 @@ class Ui_MainWindow(object):
         self.FormSelectedCP_g.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_87.setText(QCoreApplication.translate("MainWindow", u"Lap:", None))
         self.FormSelectedCP_lap.setText(QCoreApplication.translate("MainWindow", u"...", None))
-        self.tabWidget_10.setTabText(self.tabWidget_10.indexOf(self.tab_45), QCoreApplication.translate("MainWindow", u"Info", None))
+        self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"List of CP", None))
         self.add_cp_to_list.setText(QCoreApplication.translate("MainWindow", u"Add to List", None))
         self.delete_cp_from_list.setText(QCoreApplication.translate("MainWindow", u"Delete selected from List", None))
         self.delete_cp_from_model.setText(QCoreApplication.translate("MainWindow", u"Exclude selected", None))
         self.leave_cp_in_model.setText(QCoreApplication.translate("MainWindow", u"Limit to selected", None))
-        self.tabWidget_10.setTabText(self.tabWidget_10.indexOf(self.tab_35), QCoreApplication.translate("MainWindow", u"List of CP", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_51), QCoreApplication.translate("MainWindow", u"QTAIM", None))
         self.form_critic_list.setText(QCoreApplication.translate("MainWindow", u"From list", None))
         self.form_critic_all.setText(QCoreApplication.translate("MainWindow", u"All CP", None))
