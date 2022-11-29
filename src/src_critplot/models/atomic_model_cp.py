@@ -2,16 +2,20 @@
 # Python 3
 
 import math
+import numpy as np
 from copy import deepcopy
 from numpy.linalg import inv
 from core_gui_atomistic.atom import Atom
 from core_gui_atomistic.atomic_model import AtomicModel
+from core_gui_atomistic import helpers
 
 
 class AtomicModelCP(AtomicModel):
     def __init__(self, new_atoms: list = []):
         super().__init__(new_atoms)
         self.bcp = []
+        self.rcp = []
+        self.ccp = []
 
     def bond_path_points_optimize(self):
         i = 0
@@ -51,30 +55,31 @@ class AtomicModelCP(AtomicModel):
     def move(self, l_x, l_y, l_z):
         """Move model by the vector."""
         super().move(l_x, l_y, l_z)
+        dl = np.array([l_x, l_y, l_z])
 
         for point in self.bcp:
-            point.x += l_x
-            point.y += l_y
-            point.z += l_z
-
-            self.move_bond_path(l_x, l_y, l_z, point.get_property("bond1"))
-            self.move_bond_path(l_x, l_y, l_z, point.get_property("bond2"))
-
-            self.move_bond_path(l_x, l_y, l_z, point.get_property("bond1opt"))
-            self.move_bond_path(l_x, l_y, l_z, point.get_property("bond2opt"))
+            point.xyz += dl
+            self.move_bond_path(dl, point.get_property("bond1"))
+            self.move_bond_path(dl, point.get_property("bond2"))
+            self.move_bond_path(dl, point.get_property("bond1opt"))
+            self.move_bond_path(dl, point.get_property("bond2opt"))
+        for point in self.rcp:
+            point.xyz += dl
+        for point in self.ccp:
+            point.xyz += dl
         return self.atoms
 
     @staticmethod
-    def move_bond_path(lx, ly, lz, bond):
+    def move_bond_path(dl, bond):
         if bond:
             for bp in bond:
-                bp.x += lx
-                bp.y += ly
-                bp.z += lz
+                bp.xyz += dl
 
     def go_to_positive_coordinates_translate(self):
         self.go_to_positive_array_translate(self.atoms)
         self.go_to_positive_array_translate(self.bcp)
+        self.go_to_positive_array_translate(self.rcp)
+        self.go_to_positive_array_translate(self.ccp)
         self.bond_path_opt_update()
 
     def bond_path_opt_update(self):
@@ -101,6 +106,8 @@ class AtomicModelCP(AtomicModel):
         a_inv = inv(self.lat_vectors)
         self.move_object_to_cell(self.atoms, a_inv)
         self.move_object_to_cell(self.bcp, a_inv)
+        self.move_object_to_cell(self.rcp, a_inv)
+        self.move_object_to_cell(self.ccp, a_inv)
 
     def go_to_positive_coordinates(self):
         xm = self.minX()
@@ -108,10 +115,26 @@ class AtomicModelCP(AtomicModel):
         zm = self.minZ()
         self.go_to_positive_array(self.atoms, xm, ym, zm)
         self.go_to_positive_array(self.bcp, xm, ym, zm)
+        self.go_to_positive_array(self.rcp, xm, ym, zm)
+        self.go_to_positive_array(self.ccp, xm, ym, zm)
+
+    def convert_from_direct_to_cart(self):
+        super().convert_from_direct_to_cart()
+        for atom in self.bcp:
+            atom.xyz = np.dot(self.lat_vectors, atom.xyz)
+        for atom in self.rcp:
+            atom.xyz = np.dot(self.lat_vectors, atom.xyz)
+        for atom in self.ccp:
+            atom.xyz = np.dot(self.lat_vectors, atom.xyz)
 
     def add_critical_point_bond(self, atom):
-        new_at = deepcopy(atom)
-        self.bcp.append(new_at)
+        self.bcp.append(deepcopy(atom))
+
+    def add_critical_point_ring(self, atom):
+        self.rcp.append(deepcopy(atom))
+
+    def add_critical_point_cage(self, atom):
+        self.ccp.append(deepcopy(atom))
 
     def add_bond_path_point(self, points):
         for cp in self.bcp:
@@ -172,3 +195,41 @@ class AtomicModelCP(AtomicModel):
                 minr2 = d2
                 ind2 = i
         return ind1, ind2
+
+    def create_csv_file_cp(self, cp_list, delimiter: str = ";"):
+        title = ""
+        data = ""
+        for ind in cp_list:
+            title = ""
+            cp = self.bcp[ind]
+            title += "BCP" + delimiter + "atoms" + delimiter + "dist" + delimiter
+            data += str(ind) + delimiter
+            ind1 = cp.get_property("atom1")
+            ind2 = cp.get_property("atom2")
+            atom1 = self.atoms[ind1].let + str(ind1 + 1)
+            atom2 = self.atoms[ind2].let + str(ind2 + 1)
+            data += atom1 + "-" + atom2 + delimiter
+
+            dist_line = round(self.atom_atom_distance(ind1, ind2), 4)
+            data += '" ' + str(dist_line) + ' "' + delimiter
+
+            data_list = cp.get_property("text")
+            if data_list:
+                data_list = data_list.split("\n")
+                i = 0
+
+                while i < len(data_list):
+                    if (data_list[i].find("Hessian") < 0) and (len(data_list[i]) > 0):
+                        col_title = helpers.spacedel(data_list[i].split(":")[0])
+                        col_data = data_list[i].split(":")[1].split()
+                        for k in range(len(col_data)):
+                            title += col_title
+                            if len(col_data) > 1:
+                                title += "_" + str(k + 1)
+                            title += delimiter
+                            data += '"' + col_data[k] + '"' + delimiter
+                        i += 1
+                    else:
+                        i += 4
+                data += '\n'
+        return title + "\n" + data

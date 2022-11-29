@@ -1,5 +1,4 @@
 from src.src_critplot.program.critic2 import check_cro_file, create_critic2_xyz_file, create_cri_file, parse_cp_properties
-from src.src_critplot.program.critic2 import create_csv_file_cp
 from src.src_critplot.utils.importer import Importer
 from src.src_critplot.models.atomic_model_cp import AtomicModelCP
 
@@ -37,7 +36,7 @@ def test_create_csv_file_cp(tests_path):
     model = Importer.import_from_file(f_name)
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     parse_cp_properties(f_name, model[0])
-    text = create_csv_file_cp([0, 1], model[0], delimiter=";")
+    text = model[0].create_csv_file_cp([0, 1], delimiter=";")
     assert len(text) > 4
 
 

@@ -357,18 +357,17 @@ class AtomicModel(object):
 
     def convert_from_scaled_to_cart(self, lat):
         for atom in self.atoms:
-            atom.x *= lat
-            atom.y *= lat
-            atom.z *= lat
+            atom.xyz *= lat
+            # atom.y *= lat
+            # atom.z *= lat
 
     def convert_from_direct_to_cart(self):
         for atom in self.atoms:
-            x = atom.x * self.lat_vector1[0] + atom.y * self.lat_vector2[0] + atom.z * self.lat_vector3[0]
-            y = atom.x * self.lat_vector1[1] + atom.y * self.lat_vector2[1] + atom.z * self.lat_vector3[1]
-            z = atom.x * self.lat_vector1[2] + atom.y * self.lat_vector2[2] + atom.z * self.lat_vector3[2]
-            atom.x = x
-            atom.y = y
-            atom.z = z
+            atom.xyz = np.dot(self.lat_vectors, atom.xyz)
+            # x = atom.x * self.lat_vector1[0] + atom.y * self.lat_vector2[0] + atom.z * self.lat_vector3[0]
+            # y = atom.x * self.lat_vector1[1] + atom.y * self.lat_vector2[1] + atom.z * self.lat_vector3[1]
+            # z = atom.x * self.lat_vector1[2] + atom.y * self.lat_vector2[2] + atom.z * self.lat_vector3[2]
+            # atom.xyz = np.array([x, y, z])
 
     def convert_from_cart_to_direct(self):
         obr = np.linalg.inv(self.lat_vectors).transpose()

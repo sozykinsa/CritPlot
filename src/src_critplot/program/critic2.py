@@ -1,11 +1,88 @@
 # -*- coding: utf-8 -*-
-import sys
 import os
 import math
 import numpy as np
 from core_gui_atomistic import helpers
+from core_gui_atomistic.atom import Atom
+from core_gui_atomistic.periodic_table import TPeriodTable
 from src_critplot.models.atomic_model_cp import AtomicModelCP
-sys.path.append('')
+
+
+def structure_from_cro_file(filename):
+    """
+    * Complete CP list, bcp and rcp connectivity table
+    # (cp(end)+lvec connected to bcp/rcp)
+    #cp  ncp   typ        position (cryst. coords.)            end1 (lvec)      end2 (lvec)
+    1      1    n   0.41201875    0.19237040    0.32843532
+    """
+    period_table = TPeriodTable()
+    model = AtomicModelCP()
+    if os.path.exists(filename) and filename.endswith("cro"):
+        box_ang = helpers.from_file_property(filename, "Lattice parameters (ang):", 1, 'string').split()
+        box_ang = np.array(helpers.list_str_to_float(box_ang))
+        box_deg = helpers.from_file_property(filename, "Lattice angles (degrees):", 1, 'string').split()
+        box_deg = np.array(helpers.list_str_to_float(box_deg))
+
+        lat_vectors = helpers.lat_vectors_from_params(box_ang[0], box_ang[1], box_ang[2],
+                                                      math.radians(box_deg[0]),
+                                                      math.radians(box_deg[1]),
+                                                      math.radians(box_deg[2]))
+
+        model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
+
+        f = open(filename)
+        str1 = f.readline()
+        while str1.find("* Critical point list, final report (non-equivalent cps)") < 0:
+            str1 = f.readline()
+        f.readline()
+        f.readline()
+        f.readline()
+        str1 = f.readline()
+        nucleus = []
+        nnattr = []
+        bond = []
+        ring = []
+        cage = []
+        while len(str1) > 5:
+            data1 = str1.split(")")
+            data = data1[1].split()
+            """
+            ncp   pg  type   CPname         position (cryst. coords.)       mult  name            f             |grad|           lap
+            1    C1  (3,-3) nucleus   0.41201875   0.19237040   0.32843532    1     H_      4.02547716E+00  0.00000000E+00 -1.04730465E+02
+            """
+            if data[0] == "nucleus":
+                nucleus.append(data)
+                let = data[5].replace("_", "")
+                charge = period_table.get_charge_by_letter(let)
+                model.add_atom(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
+
+            if data[0] == "nnattr":
+                nnattr.append(data)
+            if data[0] == "bond":
+                bond.append(data)
+                let = "xb"
+                charge = period_table.get_charge_by_letter(let)
+                model.add_critical_point_bond(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
+            if data[0] == "ring":
+                ring.append(data)
+                let = "Cu"
+                charge = period_table.get_charge_by_letter(let)
+                model.add_critical_point_ring(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
+            if data[0] == "cage":
+                cage.append(data)
+                let = "Al"
+                charge = period_table.get_charge_by_letter(let)
+                model.add_critical_point_cage(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
+            if not ((data[0] == "nucleus") or (data[0] == "bond") or (data[0] == "ring") or (data[0] == "cage")):
+                print("---: ", data[3], "  --  ", str1)
+            str1 = f.readline()
+
+        while str1.find("* Complete CP list, bcp and rcp connectivity table") < 0:
+            str1 = f.readline()
+
+        f.readline()
+        model.convert_from_direct_to_cart()
+    return [model]
 
 
 def parse_cp_properties(filename, model):
@@ -136,45 +213,6 @@ def check_cro_file(filename):
         return box_bohr, box_ang, box_deg, cps
     else:
         return "", "", "", []
-
-
-def create_csv_file_cp(cp_list, model, delimiter: str = ";"):
-    title = ""
-    data = ""
-    for ind in cp_list:
-        title = ""
-        cp = model.bcp[ind]
-        title += "BCP" + delimiter + "atoms" + delimiter + "dist" + delimiter
-        data += str(ind) + delimiter
-        ind1 = cp.get_property("atom1")
-        ind2 = cp.get_property("atom2")
-        atom1 = model.atoms[ind1].let + str(ind1 + 1)
-        atom2 = model.atoms[ind2].let + str(ind2 + 1)
-        data += atom1 + "-" + atom2 + delimiter
-
-        dist_line = round(model.atom_atom_distance(ind1, ind2), 4)
-        data += '" ' + str(dist_line) + ' "' + delimiter
-
-        data_list = cp.get_property("text")
-        if data_list:
-            data_list = data_list.split("\n")
-            i = 0
-
-            while i < len(data_list):
-                if (data_list[i].find("Hessian") < 0) and (len(data_list[i]) > 0):
-                    col_title = helpers.spacedel(data_list[i].split(":")[0])
-                    col_data = data_list[i].split(":")[1].split()
-                    for k in range(len(col_data)):
-                        title += col_title
-                        if len(col_data) > 1:
-                            title += "_" + str(k + 1)
-                        title += delimiter
-                        data += '"' + col_data[k] + '"' + delimiter
-                    i += 1
-                else:
-                    i += 4
-            data += '\n'
-    return title + "\n" + data
 
 
 def model_to_critic_xyz_file(model, cps):

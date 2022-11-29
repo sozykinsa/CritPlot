@@ -5,9 +5,9 @@ from typing import Callable
 import OpenGL.GL as gl
 import OpenGL.GLU as glu
 import numpy as np
-from src.core_gui_atomistic.guiopenglbase import GuiOpenGLBase
-from src.core_gui_atomistic.helpers import is_number
-from src.src_critplot.models.atomic_model_cp import AtomicModelCP
+from core_gui_atomistic.guiopenglbase import GuiOpenGLBase
+from core_gui_atomistic.helpers import is_number
+from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 class GuiOpenGLCP(GuiOpenGLBase):
@@ -37,7 +37,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
 
     def add_all_elements(self):
         super().add_all_elements()
-        self.add_bcp()
+        self.add_critical_points()
         self.add_bond_path()
 
     def set_form_elements(self, check_atom_selection=None, orientation_model_changed: Callable = None,
@@ -88,18 +88,18 @@ class GuiOpenGLCP(GuiOpenGLBase):
 
     def copy_state(self, ogl_model):
         super().copy_state(ogl_model)
-        self.add_bcp()
+        self.add_critical_points()
         self.add_bond_path()
         self.update()
 
-    def set_atomic_structure(self, structure, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box, box_color,
-                             is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes, axes_color,
-                             contour_width, is_bcp_property_visible):
-        super().set_atomic_structure(structure, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box,
-                                     box_color, is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes,
-                                     axes_color, contour_width)
+    def set_structure_parameters(self, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box, box_color,
+                                 is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes, axes_color,
+                                 contour_width, is_bcp_property_visible):
+        super().set_structure_parameters(atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box,
+                                         box_color, is_view_bonds, bonds_color, bond_width, bonds_by_atoms,
+                                         is_view_axes, axes_color, contour_width)
         self.is_bcp_property_visible = is_bcp_property_visible
-        self.add_bcp()
+        self.add_critical_points()
         self.add_bond_path()
         self.update()
 
@@ -107,22 +107,32 @@ class GuiOpenGLCP(GuiOpenGLBase):
         super().selected_atom_properties_to_form()
         self.selected_cp_callback(self.selected_cp)
 
-    def add_bcp(self):
+    def add_critical_points(self):
         gl.glNewList(self.object + 8, gl.GL_COMPILE)
-        for at in self.main_model.bcp:
+        color = (1, 0, 0)
+        self.add_cp(color, self.main_model.bcp)
+
+        color = (1, 1, 0)
+        self.add_cp(color, self.main_model.ccp)
+
+        color = (1, 1, 1)
+        self.add_cp(color, self.main_model.rcp)
+
+        gl.glEndList()
+        self.is_bcp_available = True
+        self.update()
+
+    def add_cp(self, color, cps):
+        for at in cps:
             gl.glPushMatrix()
             gl.glTranslatef(*(self.scale_factor * at.xyz))
-            gl.glColor3f(1, 0, 0)
+            gl.glColor3f(*color)
             mult = self.scale_factor
             if at.is_selected():
                 gl.glColor3f(0, 0, 1)
                 mult *= 1.3
             glu.gluSphere(glu.gluNewQuadric(), 0.15 * mult, self.quality * 70, self.quality * 70)
             gl.glPopMatrix()
-
-        gl.glEndList()
-        self.is_bcp_available = True
-        self.update()
 
     def add_bond_path(self):
         gl.glNewList(self.object + 9, gl.GL_COMPILE)
@@ -168,20 +178,8 @@ class GuiOpenGLCP(GuiOpenGLBase):
                 if self.is_view_bonds and (len(self.main_model.bonds) > 0):
                     gl.glCallList(self.object + 2)  # find_bonds_exact
 
-                #if self.is_view_voronoi:
-                #    gl.glCallList(self.object + 1)  # Voronoi
-
                 if self.is_view_box:
                     gl.glCallList(self.object + 3)  # lattice_parameters_abc_angles
-
-                #if self.is_view_surface:
-                #    gl.glCallList(self.object + 4)  # Surface
-
-                #if self.is_view_contour:
-                #    gl.glCallList(self.object + 5)  # Contour
-
-                #if self.is_view_contour_fill:
-                #    gl.glCallList(self.object + 6)  # ContourFill
 
                 if self.is_view_axes:
                     gl.glCallList(self.object + 7)  # Axes
@@ -211,29 +209,42 @@ class GuiOpenGLCP(GuiOpenGLBase):
     def get_atom_on_screen(self):
         point = self.get_point_in_3d(self.x_scene, self.y_scene)
         old_selected = self.selected_atom
+        old_selected_cp = self.selected_cp
         need_for_update = False
 
-        ind, min_r = self.nearest_point(self.scale_factor, self.main_model.atoms, point)
-        cp_ind, cp_min_r = self.nearest_point(self.scale_factor, self.main_model.bcp, point)
+        atom_ind, atom_min_r = self.nearest_point(self.scale_factor, self.main_model.atoms, point)
+        bcp_ind, bcp_min_r = self.nearest_point(self.scale_factor, self.main_model.bcp, point)
+        ccp_ind, ccp_min_r = self.nearest_point(self.scale_factor, self.main_model.ccp, point)
+        rcp_ind, rcp_min_r = self.nearest_point(self.scale_factor, self.main_model.rcp, point)
 
-        if (cp_min_r < 1.4) and (cp_min_r <= min_r):
-            if self.selected_cp == cp_ind:
-                self.main_model.bcp[self.selected_cp].set_selected(False)
+        if (bcp_min_r < 1.4) and (bcp_min_r <= atom_min_r):
+            if self.selected_cp == bcp_ind:
+                if self.selected_cp > 0:
+                    self.main_model.bcp[self.selected_cp].set_selected(False)
                 self.selected_cp = -1
             else:
-                self.main_model.bcp[self.selected_cp].set_selected(False)
-                self.selected_cp = cp_ind
-                self.main_model.bcp[self.selected_cp].set_selected(True)
-            need_for_update = True
-            self.add_bcp()
+                if self.selected_cp > 0:
+                    self.main_model.bcp[self.selected_cp].set_selected(False)
+                self.selected_cp = bcp_ind
+                if self.selected_atom > 0:
+                    self.main_model.atoms[self.selected_atom].set_selected(False)
+                self.selected_atom = -1
+                if self.selected_cp > 0:
+                    self.main_model.bcp[self.selected_cp].set_selected(True)
 
-        if min_r <= cp_min_r:
-            self.update_selected_atom(ind, min_r)
+        if atom_min_r <= bcp_min_r:
+            self.update_selected_atom(atom_ind, atom_min_r)
 
         self.can_atom_search = False
-        if old_selected != self.selected_atom:
-            need_for_update = True
-
-        if need_for_update:
+        selected_atom_was_modified = old_selected != self.selected_atom
+        selected_cp_was_modified = old_selected_cp != self.selected_cp
+        if selected_atom_was_modified:
+            if self.selected_cp > 0:
+                self.main_model.bcp[self.selected_cp].set_selected(False)
+                self.selected_cp = -1
+        if selected_atom_was_modified or selected_cp_was_modified:
+            self.add_atoms()
+            self.add_critical_points()
+            self.add_bonds()
             self.selected_atom_changed()
             self.update()

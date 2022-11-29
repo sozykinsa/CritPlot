@@ -570,8 +570,8 @@ class GuiOpenGLBase(QOpenGLWidget):
         p_z = p3cone + np.array([1.5 * size_cone, 0, 0])
         p_z1 = p_z + np.array([-0.5 * letter_height, 0, -0.5 * letter_width])
         p_z2 = p_z + np.array([+0.5 * letter_height, 0, +0.5 * letter_width])
-        p_z3 = p_z + np.array([-0.5 * letter_height, 0,  +0.5 * letter_width])
-        p_z4 = p_z + np.array([+0.5 * letter_height, 0,  -0.5 * letter_width])
+        p_z3 = p_z + np.array([-0.5 * letter_height, 0, +0.5 * letter_width])
+        p_z4 = p_z + np.array([+0.5 * letter_height, 0, -0.5 * letter_width])
         self.add_bond(p_z1, p_z3, 0.5 * width)
         self.add_bond(p_z1, p_z2, 0.5 * width)
         self.add_bond(p_z2, p_z4, 0.5 * width)
@@ -701,16 +701,14 @@ class GuiOpenGLBase(QOpenGLWidget):
     def get_atom_on_screen(self):
         point = self.get_point_in_3d(self.x_scene, self.y_scene)
         old_selected = self.selected_atom
-        need_for_update = False
         ind, min_r = self.nearest_point(self.scale_factor, self.main_model.atoms, point)
         self.update_selected_atom(ind, min_r)
 
         self.can_atom_search = False
         if old_selected != self.selected_atom:
-            need_for_update = True
-
-        if need_for_update:
             self.selected_atom_changed()
+            self.add_atoms()
+            self.add_bonds()
             self.update()
 
     def update_selected_atom(self, ind, min_r):
@@ -724,14 +722,10 @@ class GuiOpenGLBase(QOpenGLWidget):
                 if self.selected_atom >= 0:
                     self.main_model.atoms[self.selected_atom].set_selected(False)
                 self.selected_atom = -1
-            self.add_atoms()
-            self.add_bonds()
 
     def new_atom_for_model(self, charge, let, position):
-        x = position[0] + self.coord0[0]
-        y = position[1] + self.coord0[1]
-        z = position[2] + self.coord0[2]
-        return Atom([x, y, z, let, charge])
+        xyz = position + self.coord0
+        return Atom([xyz[0], xyz[1], xyz[2], let, charge])
 
     def scale(self, wheel):
         if self.active:
@@ -828,26 +822,20 @@ class GuiOpenGLBase(QOpenGLWidget):
 
     def selected_atom_changed(self):
         if self.selected_atom >= 0:
-            x = self.main_model[self.selected_atom].x - self.coord0[0]
-            y = self.main_model[self.selected_atom].y - self.coord0[1]
-            z = self.main_model[self.selected_atom].z - self.coord0[2]
-            self.selected_atom_data_to_form(self.main_model[self.selected_atom].charge, x, y, z)
+            xyz = self.main_model[self.selected_atom].xyz - self.coord0
+            self.selected_atom_data_to_form(self.main_model[self.selected_atom].charge, xyz[0], xyz[1], xyz[2])
             if self.selected_fragment_mode:
                 self.main_model[self.selected_atom].fragment1 = not self.main_model[self.selected_atom].fragment1
                 self.atoms_of_selected_fragment_to_form()
         else:
             self.selected_atom_data_to_form(0, 0, 0, 0)
         self.selected_atom_properties_to_form()
+        print("point 5")
 
-    def set_atomic_structure(self, structure, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box, box_color,
-                             is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes, axes_color,
-                             contour_width):
-        self.clean()
+    def set_structure_parameters(self, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box, box_color,
+                                 is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes, axes_color,
+                                 contour_width):
         self.prop = "charge"
-        self.selected_atom = -1
-        self.main_model = deepcopy(structure)
-        self.coord0 = -self.main_model.get_center_of_mass()
-        self.main_model.move(*self.coord0)
         self.is_view_box = is_view_box
         self.is_view_atoms = is_view_atoms
         self.is_atomic_numbers_visible = is_view_atom_numbers
@@ -856,12 +844,21 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.bond_width = bond_width
         self.is_view_axes = is_view_axes
         self.color_of_axes = axes_color
-        self.active = False
         self.color_of_atoms = atoms_colors
-        self.auto_zoom()
         self.color_of_bonds = bonds_color
         self.color_of_box = box_color
-        self.main_model.find_bonds_fast()
         self.contour_width = contour_width
+        self.add_all_elements()
+        self.update()
+
+    def set_atomic_structure(self, structure):
+        self.clean()
+        self.selected_atom = -1
+        self.main_model = deepcopy(structure)
+        self.coord0 = -self.main_model.get_center_of_mass()
+        self.main_model.move(*self.coord0)
+        self.active = False
+        self.auto_zoom()
+        self.main_model.find_bonds_fast()
         self.add_all_elements()
         self.update()

@@ -1090,10 +1090,10 @@ class MainForm(QMainWindow):
         atomscolor = self.colors_of_atoms()
         contour_width = (self.ui.FormSettingsViewSpinContourWidth.value()) / 1000.0
         is_show_bcp_text = self.ui.show_bcp_text.isChecked()
-        self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model], atomscolor, view_atoms,
-                                                  view_atom_numbers, view_box, boxcolor, view_bonds, bondscolor,
-                                                  bond_width, color_of_bonds_by_atoms,
-                                                  view_axes, axescolor, contour_width, is_show_bcp_text)
+        self.ui.openGLWidget.set_structure_parameters(atomscolor, view_atoms, view_atom_numbers, view_box, boxcolor,
+                                                      view_bonds, bondscolor, bond_width, color_of_bonds_by_atoms,
+                                                      view_axes, axescolor, contour_width, is_show_bcp_text)
+        self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
         self.ui.AtomsInSelectedFragment.clear()
 
         self.show_property_enabling()
@@ -1367,9 +1367,11 @@ class MainForm(QMainWindow):
                             str(self.history_of_atom_selection[-2] + 1) + " - " + \
                             str(self.history_of_atom_selection[-3] + 1) + " : " + \
                             str(round(math.degrees(angle), 3)) + " degrees\n"
+        print("point3")
         if selected_atom < 0:
             text += "Select any atom."
         self.ui.AtomPropertiesText.setText(text)
+        print("point4")
 
     def selected_cp_changed(self, selected_cp):
         if selected_cp >= 0:

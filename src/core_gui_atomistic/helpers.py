@@ -52,20 +52,15 @@ def lat_vectors_from_params(a, b, c, alpha, beta, gamma):
     tm = math.pow(math.cos(alpha), 2) + math.pow(math.cos(beta), 2) + math.pow(math.cos(gamma), 2)
     tmp = math.sqrt(1 + 2 * math.cos(alpha) * math.cos(beta) * math.cos(gamma) - tm)
     h = c * tmp / math.sin(gamma)
-    lat_vect_1 = [a, 0, 0]
-    lat_vect_2 = [b * math.cos(gamma), b * math.sin(gamma), 0]
-    lat_vect_3 = [c * math.cos(beta), c * math.cos(alpha) * math.sin(gamma), h]
-    if math.fabs(lat_vect_2[0]) < 1e-8:
-        lat_vect_2[0] = 0
-    if math.fabs(lat_vect_2[1]) < 1e-8:
-        lat_vect_2[1] = 0
-    if math.fabs(lat_vect_3[0]) < 1e-8:
-        lat_vect_3[0] = 0
-    if math.fabs(lat_vect_3[1]) < 1e-8:
-        lat_vect_3[1] = 0
-    if math.fabs(lat_vect_3[2]) < 1e-8:
-        lat_vect_3[2] = 0
-    return lat_vect_1, lat_vect_2, lat_vect_3
+    lat_vectors = np.zeros((3, 3), dtype=float)
+    lat_vectors[0] = np.array([a, 0, 0])
+    lat_vectors[1] = np.array([b * math.cos(gamma), b * math.sin(gamma), 0])
+    lat_vectors[2] = np.array([c * math.cos(beta), c * math.cos(alpha) * math.sin(gamma), h])
+    for i in range(3):
+        for j in range(3):
+            if math.fabs(lat_vectors[i][j]) < 1e-8:
+                lat_vectors[i][j] = 0
+    return lat_vectors
 
 
 def lattice_parameters_abc_angles(lattice_parameters, lat_constant):
@@ -78,12 +73,9 @@ def lattice_parameters_abc_angles(lattice_parameters, lat_constant):
         alpha = math.radians(float(data[3]))
         beta = math.radians(float(data[4]))
         gamma = math.radians(float(data[5]))
-
-        lat_vect_1, lat_vect_2, lat_vect_3 = lat_vectors_from_params(a, b, c, alpha, beta, gamma)
-
-        return lat_vect_1, lat_vect_2, lat_vect_3
+        return lat_vectors_from_params(a, b, c, alpha, beta, gamma)
     else:
-        return [False, False, False], [False, False, False], [False, False, False]
+        return None
 
 
 def list_str_to_float(x):
@@ -254,5 +246,8 @@ def check_format(filename):
 
     if filename.endswith("data") or filename.endswith("DATA"):
         return "project"
+
+    if filename.endswith("cro") or filename.endswith("CRO"):
+        return "critic_cro"
 
     return "unknown"
