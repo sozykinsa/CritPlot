@@ -1012,7 +1012,7 @@ class MainForm(QMainWindow):
             else:
                 self.ui.openGLWidget.color_atoms_with_property()
         else:
-            self.ui.openGLWidget.color_atoms_with_charge()
+            self.ui.openGLWidget.color_atoms_with_property()
         self.ui.openGLWidget.update()
 
     def cp_property_precision_changed(self):  # pragma: no cover
@@ -1333,29 +1333,38 @@ class MainForm(QMainWindow):
                 if (len(self.history_of_atom_selection) > 2) and \
                         (self.history_of_atom_selection[-1] != self.history_of_atom_selection[-2]) \
                         and (self.history_of_atom_selection[-3] != self.history_of_atom_selection[-2]):
-                    x1 = model.atoms[self.history_of_atom_selection[-1]].x
-                    y1 = model.atoms[self.history_of_atom_selection[-1]].y
-                    z1 = model.atoms[self.history_of_atom_selection[-1]].z
+                    # x1 = model.atoms[self.history_of_atom_selection[-1]].x
+                    # y1 = model.atoms[self.history_of_atom_selection[-1]].y
+                    # z1 = model.atoms[self.history_of_atom_selection[-1]].z
 
-                    x2 = model.atoms[self.history_of_atom_selection[-2]].x
-                    y2 = model.atoms[self.history_of_atom_selection[-2]].y
-                    z2 = model.atoms[self.history_of_atom_selection[-2]].z
+                    # x2 = model.atoms[self.history_of_atom_selection[-2]].x
+                    # y2 = model.atoms[self.history_of_atom_selection[-2]].y
+                    # z2 = model.atoms[self.history_of_atom_selection[-2]].z
 
-                    x3 = model.atoms[self.history_of_atom_selection[-3]].x
-                    y3 = model.atoms[self.history_of_atom_selection[-3]].y
-                    z3 = model.atoms[self.history_of_atom_selection[-3]].z
+                    # x3 = model.atoms[self.history_of_atom_selection[-3]].x
+                    # y3 = model.atoms[self.history_of_atom_selection[-3]].y
+                    # z3 = model.atoms[self.history_of_atom_selection[-3]].z
 
-                    vx1 = x1 - x2
-                    vy1 = y1 - y2
-                    vz1 = z1 - z2
+                    # vx1 = x1 - x2
+                    # vy1 = y1 - y2
+                    # vz1 = z1 - z2
 
-                    vx2 = x3 - x2
-                    vy2 = y3 - y2
-                    vz2 = z3 - z2
+                    # vx2 = x3 - x2
+                    # vy2 = y3 - y2
+                    # vz2 = z3 - z2
 
-                    a = vx1 * vx2 + vy1 * vy2 + vz1 * vz2
-                    b = math.sqrt(vx1 * vx1 + vy1 * vy1 + vz1 * vz1)
-                    c = math.sqrt(vx2 * vx2 + vy2 * vy2 + vz2 * vz2)
+                    vec1 = model.atoms[self.history_of_atom_selection[-1]].xyz - \
+                           model.atoms[self.history_of_atom_selection[-2]].xyz
+
+                    vec2 = model.atoms[self.history_of_atom_selection[-3]].xyz - \
+                           model.atoms[self.history_of_atom_selection[-2]].xyz
+
+                    # a1 = vx1 * vx2 + vy1 * vy2 + vz1 * vz2
+                    a = np.dot(vec1, vec2)
+                    # b = math.sqrt(vx1 * vx1 + vy1 * vy1 + vz1 * vz1)
+                    b = np.linalg.norm(vec1)
+                    # c = math.sqrt(vx2 * vx2 + vy2 * vy2 + vz2 * vz2)
+                    c = np.linalg.norm(vec2)
 
                     arg = a / (b * c)
                     if math.fabs(arg) > 1:
@@ -1367,11 +1376,9 @@ class MainForm(QMainWindow):
                             str(self.history_of_atom_selection[-2] + 1) + " - " + \
                             str(self.history_of_atom_selection[-3] + 1) + " : " + \
                             str(round(math.degrees(angle), 3)) + " degrees\n"
-        print("point3")
         if selected_atom < 0:
             text += "Select any atom."
         self.ui.AtomPropertiesText.setText(text)
-        print("point4")
 
     def selected_cp_changed(self, selected_cp):
         if selected_cp >= 0:
@@ -1383,7 +1390,6 @@ class MainForm(QMainWindow):
             bond1 = cp.get_property("bond1")
             bond2 = cp.get_property("bond2")
 
-            # ind1, ind2 = model.atoms_of_bond_path(selected_cp)
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
 
@@ -1392,12 +1398,11 @@ class MainForm(QMainWindow):
                 text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = " \
                         + str(len(bond1) + len(bond2)) + " points\n"
 
-            text += str(model.bcp[selected_cp].get_property("text"))
-
             self.ui.selectedCP.setText(str(selected_cp))
-            f = model.bcp[selected_cp].get_property("title")
-            self.ui.selected_cp_title.setText(f)
-            f = model.bcp[selected_cp].get_property("field")
+
+            t = model.bcp[selected_cp].get_property("title")
+            self.ui.selected_cp_title.setText(t)
+            f = model.bcp[selected_cp].get_property("rho")
             self.ui.FormSelectedCP_f.setText(f)
             g = model.bcp[selected_cp].get_property("grad")
             self.ui.FormSelectedCP_g.setText(g)
@@ -1407,6 +1412,11 @@ class MainForm(QMainWindow):
             dist_line = round(model.atom_atom_distance(ind1, ind2), 4)
             self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
             self.ui.selectedCP_nuclei.setText(atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let + str(ind2 + 1))
+
+            for key in model.bcp[selected_cp].properties:
+                text += str(key) + ": " + str(model.bcp[selected_cp].get_property(key)) + "\n"
+
+            text += str(model.bcp[selected_cp].get_property("text"))
         else:
             text = "Select any critical point"
             self.ui.selectedCP.setText("...")

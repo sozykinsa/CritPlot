@@ -210,12 +210,11 @@ class GuiOpenGLCP(GuiOpenGLBase):
         point = self.get_point_in_3d(self.x_scene, self.y_scene)
         old_selected = self.selected_atom
         old_selected_cp = self.selected_cp
-        need_for_update = False
 
         atom_ind, atom_min_r = self.nearest_point(self.scale_factor, self.main_model.atoms, point)
         bcp_ind, bcp_min_r = self.nearest_point(self.scale_factor, self.main_model.bcp, point)
-        ccp_ind, ccp_min_r = self.nearest_point(self.scale_factor, self.main_model.ccp, point)
-        rcp_ind, rcp_min_r = self.nearest_point(self.scale_factor, self.main_model.rcp, point)
+        # ccp_ind, ccp_min_r = self.nearest_point(self.scale_factor, self.main_model.ccp, point)
+        # rcp_ind, rcp_min_r = self.nearest_point(self.scale_factor, self.main_model.rcp, point)
 
         if (bcp_min_r < 1.4) and (bcp_min_r <= atom_min_r):
             if self.selected_cp == bcp_ind:

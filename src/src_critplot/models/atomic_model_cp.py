@@ -138,11 +138,12 @@ class AtomicModelCP(AtomicModel):
 
     def add_bond_path_point(self, points):
         for cp in self.bcp:
-            dx = math.pow(cp.x - points[0].x, 2)
-            dy = math.pow(cp.y - points[0].y, 2)
-            dz = math.pow(cp.z - points[0].z, 2)
-            d = math.sqrt(dx + dy + dz)
-            if d < 1e-4:
+            # dx = math.pow(cp.x - points[0].x, 2)
+            # dy = math.pow(cp.y - points[0].y, 2)
+            # dz = math.pow(cp.z - points[0].z, 2)
+            # d = math.sqrt(dx + dy + dz)
+            distance = math.dist(cp.xyz, points[0].xyz)
+            if distance < 1e-4:
                 if cp.get_property("bond1") is None:
                     cp.set_property("bond1", deepcopy(points))
                 else:
@@ -157,35 +158,39 @@ class AtomicModelCP(AtomicModel):
         bond2 = cp.get_property("bond2")
         if bond1 is None or bond2 is None:
             return 0, 0
-        cpx1 = bond1[-1].x
-        cpy1 = bond1[-1].y
-        cpz1 = bond1[-1].z
-        cpx2 = bond2[-1].x
-        cpy2 = bond2[-1].y
-        cpz2 = bond2[-1].z
-        x1 = atoms[0].x
-        y1 = atoms[0].y
-        z1 = atoms[0].z
-        minr1 = math.sqrt((cpx1 - x1) * (cpx1 - x1) + (cpy1 - y1) * (cpy1 - y1) + (cpz1 - z1) * (cpz1 - z1))
-        minr2 = math.sqrt((cpx2 - x1) * (cpx2 - x1) + (cpy2 - y1) * (cpy2 - y1) + (cpz2 - z1) * (cpz2 - z1))
+        # cpx1 = bond1[-1].x
+        # cpy1 = bond1[-1].y
+        # cpz1 = bond1[-1].z
+        # cpx2 = bond2[-1].x
+        # cpy2 = bond2[-1].y
+        # cpz2 = bond2[-1].z
+        # x1 = atoms[0].x
+        # y1 = atoms[0].y
+        # z1 = atoms[0].z
+        # minr1 = math.sqrt((cpx1 - x1) * (cpx1 - x1) + (cpy1 - y1) * (cpy1 - y1) + (cpz1 - z1) * (cpz1 - z1))
+        # minr2 = math.sqrt((cpx2 - x1) * (cpx2 - x1) + (cpy2 - y1) * (cpy2 - y1) + (cpz2 - z1) * (cpz2 - z1))
+        minr1 = math.dist(bond1[-1].xyz, atoms[0].xyz)
+        minr2 = math.dist(bond2[-1].xyz, atoms[0].xyz)
         ind1 = 0
         ind2 = 0
         for i in range(0, len(atoms)):
-            x1 = atoms[i].x
-            y1 = atoms[i].y
-            z1 = atoms[i].z
+            # x1 = atoms[i].x
+            # y1 = atoms[i].y
+            # z1 = atoms[i].z
 
-            dx1 = cpx1 - x1
-            dx2 = cpx2 - x1
+            # dx1 = cpx1 - x1
+            # dx2 = cpx2 - x1
 
-            dy1 = cpy1 - y1
-            dy2 = cpy2 - y1
+            # dy1 = cpy1 - y1
+            # dy2 = cpy2 - y1
 
-            dz1 = cpz1 - z1
-            dz2 = cpz2 - z1
+            # dz1 = cpz1 - z1
+            # dz2 = cpz2 - z1
 
-            d1 = math.sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1)
-            d2 = math.sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2)
+            # d1 = math.sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1)
+            # d2 = math.sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2)
+            d1 = math.dist(bond1[-1].xyz, atoms[i].xyz)
+            d2 = math.dist(bond2[-1].xyz, atoms[i].xyz)
 
             if d1 < minr1:
                 minr1 = d1

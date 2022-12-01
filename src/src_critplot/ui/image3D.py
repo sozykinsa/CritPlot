@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from qtbased.guiopengl_cp import GuiOpenGLCP
+from srs_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
 
 
 class Ui_MainWindow(object):

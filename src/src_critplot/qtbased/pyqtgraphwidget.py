@@ -9,7 +9,7 @@ from PySide2.QtGui import QFont
 import pyqtgraph as pg  # pip install pyqtgraph
 import numpy as np
 from typing import List
-from src.src_critplot.qtbased.pyqtgraphwidget_core import PyqtGraphWidgetCore
+from src_critplot.qtbased.pyqtgraphwidget_core import PyqtGraphWidgetCore
 
 
 class PyqtGraphWidget(PyqtGraphWidgetCore):

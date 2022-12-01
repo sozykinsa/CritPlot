@@ -8,10 +8,10 @@ def test_critic2_section(critplot_application, tests_path):
     window.menu_open(f_name)
     model = window.models[-1]
     assert len(model.bcp) == 5
-    assert "field" not in model.bcp[0].properties
+    assert "rho" not in model.bcp[0].properties
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     parse_cp_properties(f_name, model)
-    assert float(model.bcp[0].properties["field"]) == pytest.approx(1.68288239)
+    assert float(model.bcp[0].properties["rho"]) == pytest.approx(1.68288239)
     window.add_cp_to_list()
     assert window.ui.FormCPlist.count() == 0
     window.selected_cp_changed(1)

@@ -38,51 +38,89 @@ def structure_from_cro_file(filename):
         f.readline()
         f.readline()
         str1 = f.readline()
-        nucleus = []
-        nnattr = []
-        bond = []
-        ring = []
-        cage = []
+        crit_points = []
         while len(str1) > 5:
-            data1 = str1.split(")")
-            data = data1[1].split()
             """
             ncp   pg  type   CPname         position (cryst. coords.)       mult  name            f             |grad|           lap
             1    C1  (3,-3) nucleus   0.41201875   0.19237040   0.32843532    1     H_      4.02547716E+00  0.00000000E+00 -1.04730465E+02
             """
-            if data[0] == "nucleus":
-                nucleus.append(data)
-                let = data[5].replace("_", "")
-                charge = period_table.get_charge_by_letter(let)
-                model.add_atom(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
-
-            if data[0] == "nnattr":
-                nnattr.append(data)
-            if data[0] == "bond":
-                bond.append(data)
-                let = "xb"
-                charge = period_table.get_charge_by_letter(let)
-                model.add_critical_point_bond(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
-            if data[0] == "ring":
-                ring.append(data)
-                let = "Cu"
-                charge = period_table.get_charge_by_letter(let)
-                model.add_critical_point_ring(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
-            if data[0] == "cage":
-                cage.append(data)
-                let = "Al"
-                charge = period_table.get_charge_by_letter(let)
-                model.add_critical_point_cage(Atom([float(data[1]), float(data[2]), float(data[3]), let, charge]))
-            if not ((data[0] == "nucleus") or (data[0] == "bond") or (data[0] == "ring") or (data[0] == "cage")):
-                print("---: ", data[3], "  --  ", str1)
+            data1 = str1.split(")")
+            data2 = data1[0].split("(")
+            data = data1[1].split()
+            row = data2[0].split()
+            row.append(data2[1])
+            row += data
+            crit_points.append(row)
             str1 = f.readline()
 
         while str1.find("* Complete CP list, bcp and rcp connectivity table") < 0:
             str1 = f.readline()
 
         f.readline()
+        f.readline()
+        str1 = f.readline()
+        while len(str1) > 5:
+            data = str1.split()
+            number = int(data[1]) - 1
+            """
+            #cp  ncp   typ        position (cryst. coords.)            end1 (lvec)      end2 (lvec)
+            1      1    n   0.67394965    0.51875056    0.41176494  
+            115    37   b   0.61261657    0.49723994    0.38722411  101  ( 0  0  0 )  76  ( 0  0  0 )
+            347    108  r   0.51856128    0.51875294    0.44655967  359  ( 0  0  0 ) 359  ( 0  0  0 )
+            362    116  c   0.51852061    0.51875000    0.63729618
+            """
+            x, y, z = float(data[3]), float(data[4]), float(data[5])
+            crit_info = crit_points[number]
+            if crit_info[3] == "nucleus":
+                let = crit_info[8].replace("_", "")
+                title = let + data[0]
+                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                model.add_atom(new_atom)
+                # print(crit_points[number])
+
+            if crit_info[3] == "nnattr":
+                pass
+
+            if crit_info[3] == "bond":
+                let = "xb"
+                title = let + data[0]
+                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                new_atom.set_property("atom1", int(data[6]))
+                new_atom.set_property("atom2", int(data[12]))
+                translation1 = int(data[8]) * model.lat_vector1 + int(data[9]) * model.lat_vector2 + \
+                               int(data[10]) * model.lat_vector3
+                translation2 = int(data[14]) * model.lat_vector1 + int(data[15]) * model.lat_vector2 + \
+                               int(data[16]) * model.lat_vector3
+                new_atom.set_property("atom1_translation", translation1)
+                new_atom.set_property("atom2_translation", translation2)
+                model.add_critical_point_bond(new_atom)
+                # print(crit_info)
+                # print(data)
+            if crit_info[3] == "ring":
+                let = "xr"
+                title = let + data[0]
+                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                model.add_critical_point_ring(new_atom)
+            if crit_info[3] == "cage":
+                let = "xc"
+                title = let + data[0]
+                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                model.add_critical_point_cage(new_atom)
+            str1 = f.readline()
+
+        f.readline()
         model.convert_from_direct_to_cart()
     return [model]
+
+
+def init_crit_point(crit_info, let, period_table, title, x, y, z):
+    charge = period_table.get_charge_by_letter(let)
+    new_atom = Atom([x, y, z, let, charge])
+    new_atom.set_property("title", title)
+    new_atom.set_property("rho", crit_info[9])
+    new_atom.set_property("grad", crit_info[10])
+    new_atom.set_property("lap", crit_info[11])
+    return new_atom
 
 
 def parse_cp_properties(filename, model):
@@ -93,72 +131,70 @@ def parse_cp_properties(filename, model):
     lat_vect_1, lat_vect_2, lat_vect_3 = helpers.lat_vectors_from_params(box_ang[0], box_ang[1], box_ang[2],
                                                                          al, be, ga)
     model.set_lat_vectors(lat_vect_1, lat_vect_2, lat_vect_3)
-    k = 0
+    # k = 0
     for cp in model.bcp:
         for cp1 in cps:
-            d1 = (cp.x - cp1[1]) ** 2
-            d2 = (cp.y - cp1[2]) ** 2
-            d3 = (cp.z - cp1[3]) ** 2
-            if math.sqrt(d1 + d2 + d3) < 1e-5:
+            distance = math.dist(cp.xyz, np.array(cp1[1:4]))
+            if distance < 1e-5:
                 cp.set_property("title", "b" + cp1[8])
-                cp.set_property("field", cp1[4])
+                cp.set_property("rho", cp1[4])
                 cp.set_property("grad", cp1[5])
                 cp.set_property("lap", cp1[6])
                 cp.set_property("text", cp1[7])
-                k += 1
+                # k += 1
 
 
 def atoms_from_xyz(filename):
     """Import from *.xyz file."""
     molecules = []
     if os.path.exists(filename):
-            f = open(filename)
-            number_of_atoms = int(math.fabs(int(f.readline())))
-            new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f)
-            critic_data = {"xn", "xr", "xb", "xc", "xz"}
-            fl = False
+        f = open(filename)
+        number_of_atoms = int(math.fabs(int(f.readline())))
+        new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f)
+        critic_data = {"xn", "xr", "xb", "xc", "xz"}
+        fl = False
+        for atom in new_model.atoms:
+            if atom.let.lower() in critic_data:
+                fl = True
+        if fl:
+            new_model2 = AtomicModelCP()
+            xz_points = []
+
             for atom in new_model.atoms:
-                if atom.let.lower() in critic_data:
-                    fl = True
-            if fl:
-                    new_model2 = AtomicModelCP()
-                    xz_points = []
+                if atom.let.lower() not in critic_data:
+                    new_model2.add_atom(atom)
+                if atom.let.lower() == "xb":
+                    new_model2.add_critical_point_bond(atom)
+                if atom.let.lower() == "xz":
+                    xz_points.append(atom)
 
-                    for atom in new_model.atoms:
-                        if atom.let.lower() not in critic_data:
-                            new_model2.add_atom(atom)
-                        if atom.let.lower() == "xb":
-                            new_model2.add_critical_point_bond(atom)
-                        if atom.let.lower() == "xz":
-                            xz_points.append(atom)
+            points = []
 
-                    points = []
+            for i in range(0, len(xz_points)):
+                if len(points) == 0:
+                    points.append(xz_points[i])
+                else:
+                    px = points[-1].x
+                    py = points[-1].y
+                    pz = points[-1].z
 
-                    for i in range(0, len(xz_points)):
-                        if len(points) == 0:
-                            points.append(xz_points[i])
-                        else:
-                            px = points[-1].x
-                            py = points[-1].y
-                            pz = points[-1].z
+                    nx = xz_points[i].x
+                    ny = xz_points[i].y
+                    nz = xz_points[i].z
 
-                            nx = xz_points[i].x
-                            ny = xz_points[i].y
-                            nz = xz_points[i].z
+                    d = math.sqrt((px - nx) * (px - nx) + (py - ny) * (py - ny) + (pz - nz) * (pz - nz))
 
-                            d = math.sqrt((px - nx) * (px - nx) + (py - ny) * (py - ny) + (pz - nz) * (pz - nz))
-
-                            if d < 0.09:
-                                points.append(xz_points[i])
-                            else:
-                                new_model2.add_bond_path_point(points)
-                                points = [xz_points[i]]
-
-                    if len(points) > 0:
+                    if d < 0.09:
+                        points.append(xz_points[i])
+                    else:
                         new_model2.add_bond_path_point(points)
+                        points = [xz_points[i]]
 
-                    new_model2.bond_path_points_optimize()
-                    new_model = new_model2
+            if len(points) > 0:
+                new_model2.add_bond_path_point(points)
+
+            new_model2.bond_path_points_optimize()
+            new_model = new_model2
     molecules.append(new_model)
     return molecules
 
