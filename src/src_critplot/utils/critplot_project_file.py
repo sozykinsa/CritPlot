@@ -8,7 +8,7 @@ class CritPlotProjectFile(GUI4dftProjectFile):
     def project_file_writer(model):
         text = GUI4dftProjectFile.project_file_writer(model)
         try:
-            bcp = model.bcp
+            bcp = model.cps
             text += "%bond critical points\n"
             for point in bcp:
                 text += point.to_string() + "\n"

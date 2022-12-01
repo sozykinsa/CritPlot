@@ -12,21 +12,21 @@ def test_open_xyz_critic_file(tests_path):
 def test_create_critic2_xyz_file(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
     model = Importer.import_from_file(f_name)
-    assert len(model[0].bcp) == 5
-    text = create_critic2_xyz_file(model[0].bcp, (model[0].bcp[1], model[0].bcp[2]), True, model[0])
+    assert len(model[0].cps) == 5
+    text = create_critic2_xyz_file(model[0].cps, (model[0].cps[1], model[0].cps[2]), True, model[0])
     assert len(text) == 3739
-    text = create_critic2_xyz_file(model[0].bcp, (model[0].bcp[1], model[0].bcp[2]), False, model[0])
+    text = create_critic2_xyz_file(model[0].cps, (model[0].cps[1], model[0].cps[2]), False, model[0])
     assert len(text) == 8375
 
 
 def test_atoms_of_bond_path(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
     model = Importer.import_from_file(f_name)
-    atom1, atom2 = AtomicModelCP.atoms_of_bond_path(model[0].atoms, model[0].bcp[1])
+    atom1, atom2 = AtomicModelCP.atoms_of_bond_path(model[0].atoms, model[0].cps[1])
     assert atom1 == 2
     assert atom2 == 2
 
-    atom1, atom2 = AtomicModelCP.atoms_of_bond_path(model[0].atoms, model[0].bcp[2])
+    atom1, atom2 = AtomicModelCP.atoms_of_bond_path(model[0].atoms, model[0].cps[2])
     assert atom1 == 1
     assert atom2 == 1
 

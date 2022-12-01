@@ -91,7 +91,7 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 let = "xb"
                 cp, row = parse_cp_point(file1, let, text, title)
                 add_associated_atoms(cp, model, row1)
-                model.add_critical_point_bond(cp)
+                model.add_critical_point(cp)
             elif data == "(3,-3)":
                 """
                 CP N.      9
@@ -107,13 +107,9 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 # print("nucleus (3,-3) ----->")
                 text = "Type : (3,-3)\n"
                 title = "A" + title
-                let = "H"
+                let = "A"
                 cp, row = parse_cp_point(file1, let, text, title)
-
-                for atom in model.atoms:
-                    distance = math.dist(atom.xyz, np.array(cp.xyz))
-                    if distance < 1e-5:
-                        atom.properties = cp.properties
+                model.add_critical_point(cp)
                 # print(data)
             elif data == "(3,+1)":
                 """ CP TYPE                        :  (3,+1) """
@@ -136,12 +132,17 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 let = "xr"
                 cp, row = parse_cp_point(file1, let, text, title)
                 add_associated_atoms(cp, model, row1)
-                model.add_critical_point_ring(cp)
-                # print(data)
+                model.add_critical_point(cp)
             elif data == "(3,+3)":
                 """ CP TYPE                        :  (3,+3) """
-                print("cage (3,+3) ----->")
-                print(data)
+                # print("cage (3,+3) ----->")
+                text = "Type : (3,+3)\n"
+                title = "c" + title
+                let = "xc"
+                cp, row = parse_cp_point(file1, let, text, title)
+                add_associated_atoms(cp, model, row1)
+                model.add_critical_point(cp)
+                # print(data)
             else:
                 print("else")
                 print(row)
@@ -152,56 +153,62 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 """ correction """
                 n_cp = int(helpers.spacedel(row.split("NUMBER OF UNIQUE CRI. POINT FOUND:")[1]))
                 # print("n_cp: ", n_cp)
+                row = file1.readline()
+                while len(row) < 10:
+                    row = file1.readline()
+                row = file1.readline()
+                while len(row) < 10:
+                    row = file1.readline()
+                """CP N.  X(AU)   Y(AU)   Z(AU)   TYPE      RHO    LAPL   L1(V1) L2(V2) L3(V3) ELLIP"""
                 while row.find("*************************************") < 0:
                     row = file1.readline()
                 for i in range(n_cp):
                     row = file1.readline()
-                    data = row.split(')')
-                    n = int(data[0])
-                    t = data[1].split(',')[1]
-                    if t == '-1':
-                        file1.readline()
+                    row1 = file1.readline()
+                    if len(row1) < 4:
                         row1 = file1.readline().split()
-                        # print(row1)
                         row2 = file1.readline().split()
+                        # print("1---> ", row1)
+                        # print("2---> ", row2)
                         b_len = round((float(row1[6]) + float(row2[6])) * 0.52917720859, 4)
 
-                        for cp in model.bcp:
-                            if cp.get_property("title") == "b" + str(n):
-                                atom1_old = cp.get_property("atom1")
-                                atom2_old = cp.get_property("atom2")
-                                atom1 = int(row1[2])
-                                atom2 = int(row2[2])
-                                correction = "-"
-                                text_new = cp.get_property("text")
-                                f1 = (atom1_old == atom1 - 1) and (atom2_old == atom2 - 1)
-                                if not (f1 or (atom1_old == atom2 - 1) and (atom2_old == atom1 - 1)):
-                                    cp.set_property("atom1", atom1 - 1)
-                                    cp.set_property("atom2", atom2 - 1)
-                                    let1 = model.atoms[atom1_old].let
-                                    let2 = model.atoms[atom2_old].let
-                                    dist_line = round(model.atom_atom_distance(atom1_old, atom2_old), 4)
-                                    let1n = model.atoms[atom1 - 1].let
-                                    let2n = model.atoms[atom2 - 1].let
-                                    correction = "(" + let1 + str(atom1_old + 1) + "-" + let2 + str(atom2_old + 1) + \
-                                                 ")r=" + str(dist_line) + "->(" + let1n + str(atom1) + "-" + let2n + \
-                                                 str(atom2) + ")" + "r=" + str(b_len)
-                                text_new += "\ncorrections : " + correction
-                                cp.set_property("text", text_new)
+                        cp = model.cps[i]
+                        atom1_old = cp.get_property("atom1")
+                        atom2_old = cp.get_property("atom2")
+                        atom1 = int(row1[2])
+                        atom2 = int(row2[2])
+                        correction = "-"
+                        text_new = cp.get_property("text")
+                        f1 = (atom1_old == atom1 - 1) and (atom2_old == atom2 - 1)
+                        if not (f1 or (atom1_old == atom2 - 1) and (atom2_old == atom1 - 1)):
+                            cp.set_property("atom1", atom1 - 1)
+                            cp.set_property("atom2", atom2 - 1)
+                            let1 = model.atoms[atom1_old].let
+                            let2 = model.atoms[atom2_old].let
+                            dist_line = round(model.atom_atom_distance(atom1_old, atom2_old), 4)
+                            let1n = model.atoms[atom1 - 1].let
+                            let2n = model.atoms[atom2 - 1].let
+                            correction = "(" + let1 + str(atom1_old + 1) + "-" + let2 + str(atom2_old + 1) + ")r=" + \
+                                         str(dist_line) + "->(" + let1n + str(atom1) + "-" + let2n + str(atom2) + ")" +\
+                                         "r=" + str(b_len)
+                        text_new += "\ncorrections : " + correction
+                        cp.set_property("text", text_new)
                         for j in range(3):
                             file1.readline()
-                    if (t == '-3') or (t == '+1') or (t == '+3'):
-                        for j in range(5):
-                            file1.readline()
+                    else:
+                        for j in range(4):
+                            row = file1.readline()
                 row = ""
-        for cp in model.bcp:
+        # print("cp -path test")
+        for cp in model.cps:
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
-            p1 = Atom([*model.atoms[ind1].xyz, "xz", 1])
-            p2 = Atom([*cp.xyz, "xz", 1])
-            p3 = Atom([*model.atoms[ind2].xyz, "xz", 1])
-            model.add_bond_path_point([p2, p1])
-            model.add_bond_path_point([p2, p3])
+            if (ind1 is not None) and (ind2 is not None):
+                p1 = Atom([*model.atoms[ind1].xyz, "xz", 1])
+                p2 = Atom([*cp.xyz, "xz", 1])
+                p3 = Atom([*model.atoms[ind2].xyz, "xz", 1])
+                model.add_bond_path_point([p2, p1])
+                model.add_bond_path_point([p2, p3])
         model.bond_path_points_optimize()
 
 

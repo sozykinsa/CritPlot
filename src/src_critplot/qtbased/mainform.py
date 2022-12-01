@@ -996,7 +996,7 @@ class MainForm(QMainWindow):
                 atom_prop_type.appendRow(QStandardItem(str(key)))
             self.ui.PropertyForColorOfAtom.setModel(atom_prop_type)
         if self.ui.openGLWidget.main_model.n_bcp() > 0:
-            bcp = self.ui.openGLWidget.main_model.bcp[0]
+            bcp = self.ui.openGLWidget.main_model.cps[0]
             bcp_prop_type = QStandardItemModel()
             standart_prop = ["bond1", "bond2", "bond1opt", "bond2opt", "atom1", "atom2"]
             for key in bcp.properties:
@@ -1384,7 +1384,7 @@ class MainForm(QMainWindow):
         if selected_cp >= 0:
             model = self.models[self.active_model]
             text = "Selected critical point: " + str(selected_cp + 1) + " ("
-            cp = model.bcp[selected_cp]
+            cp = model.cps[selected_cp]
             atoms = model.atoms
 
             bond1 = cp.get_property("bond1")
@@ -1400,23 +1400,23 @@ class MainForm(QMainWindow):
 
             self.ui.selectedCP.setText(str(selected_cp))
 
-            t = model.bcp[selected_cp].get_property("title")
+            t = model.cps[selected_cp].get_property("title")
             self.ui.selected_cp_title.setText(t)
-            f = model.bcp[selected_cp].get_property("rho")
+            f = model.cps[selected_cp].get_property("rho")
             self.ui.FormSelectedCP_f.setText(f)
-            g = model.bcp[selected_cp].get_property("grad")
+            g = model.cps[selected_cp].get_property("grad")
             self.ui.FormSelectedCP_g.setText(g)
-            lap = model.bcp[selected_cp].get_property("lap")
+            lap = model.cps[selected_cp].get_property("lap")
             self.ui.FormSelectedCP_lap.setText(lap)
 
             dist_line = round(model.atom_atom_distance(ind1, ind2), 4)
             self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
             self.ui.selectedCP_nuclei.setText(atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let + str(ind2 + 1))
 
-            for key in model.bcp[selected_cp].properties:
-                text += str(key) + ": " + str(model.bcp[selected_cp].get_property(key)) + "\n"
+            for key in model.cps[selected_cp].properties:
+                text += str(key) + ": " + str(model.cps[selected_cp].get_property(key)) + "\n"
 
-            text += str(model.bcp[selected_cp].get_property("text"))
+            text += str(model.cps[selected_cp].get_property("text"))
         else:
             text = "Select any critical point"
             self.ui.selectedCP.setText("...")
@@ -1502,19 +1502,19 @@ class MainForm(QMainWindow):
 
     def leave_cp_in_model(self):
         model = self.models[self.active_model]
-        model.bcp = self.selected_cp()
+        model.cps = self.selected_cp()
         self.ui.openGLWidget.selected_cp = -1
         self.ui.FormCPlist.clear()
         self.plot_model(self.active_model)
 
     @staticmethod
     def remove_cp_from_model(model, crit_points):
-        bcp = deepcopy(model.bcp)
+        bcp = deepcopy(model.cps)
         for b in crit_points:
             for cp in bcp:
                 if cp.to_string() == b.to_string():
                     bcp.remove(cp)
-        model.bcp = bcp
+        model.cps = bcp
 
     def selected_cp(self):
         bcp_selected = []
@@ -1522,7 +1522,7 @@ class MainForm(QMainWindow):
             model = self.models[self.active_model]
             for i in range(0, self.ui.FormCPlist.count()):
                 ind = int(self.ui.FormCPlist.item(i).text())
-                bcp_selected.append(model.bcp[ind])
+                bcp_selected.append(model.cps[ind])
         return bcp_selected
 
     def create_critic2_xyz_file(self):  # pragma: no cover
@@ -1531,7 +1531,7 @@ class MainForm(QMainWindow):
         f_name = self.get_file_name_from_save_dialog(format_str)
         if f_name:
             model = self.models[self.active_model]
-            bcp = deepcopy(model.bcp)
+            bcp = deepcopy(model.cps)
             bcp_selected = self.selected_cp()
             is_with_selected = self.ui.radio_with_cp.isChecked()
             text = critic2.create_critic2_xyz_file(bcp, bcp_selected, is_with_selected, model)
@@ -1550,7 +1550,7 @@ class MainForm(QMainWindow):
                     ind = int(self.ui.FormCPlist.item(i).text())
                     cp_list.append(ind)
             elif self.ui.form_critic_all.isChecked():
-                cp_list = range(len(model.bcp))
+                cp_list = range(len(model.cps))
             else:
                 print("TODO: all from file")
             text = critic2.create_csv_file_cp(cp_list, model)
@@ -1587,7 +1587,7 @@ class MainForm(QMainWindow):
 
             cp_list = []
             if self.ui.form_critic_all_cp.isChecked():
-                cp_list = range(len(model.bcp))
+                cp_list = range(len(model.cps))
             else:
                 for i in range(0, self.ui.FormCPlist.count()):
                     ind = int(self.ui.FormCPlist.item(i).text())

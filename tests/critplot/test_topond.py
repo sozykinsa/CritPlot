@@ -16,8 +16,8 @@ def test_get_cell(tests_path):
     assert np.array(cell[0]) == pytest.approx(np.array([3.57945, 2.34575, 0.00000]))
 
 
-#def test_atomic_data_from_output(tests_path):
-#    f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
-#    models = atomic_data_from_output(f_name)
-#    pos = models[0].get_positions()
-#    assert len(pos) == 4
+def test_atomic_data_from_output(tests_path):
+    f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
+    models = atomic_data_from_output(f_name)
+    pos = models[0].get_positions()
+    assert len(pos) == 4

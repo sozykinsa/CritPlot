@@ -93,19 +93,19 @@ def structure_from_cro_file(filename):
                                int(data[16]) * model.lat_vector3
                 new_atom.set_property("atom1_translation", translation1)
                 new_atom.set_property("atom2_translation", translation2)
-                model.add_critical_point_bond(new_atom)
+                model.add_critical_point(new_atom)
                 # print(crit_info)
                 # print(data)
             if crit_info[3] == "ring":
                 let = "xr"
                 title = let + data[0]
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
-                model.add_critical_point_ring(new_atom)
+                model.add_critical_point(new_atom)
             if crit_info[3] == "cage":
                 let = "xc"
                 title = let + data[0]
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
-                model.add_critical_point_cage(new_atom)
+                model.add_critical_point(new_atom)
             str1 = f.readline()
 
         f.readline()
@@ -132,7 +132,7 @@ def parse_cp_properties(filename, model):
                                                                          al, be, ga)
     model.set_lat_vectors(lat_vect_1, lat_vect_2, lat_vect_3)
     # k = 0
-    for cp in model.bcp:
+    for cp in model.cps:
         for cp1 in cps:
             distance = math.dist(cp.xyz, np.array(cp1[1:4]))
             if distance < 1e-5:
@@ -164,7 +164,7 @@ def atoms_from_xyz(filename):
                 if atom.let.lower() not in critic_data:
                     new_model2.add_atom(atom)
                 if atom.let.lower() == "xb":
-                    new_model2.add_critical_point_bond(atom)
+                    new_model2.add_critical_point(atom)
                 if atom.let.lower() == "xz":
                     xz_points.append(atom)
 
@@ -174,16 +174,7 @@ def atoms_from_xyz(filename):
                 if len(points) == 0:
                     points.append(xz_points[i])
                 else:
-                    px = points[-1].x
-                    py = points[-1].y
-                    pz = points[-1].z
-
-                    nx = xz_points[i].x
-                    ny = xz_points[i].y
-                    nz = xz_points[i].z
-
-                    d = math.sqrt((px - nx) * (px - nx) + (py - ny) * (py - ny) + (pz - nz) * (pz - nz))
-
+                    d = math.dist(points[-1].xyz, xz_points[i].xyz)
                     if d < 0.09:
                         points.append(xz_points[i])
                     else:
@@ -308,7 +299,7 @@ def create_cri_file(cp_list, extra_points, is_form_bp, model, text_prop):
     textl += "REFERENCE 1\n"
 
     for ind in cp_list:
-        cp = model.bcp[ind]
+        cp = model.cps[ind]
         text += "Bond Critical Point: " + str(ind) + "  :  "
         ind1 = cp.get_property("atom1")
         ind2 = cp.get_property("atom2")
