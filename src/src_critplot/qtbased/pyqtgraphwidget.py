@@ -4,12 +4,10 @@
 # ------------------------------------------------------
 # https://www.pythonguis.com/tutorials/pyside-plotting-pyqtgraph/
 
-from PySide2.QtWidgets import QWidget, QVBoxLayout
-from PySide2.QtGui import QFont
 import pyqtgraph as pg  # pip install pyqtgraph
 import numpy as np
 from typing import List
-from src_critplot.qtbased.pyqtgraphwidget_core import PyqtGraphWidgetCore
+from core_gui_atomistic.pyqtgraphwidget_core import PyqtGraphWidgetCore
 
 
 class PyqtGraphWidget(PyqtGraphWidgetCore):
