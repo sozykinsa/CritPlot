@@ -5,7 +5,7 @@ import math
 import numpy as np
 from copy import deepcopy
 from numpy.linalg import inv
-from core_gui_atomistic.atom import Atom
+from src_critplot.models.atom_cp import AtomCp as Atom
 from core_gui_atomistic.atomic_model import AtomicModel
 from core_gui_atomistic import helpers
 
@@ -17,26 +17,23 @@ class AtomicModelCP(AtomicModel):
 
     def bond_path_points_optimize(self):
         i = 0
-
         while i < len(self.cps):
-            bond1 = self.cps[i].get_property("bond1")
-            bond2 = self.cps[i].get_property("bond2")
-            if (bond1 is None) or (bond2 is None):
-                self.cps.pop(i)
-                i -= 1
-            else:
-                if (bond1[-1].x == bond2[-1].x) and (bond1[-1].y == bond2[-1].y) and (bond1[-1].z == bond2[-1].z):
-                    self.cps.pop(i)
+            if self.cps[i].let == "xb":
+                bond1 = self.cps[i].bonds.get("bond1")
+                bond2 = self.cps[i].bonds.get("bond2")
+                if (bond1 is None) or (bond2 is None):
                     i -= 1
+                else:
+                    if (bond1[-1].x == bond2[-1].x) and (bond1[-1].y == bond2[-1].y) and (bond1[-1].z == bond2[-1].z):
+                        self.cps.pop(i)
+                        i -= 1
+                self.critical_path_simplifier("bond1", self.cps[i])
+                self.critical_path_simplifier("bond2", self.cps[i])
             i += 1
-
-        for cp in self.cps:
-            self.critical_path_simplifier("bond1", cp)
-            self.critical_path_simplifier("bond2", cp)
 
     @staticmethod
     def critical_path_simplifier(b, cp):
-        bond = deepcopy(cp.get_property(b))
+        bond = deepcopy(cp.bonds.get(b))
         if bond is None:
             return
         i = 2
@@ -48,7 +45,7 @@ class AtomicModelCP(AtomicModel):
             if (math.fabs(m - j) < 1e-6) and (math.fabs(m - k) < 1e-6):
                 bond.pop(i - 2)
                 i -= 1
-        cp.set_property(b + "opt", bond)
+        cp.bonds[b + "opt"] = bond
 
     def move(self, l_x, l_y, l_z):
         """Move model by the vector."""
@@ -57,10 +54,10 @@ class AtomicModelCP(AtomicModel):
 
         for cp in self.cps:
             cp.xyz += dl
-            self.move_bond_path(dl, cp.get_property("bond1"))
-            self.move_bond_path(dl, cp.get_property("bond2"))
-            self.move_bond_path(dl, cp.get_property("bond1opt"))
-            self.move_bond_path(dl, cp.get_property("bond2opt"))
+            self.move_bond_path(dl, cp.bonds.get("bond1"))
+            self.move_bond_path(dl, cp.bonds.get("bond2"))
+            self.move_bond_path(dl, cp.bonds.get("bond1opt"))
+            self.move_bond_path(dl, cp.bonds.get("bond2opt"))
         return self.atoms
 
     @staticmethod
@@ -72,16 +69,14 @@ class AtomicModelCP(AtomicModel):
     def go_to_positive_coordinates_translate(self):
         self.go_to_positive_array_translate(self.atoms)
         self.go_to_positive_array_translate(self.cps)
-        self.go_to_positive_array_translate(self.rcp)
-        self.go_to_positive_array_translate(self.ccp)
         self.bond_path_opt_update()
 
     def bond_path_opt_update(self):
         for i in range(len(self.cps)):
-            self.cps[i].properties.pop("bond1")
-            self.cps[i].properties.pop("bond2")
-            self.cps[i].properties.pop("bond1opt")
-            self.cps[i].properties.pop("bond2opt")
+            self.cps[i].bonds.pop("bond1")
+            self.cps[i].bonds.pop("bond2")
+            self.cps[i].bonds.pop("bond1opt")
+            self.cps[i].bonds.pop("bond2opt")
 
             ind1 = self.cps[i].get_property("atom1")
             ind2 = self.cps[i].get_property("atom2")
@@ -100,8 +95,6 @@ class AtomicModelCP(AtomicModel):
         a_inv = inv(self.lat_vectors)
         self.move_object_to_cell(self.atoms, a_inv)
         self.move_object_to_cell(self.cps, a_inv)
-        self.move_object_to_cell(self.rcp, a_inv)
-        self.move_object_to_cell(self.ccp, a_inv)
 
     def go_to_positive_coordinates(self):
         xm = self.minX()
@@ -122,35 +115,15 @@ class AtomicModelCP(AtomicModel):
         for cp in self.cps:
             distance = math.dist(cp.xyz, points[0].xyz)
             if distance < 1e-4:
-                if cp.get_property("bond1") is None:
-                    cp.set_property("bond1", deepcopy(points))
+                if cp.bonds.get("bond1") is None:
+                    cp.bonds["bond1"] = deepcopy(points)
                 else:
-                    cp.set_property("bond2", deepcopy(points))
-                    ind1, ind2 = self.atoms_of_bond_path(self.atoms, self.cps[self.cps.index(cp)])
-                    cp.set_property("atom1", ind1)
-                    cp.set_property("atom2", ind2)
+                    cp.bonds["bond2"] = deepcopy(points)
 
     @staticmethod
-    def atoms_of_bond_path(atoms, cp):
-        bond1 = cp.get_property("bond1")
-        bond2 = cp.get_property("bond2")
-        if bond1 is None or bond2 is None:
-            return 0, 0
-        minr1 = math.dist(bond1[-1].xyz, atoms[0].xyz)
-        minr2 = math.dist(bond2[-1].xyz, atoms[0].xyz)
-        ind1 = 0
-        ind2 = 0
-        for i in range(0, len(atoms)):
-            d1 = math.dist(bond1[-1].xyz, atoms[i].xyz)
-            d2 = math.dist(bond2[-1].xyz, atoms[i].xyz)
-
-            if d1 < minr1:
-                minr1 = d1
-                ind1 = i
-
-            if d2 < minr2:
-                minr2 = d2
-                ind2 = i
+    def atoms_of_bond_path(cp):
+        ind1 = cp.get_property("atom1")
+        ind2 = cp.get_property("atom2")
         return ind1, ind2
 
     def create_csv_file_cp(self, cp_list, delimiter: str = ";"):

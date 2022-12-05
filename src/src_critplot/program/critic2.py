@@ -3,7 +3,7 @@ import os
 import math
 import numpy as np
 from core_gui_atomistic import helpers
-from core_gui_atomistic.atom import Atom
+from src_critplot.models.atom_cp import AtomCp as Atom
 from core_gui_atomistic.periodic_table import TPeriodTable
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
@@ -60,6 +60,8 @@ def structure_from_cro_file(filename):
         f.readline()
         str1 = f.readline()
         while len(str1) > 5:
+            str1 = str1.replace("(", "")
+            str1 = str1.replace(")", "")
             data = str1.split()
             number = int(data[1]) - 1
             """
@@ -86,11 +88,11 @@ def structure_from_cro_file(filename):
                 title = let + data[0]
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 new_atom.set_property("atom1", int(data[6]))
-                new_atom.set_property("atom2", int(data[12]))
-                translation1 = int(data[8]) * model.lat_vector1 + int(data[9]) * model.lat_vector2 + \
-                               int(data[10]) * model.lat_vector3
-                translation2 = int(data[14]) * model.lat_vector1 + int(data[15]) * model.lat_vector2 + \
-                               int(data[16]) * model.lat_vector3
+                new_atom.set_property("atom2", int(data[10]))
+                translation1 = int(data[7]) * model.lat_vector1 + int(data[8]) * model.lat_vector2 + \
+                               int(data[9]) * model.lat_vector3
+                translation2 = int(data[11]) * model.lat_vector1 + int(data[12]) * model.lat_vector2 + \
+                               int(data[13]) * model.lat_vector3
                 new_atom.set_property("atom1_translation", translation1)
                 new_atom.set_property("atom2_translation", translation2)
                 model.add_critical_point(new_atom)
@@ -124,68 +126,37 @@ def init_crit_point(crit_info, let, period_table, title, x, y, z):
 
 
 def parse_cp_properties(filename, model):
-    box_bohr, box_ang, box_deg, cps = check_cro_file(filename)
-    al = math.radians(box_deg[0])
-    be = math.radians(box_deg[1])
-    ga = math.radians(box_deg[2])
-    lat_vect_1, lat_vect_2, lat_vect_3 = helpers.lat_vectors_from_params(box_ang[0], box_ang[1], box_ang[2],
-                                                                         al, be, ga)
-    model.set_lat_vectors(lat_vect_1, lat_vect_2, lat_vect_3)
-    # k = 0
-    for cp in model.cps:
-        for cp1 in cps:
-            distance = math.dist(cp.xyz, np.array(cp1[1:4]))
-            if distance < 1e-5:
-                cp.set_property("title", "b" + cp1[8])
-                cp.set_property("rho", cp1[4])
-                cp.set_property("grad", cp1[5])
-                cp.set_property("lap", cp1[6])
-                cp.set_property("text", cp1[7])
-                # k += 1
-
-
-def atoms_from_xyz(filename):
-    """Import from *.xyz file."""
+    """Import bond paths from *.xyz file."""
     molecules = []
     if os.path.exists(filename):
         f = open(filename)
         number_of_atoms = int(math.fabs(int(f.readline())))
         new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f)
-        critic_data = {"xn", "xr", "xb", "xc", "xz"}
-        fl = False
+        new_model2 = model
+        xz_points = []
+
         for atom in new_model.atoms:
-            if atom.let.lower() in critic_data:
-                fl = True
-        if fl:
-            new_model2 = AtomicModelCP()
-            xz_points = []
+            if atom.let.lower() == "xz":
+                xz_points.append(atom)
 
-            for atom in new_model.atoms:
-                if atom.let.lower() not in critic_data:
-                    new_model2.add_atom(atom)
-                if atom.let.lower() == "xb":
-                    new_model2.add_critical_point(atom)
-                if atom.let.lower() == "xz":
-                    xz_points.append(atom)
+        points = []
 
-            points = []
-
-            for i in range(0, len(xz_points)):
-                if len(points) == 0:
+        for i in range(0, len(xz_points)):
+            if len(points) == 0:
+                points.append(xz_points[i])
+            else:
+                d = math.dist(points[-1].xyz, xz_points[i].xyz)
+                if d < 0.09:
                     points.append(xz_points[i])
                 else:
-                    d = math.dist(points[-1].xyz, xz_points[i].xyz)
-                    if d < 0.09:
-                        points.append(xz_points[i])
-                    else:
-                        new_model2.add_bond_path_point(points)
-                        points = [xz_points[i]]
+                    new_model2.add_bond_path_point(points)
+                    points = [xz_points[i]]
 
-            if len(points) > 0:
-                new_model2.add_bond_path_point(points)
+        if len(points) > 0:
+            new_model2.add_bond_path_point(points)
 
-            new_model2.bond_path_points_optimize()
-            new_model = new_model2
+        new_model2.bond_path_points_optimize()
+        new_model = new_model2
     molecules.append(new_model)
     return molecules
 

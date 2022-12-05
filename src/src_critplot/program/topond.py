@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
-import math
 import numpy as np
 from core_gui_atomistic import helpers
 from core_gui_atomistic.periodic_table import TPeriodTable
-from core_gui_atomistic.atom import Atom
+from src_critplot.models.atom_cp import AtomCp as Atom
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
@@ -163,7 +162,7 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 while row.find("*************************************") < 0:
                     row = file1.readline()
                 for i in range(n_cp):
-                    row = file1.readline()
+                    file1.readline()
                     row1 = file1.readline()
                     if len(row1) < 4:
                         row1 = file1.readline().split()

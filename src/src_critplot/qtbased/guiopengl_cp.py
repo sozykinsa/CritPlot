@@ -15,12 +15,15 @@ class GuiOpenGLCP(GuiOpenGLBase):
         super().__init__(parent)
 
         # opengl lists
-        self.list_for_bcp: int = 8
+        self.list_for_cp: int = 8
         self.list_for_bondpath: int = 9
 
-        self.is_bcp_available: bool = False
+        self.is_cp_available: bool = False
         self.is_bond_path_available: bool = False
         self.is_show_bcp: bool = True
+        self.is_show_ccp: bool = True
+        self.is_show_rcp: bool = True
+        self.is_show_ncp: bool = True
         self.is_show_bond_path: bool = True
         self.selected_cp = -1
         self.is_bcp_property_visible: bool = False
@@ -56,13 +59,16 @@ class GuiOpenGLCP(GuiOpenGLBase):
                                   selected_atom_changed, quality)
         self.selected_cp_callback = selected_cp_changed
 
-    def set_property_show_bcp(self, show_bcp):
+    def set_property_show_cp(self, show_bcp, show_ccp, show_rcp):
         self.is_show_bcp = show_bcp
+        self.is_show_ccp = show_ccp
+        self.is_show_rcp = show_rcp
+        self.add_critical_points()
 
     def set_property_bond_path(self, bond_path):
         self.is_show_bond_path = bond_path
 
-    def show_bcp_property(self, prop: str = ""):
+    def show_cp_property(self, prop: str = ""):
         if prop == "":
             self.is_bcp_property_visible = False
         else:
@@ -81,7 +87,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.selected_cp = ogl_model.selected_cp
         self.is_bcp_property_visible = ogl_model.is_bcp_property_visible
         self.bcp_property = ogl_model.bcp_property
-        self.is_bcp_available = ogl_model.is_bcp_available
+        self.is_cp_available = ogl_model.is_cp_available
         self.is_bond_path_available = ogl_model.is_bond_path_available
         self.is_show_bcp = ogl_model.is_show_bcp
         self.is_show_bond_path = ogl_model.is_show_bond_path
@@ -108,37 +114,36 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.selected_cp_callback(self.selected_cp)
 
     def add_critical_points(self):
-        gl.glNewList(self.object + 8, gl.GL_COMPILE)
-        self.add_cp(self.main_model.cps)
+        gl.glNewList(self.object + self.list_for_cp, gl.GL_COMPILE)
+        for cp in self.main_model.cps:
+            if (self.is_show_bcp and (cp.let == "xb")) or (self.is_show_ccp and (cp.let == "xc")) or \
+                    (self.is_show_rcp and (cp.let == "xr")) or (self.is_show_ncp and (cp.let == "A")):
+                gl.glPushMatrix()
+                gl.glTranslatef(*(self.scale_factor * cp.xyz))
+                color = (0, 0, 0)
+                if cp.let == "xb":
+                    color = (1, 0, 0)
+                if cp.let == "xr":
+                    color = (1, 1, 0)
+                elif cp.let == "xc":
+                    color = (1, 1, 1)
+                gl.glColor3f(*color)
+                mult = self.scale_factor
+                if cp.is_selected():
+                    gl.glColor3f(0, 0, 1)
+                    mult *= 1.3
+                glu.gluSphere(glu.gluNewQuadric(), 0.15 * mult, self.quality * 70, self.quality * 70)
+                gl.glPopMatrix()
         gl.glEndList()
-        self.is_bcp_available = True
+        self.is_cp_available = True
         self.update()
 
-    def add_cp(self, cps):
-        for cp in cps:
-            gl.glPushMatrix()
-            gl.glTranslatef(*(self.scale_factor * cp.xyz))
-            color = (0, 0, 0)
-            if cp.let == "xb":
-                color = (1, 0, 0)
-            if cp.let == "xr":
-                color = (1, 1, 0)
-            elif cp.let == "xc":
-                color = (1, 1, 1)
-            gl.glColor3f(*color)
-            mult = self.scale_factor
-            if cp.is_selected():
-                gl.glColor3f(0, 0, 1)
-                mult *= 1.3
-            glu.gluSphere(glu.gluNewQuadric(), 0.15 * mult, self.quality * 70, self.quality * 70)
-            gl.glPopMatrix()
-
     def add_bond_path(self):
-        gl.glNewList(self.object + 9, gl.GL_COMPILE)
+        gl.glNewList(self.object + self.list_for_bondpath, gl.GL_COMPILE)
 
         for cp in self.main_model.cps:
-            self.add_critical_path(cp.get_property("bond1opt"))
-            self.add_critical_path(cp.get_property("bond2opt"))
+            self.add_critical_path(cp.bonds.get("bond1opt"))
+            self.add_critical_path(cp.bonds.get("bond2opt"))
 
         gl.glEndList()
         self.is_bond_path_available = True
@@ -168,23 +173,24 @@ class GuiOpenGLCP(GuiOpenGLBase):
                 if self.is_view_atoms:
                     gl.glCallList(self.object + self.list_for_atoms)  # atoms
 
-                if self.is_bcp_available and self.is_show_bcp:
-                    gl.glCallList(self.object + 8)  # CPS
+                if self.is_cp_available and (self.is_show_bcp or self.is_show_ccp or self.is_show_rcp or
+                                             self.is_show_ncp):
+                    gl.glCallList(self.object + self.list_for_cp)  # CPS
 
                 if self.can_atom_search:
                     self.get_atom_on_screen()
 
                 if self.is_view_bonds and (len(self.main_model.bonds) > 0):
-                    gl.glCallList(self.object + 2)  # find_bonds_exact
+                    gl.glCallList(self.object + self.list_for_bonds)  # find_bonds_exact
 
                 if self.is_view_box:
-                    gl.glCallList(self.object + 3)  # lattice_parameters_abc_angles
+                    gl.glCallList(self.object + self.list_for_box)  # lattice_parameters_abc_angles
 
                 if self.is_view_axes:
-                    gl.glCallList(self.object + 7)  # Axes
+                    gl.glCallList(self.object + self.list_for_axes)  # Axes
 
                 if self.is_bond_path_available and self.is_show_bond_path:
-                    gl.glCallList(self.object + 9)  # Bondpath
+                    gl.glCallList(self.object + self.list_for_bondpath)  # Bondpath
 
                 text_to_render = []
                 if self.is_atomic_numbers_visible:

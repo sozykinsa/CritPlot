@@ -10,14 +10,14 @@ def test_critplot_run(critplot_application, h2o_model_cp):
 
 
 def test_menu_open(critplot_application, tests_path):
-    f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
+    f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     window = critplot_application
     window.menu_open(f_name)
     assert len(window.models) == 1
 
 
 def test_actions_rotate(critplot_application, tests_path):
-    f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
+    f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     window = critplot_application
     window.menu_open(f_name)
     rot = deepcopy(window.ui.openGLWidget.rotation_angles)
@@ -36,7 +36,7 @@ def test_actions_rotate(critplot_application, tests_path):
 
 
 def test_actions_move(critplot_application, tests_path):
-    f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
+    f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     window = critplot_application
     window.menu_open(f_name)
     cam_pos = deepcopy(window.ui.openGLWidget.camera_position)
@@ -54,7 +54,7 @@ def test_selected_atom_from_form(critplot_application, tests_path):
     window = critplot_application
     charge, let, position = window.selected_atom_from_form()
     assert charge == 0
-    f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
+    f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     window = critplot_application
     window.menu_open(f_name)
     window.ui.openGLWidget.selected_atom = 2

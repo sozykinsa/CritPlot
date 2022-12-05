@@ -830,7 +830,6 @@ class GuiOpenGLBase(QOpenGLWidget):
         else:
             self.selected_atom_data_to_form(0, 0, 0, 0)
         self.selected_atom_properties_to_form()
-        print("point 5")
 
     def set_structure_parameters(self, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box, box_color,
                                  is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes, axes_color,

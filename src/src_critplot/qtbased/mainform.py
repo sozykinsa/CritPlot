@@ -83,13 +83,15 @@ class MainForm(QMainWindow):
         self.ui.FormModelComboModels.currentIndexChanged.connect(self.model_to_screen)
         self.ui.PropertyForColorOfAtom.currentIndexChanged.connect(self.color_atoms_with_property)
         self.ui.ColorAtomsProperty.stateChanged.connect(self.color_atoms_with_property)
-        self.ui.PropertyForBCPtext.currentIndexChanged.connect(self.show_bcp_property)
-        self.ui.show_bcp_text.stateChanged.connect(self.show_bcp_property)
+        self.ui.PropertyForBCPtext.currentIndexChanged.connect(self.show_cp_property)
+        self.ui.show_bcp_text.stateChanged.connect(self.show_cp_property)
         self.ui.property_precision.valueChanged.connect(self.cp_property_precision_changed)
         self.ui.font_size_3d.valueChanged.connect(self.font_size_3d_changed)
         self.ui.property_shift_x.valueChanged.connect(self.property_position_changed)
         self.ui.property_shift_y.valueChanged.connect(self.property_position_changed)
         self.ui.show_bcp.stateChanged.connect(self.show_bcp)
+        self.ui.show_ccp.stateChanged.connect(self.show_bcp)
+        self.ui.show_rcp.stateChanged.connect(self.show_bcp)
         self.ui.show_bond_path.stateChanged.connect(self.show_bond_path)
 
         self.ui.FormAtomsList1.currentIndexChanged.connect(self.bond_len_to_screen)
@@ -139,7 +141,7 @@ class MainForm(QMainWindow):
         self.ui.FormActionsPreButModifyAtom.clicked.connect(self.atom_modify)
         self.ui.FormActionsPreButAddAtom.clicked.connect(self.atom_add)
 
-        self.ui.FormButtonAddCroData.clicked.connect(self.add_critic2_cro_file)
+        self.ui.add_xyz_critic_data.clicked.connect(self.add_critic2_xyz_file)
         self.ui.FormCreateCriFile.clicked.connect(self.create_cri_file)
 
         self.ui.FormModifyGoPositive.clicked.connect(self.model_go_to_positive)
@@ -336,23 +338,25 @@ class MainForm(QMainWindow):
             self.ui.changeFragment1StatusByZ.setEnabled(False)
             self.ui.fragment1Clear.setEnabled(False)
 
-    def add_critic2_cro_file(self):
+    def add_critic2_xyz_file(self):
+        """Add bond path data from *.xyz file to current model."""
         try:
-            f_name = self.get_file_name_from_open_dialog("Critic output (*.cro)")
+            f_name = self.get_file_name_from_open_dialog("Critic xyz (*.xyz)")
             if os.path.exists(f_name):
                 self.work_dir = os.path.dirname(f_name)
                 model = self.models[-1]
                 critic2.parse_cp_properties(f_name, model)
                 self.plot_last_model()
-        except Exception as e:
-            self.show_error(e)
+        except Exception as exs:
+            self.show_error(exs)
 
     @staticmethod
-    def show_error(e):
+    def show_error(error_data: Exception):
+        """error_data: Exception object for MessageBox """
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setText("Error")
-        msg.setInformativeText(str(e))
+        msg.setInformativeText(str(error_data))
         msg.setWindowTitle("Error")
         msg.exec_()
 
@@ -903,8 +907,7 @@ class MainForm(QMainWindow):
     def menu_export(self):  # pragma: no cover
         if self.ui.openGLWidget.main_model.n_atoms() > 0:
             try:
-                format = "GUI4dft project (*.data)"
-                fname = self.get_file_name_from_save_dialog(format)
+                fname = self.get_file_name_from_save_dialog("GUI4dft project (*.data)")
 
                 if not fname:
                     return
@@ -917,12 +920,9 @@ class MainForm(QMainWindow):
 
     @staticmethod
     def export_to_file(model, fname):  # pragma: no cover
-        print("export_to_file")
         if fname.endswith(".data"):
             text = CritPlotProjectFile.project_file_writer(model)
             helpers.write_text_to_file(fname, text)
-        #if fname.endswith(".xyz"):
-        #    model.toSIESTAxyz(fname)
 
     def menu_open(self, file_name=False):
         if len(self.models) > 0:   # pragma: no cover
@@ -936,7 +936,9 @@ class MainForm(QMainWindow):
             self.filename = file_name
             self.work_dir = os.path.dirname(file_name)
             try:
-                self.models = Importer.import_from_file(file_name)
+                self.models, is_critic_open = Importer.import_from_file(file_name)
+                if is_critic_open:
+                    self.ui.add_xyz_critic_data.setEnabled(True)
             except Exception as e:
                 print("Incorrect file format")
                 self.show_error(e)
@@ -1017,12 +1019,12 @@ class MainForm(QMainWindow):
 
     def cp_property_precision_changed(self):  # pragma: no cover
         self.ui.openGLWidget.property_precision_changed(self.ui.property_precision.value())
-        self.show_bcp_property()
+        self.show_cp_property()
 
     def font_size_3d_changed(self):  # pragma: no cover
         self.save_property(SETTINGS_PropertyFontSize, self.ui.font_size_3d.value())
         self.ui.openGLWidget.set_property_font_size(self.ui.font_size_3d.value())
-        self.show_bcp_property()
+        self.show_cp_property()
 
     def property_position_changed(self):  # pragma: no cover
         dx = self.ui.property_shift_x.value()
@@ -1030,26 +1032,27 @@ class MainForm(QMainWindow):
         self.save_property(SETTINGS_PropertyShiftX, dx)
         self.save_property(SETTINGS_PropertyShiftY, dy)
         self.ui.openGLWidget.set_property_shift(dx, dy)
-        self.show_bcp_property()
+        self.show_cp_property()
 
     def show_bcp(self):  # pragma: no cover
-        self.ui.openGLWidget.set_property_show_bcp(self.ui.show_bcp.isChecked())
-        self.show_bcp_property()
+        self.ui.openGLWidget.set_property_show_cp(self.ui.show_bcp.isChecked(), self.ui.show_ccp.isChecked(),
+                                                  self.ui.show_rcp.isChecked())
+        self.show_cp_property()
 
     def show_bond_path(self):  # pragma: no cover
         self.ui.openGLWidget.set_property_bond_path(self.ui.show_bond_path.isChecked())
-        self.show_bcp_property()
+        self.show_cp_property()
 
-    def show_bcp_property(self):  # pragma: no cover
+    def show_cp_property(self):  # pragma: no cover
         if self.ui.show_bcp_text.isChecked():
             prop = self.ui.PropertyForBCPtext.currentText()
-            self.ui.openGLWidget.show_bcp_property(prop)
+            self.ui.openGLWidget.show_cp_property(prop)
             self.ui.openGLWidget.set_property_font_size(self.ui.font_size_3d.value())
             dx = self.ui.property_shift_x.value()
             dy = self.ui.property_shift_y.value()
             self.ui.openGLWidget.set_property_shift(dx, dy)
         else:
-            self.ui.openGLWidget.show_bcp_property()
+            self.ui.openGLWidget.show_cp_property()
 
     def model_go_to_positive(self):
         if self.ui.openGLWidget.main_model.n_atoms() == 0:
@@ -1393,10 +1396,18 @@ class MainForm(QMainWindow):
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
 
-            text += atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let + str(ind2 + 1) + ")\n"
-            if bond1 is not None and bond2 is not None:
-                text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = " \
-                        + str(len(bond1) + len(bond2)) + " points\n"
+            if (ind1 is not None) and (ind2 is not None):
+                ind1 -= 1
+                ind2 -= 1
+
+                text += atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let + str(ind2 + 1) + ")\n"
+                if bond1 is not None and bond2 is not None:
+                    text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = " \
+                            + str(len(bond1) + len(bond2)) + " points\n"
+                dist_line = round(model.atom_atom_distance(ind1, ind2), 4)
+                self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
+                self.ui.selectedCP_nuclei.setText(atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let +
+                                                  str(ind2 + 1))
 
             self.ui.selectedCP.setText(str(selected_cp))
 
@@ -1409,10 +1420,6 @@ class MainForm(QMainWindow):
             lap = model.cps[selected_cp].get_property("lap")
             self.ui.FormSelectedCP_lap.setText(lap)
 
-            dist_line = round(model.atom_atom_distance(ind1, ind2), 4)
-            self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
-            self.ui.selectedCP_nuclei.setText(atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let + str(ind2 + 1))
-
             for key in model.cps[selected_cp].properties:
                 text += str(key) + ": " + str(model.cps[selected_cp].get_property(key)) + "\n"
 
@@ -1424,6 +1431,7 @@ class MainForm(QMainWindow):
             self.ui.FormSelectedCP_g.setText("...")
             self.ui.FormSelectedCP_lap.setText("...")
             self.ui.selectedCP_bpLenLine.setText("...")
+            self.ui.selected_cp_title.setText("...")
             self.ui.selectedCP_nuclei.setText("...")
         self.ui.criticalPointProp.setText(text)
 
