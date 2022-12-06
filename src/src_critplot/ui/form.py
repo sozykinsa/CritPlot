@@ -268,7 +268,7 @@ class Ui_MainWindow(object):
         self.frame_2 = QFrame(self.groupBox_30)
         self.frame_2.setObjectName(u"frame_2")
         self.frame_2.setMinimumSize(QSize(0, 0))
-        self.frame_2.setFrameShape(QFrame.StyledPanel)
+        self.frame_2.setFrameShape(QFrame.NoFrame)
         self.frame_2.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_5 = QHBoxLayout(self.frame_2)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
@@ -447,6 +447,7 @@ class Ui_MainWindow(object):
 
         self.AtomPropertiesText = QTextBrowser(self.tab_4)
         self.AtomPropertiesText.setObjectName(u"AtomPropertiesText")
+        self.AtomPropertiesText.setMaximumSize(QSize(16777215, 250))
 
         self.verticalLayout_10.addWidget(self.AtomPropertiesText)
 
@@ -2088,8 +2089,8 @@ class Ui_MainWindow(object):
         self.tabWidget_12.addTab(self.tab_40, "")
         self.tab_41 = QWidget()
         self.tab_41.setObjectName(u"tab_41")
-        self.verticalLayout_20 = QVBoxLayout(self.tab_41)
-        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.verticalLayout_17 = QVBoxLayout(self.tab_41)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
         self.frame_144 = QFrame(self.tab_41)
         self.frame_144.setObjectName(u"frame_144")
         self.frame_144.setMinimumSize(QSize(0, 0))
@@ -2118,7 +2119,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_101.addWidget(self.ColorBackgroundDialogButton)
 
 
-        self.verticalLayout_20.addWidget(self.frame_144)
+        self.verticalLayout_17.addWidget(self.frame_144)
 
         self.frame_77 = QFrame(self.tab_41)
         self.frame_77.setObjectName(u"frame_77")
@@ -2148,7 +2149,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_80.addWidget(self.ColorBondDialogButton)
 
 
-        self.verticalLayout_20.addWidget(self.frame_77)
+        self.verticalLayout_17.addWidget(self.frame_77)
 
         self.frame_78 = QFrame(self.tab_41)
         self.frame_78.setObjectName(u"frame_78")
@@ -2178,7 +2179,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_81.addWidget(self.ColorBoxDialogButton)
 
 
-        self.verticalLayout_20.addWidget(self.frame_78)
+        self.verticalLayout_17.addWidget(self.frame_78)
 
         self.frame_79 = QFrame(self.tab_41)
         self.frame_79.setObjectName(u"frame_79")
@@ -2208,7 +2209,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_82.addWidget(self.ColorAxesDialogButton)
 
 
-        self.verticalLayout_20.addWidget(self.frame_79)
+        self.verticalLayout_17.addWidget(self.frame_79)
 
         self.frame_10 = QFrame(self.tab_41)
         self.frame_10.setObjectName(u"frame_10")
@@ -2224,22 +2225,84 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_83.addWidget(self.label_27)
 
-        self.ColorVoronoi = QFrame(self.frame_10)
-        self.ColorVoronoi.setObjectName(u"ColorVoronoi")
-        self.ColorVoronoi.setFrameShape(QFrame.StyledPanel)
-        self.ColorVoronoi.setFrameShadow(QFrame.Raised)
+        self.color_bond_cp = QFrame(self.frame_10)
+        self.color_bond_cp.setObjectName(u"color_bond_cp")
+        self.color_bond_cp.setFrameShape(QFrame.StyledPanel)
+        self.color_bond_cp.setFrameShadow(QFrame.Raised)
 
-        self.horizontalLayout_83.addWidget(self.ColorVoronoi)
+        self.horizontalLayout_83.addWidget(self.color_bond_cp)
 
-        self.ColorVoronoiDialogButton = QPushButton(self.frame_10)
-        self.ColorVoronoiDialogButton.setObjectName(u"ColorVoronoiDialogButton")
-        self.ColorVoronoiDialogButton.setCheckable(False)
-        self.ColorVoronoiDialogButton.setChecked(False)
+        self.color_bond_cp_button = QPushButton(self.frame_10)
+        self.color_bond_cp_button.setObjectName(u"color_bond_cp_button")
+        self.color_bond_cp_button.setCheckable(False)
+        self.color_bond_cp_button.setChecked(False)
 
-        self.horizontalLayout_83.addWidget(self.ColorVoronoiDialogButton)
+        self.horizontalLayout_83.addWidget(self.color_bond_cp_button)
 
 
-        self.verticalLayout_20.addWidget(self.frame_10)
+        self.verticalLayout_17.addWidget(self.frame_10)
+
+        self.frame_11 = QFrame(self.tab_41)
+        self.frame_11.setObjectName(u"frame_11")
+        self.frame_11.setMinimumSize(QSize(0, 0))
+        self.frame_11.setMaximumSize(QSize(16777215, 16777215))
+        self.frame_11.setFrameShape(QFrame.NoFrame)
+        self.frame_11.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_87 = QHBoxLayout(self.frame_11)
+        self.horizontalLayout_87.setObjectName(u"horizontalLayout_87")
+        self.horizontalLayout_87.setContentsMargins(0, 0, 0, 0)
+        self.label_33 = QLabel(self.frame_11)
+        self.label_33.setObjectName(u"label_33")
+
+        self.horizontalLayout_87.addWidget(self.label_33)
+
+        self.color_ring_cp = QFrame(self.frame_11)
+        self.color_ring_cp.setObjectName(u"color_ring_cp")
+        self.color_ring_cp.setFrameShape(QFrame.StyledPanel)
+        self.color_ring_cp.setFrameShadow(QFrame.Raised)
+
+        self.horizontalLayout_87.addWidget(self.color_ring_cp)
+
+        self.color_ring_cp_button = QPushButton(self.frame_11)
+        self.color_ring_cp_button.setObjectName(u"color_ring_cp_button")
+        self.color_ring_cp_button.setCheckable(False)
+        self.color_ring_cp_button.setChecked(False)
+
+        self.horizontalLayout_87.addWidget(self.color_ring_cp_button)
+
+
+        self.verticalLayout_17.addWidget(self.frame_11)
+
+        self.frame_12 = QFrame(self.tab_41)
+        self.frame_12.setObjectName(u"frame_12")
+        self.frame_12.setMinimumSize(QSize(0, 0))
+        self.frame_12.setMaximumSize(QSize(16777215, 16777215))
+        self.frame_12.setFrameShape(QFrame.NoFrame)
+        self.frame_12.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_91 = QHBoxLayout(self.frame_12)
+        self.horizontalLayout_91.setObjectName(u"horizontalLayout_91")
+        self.horizontalLayout_91.setContentsMargins(0, 0, 0, 0)
+        self.label_35 = QLabel(self.frame_12)
+        self.label_35.setObjectName(u"label_35")
+
+        self.horizontalLayout_91.addWidget(self.label_35)
+
+        self.color_cage_cp = QFrame(self.frame_12)
+        self.color_cage_cp.setObjectName(u"color_cage_cp")
+        self.color_cage_cp.setFrameShape(QFrame.StyledPanel)
+        self.color_cage_cp.setFrameShadow(QFrame.Raised)
+
+        self.horizontalLayout_91.addWidget(self.color_cage_cp)
+
+        self.color_cage_cp_button = QPushButton(self.frame_12)
+        self.color_cage_cp_button.setObjectName(u"color_cage_cp_button")
+        self.color_cage_cp_button.setCheckable(False)
+        self.color_cage_cp_button.setChecked(False)
+
+        self.horizontalLayout_91.addWidget(self.color_cage_cp_button)
+
+
+        self.verticalLayout_17.addWidget(self.frame_12)
 
         self.frame_76 = QFrame(self.tab_41)
         self.frame_76.setObjectName(u"frame_76")
@@ -2248,6 +2311,7 @@ class Ui_MainWindow(object):
         self.frame_76.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_77 = QHBoxLayout(self.frame_76)
         self.horizontalLayout_77.setObjectName(u"horizontalLayout_77")
+        self.horizontalLayout_77.setContentsMargins(0, -1, -1, -1)
         self.label_29 = QLabel(self.frame_76)
         self.label_29.setObjectName(u"label_29")
         self.label_29.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
@@ -2256,13 +2320,13 @@ class Ui_MainWindow(object):
 
         self.FormSettingsColorsScale = QComboBox(self.frame_76)
         self.FormSettingsColorsScale.setObjectName(u"FormSettingsColorsScale")
-        self.FormSettingsColorsScale.setMinimumSize(QSize(250, 0))
+        self.FormSettingsColorsScale.setMinimumSize(QSize(150, 0))
         self.FormSettingsColorsScale.setEditable(False)
 
         self.horizontalLayout_77.addWidget(self.FormSettingsColorsScale)
 
 
-        self.verticalLayout_20.addWidget(self.frame_76)
+        self.verticalLayout_17.addWidget(self.frame_76)
 
         self.ColorRow = PyqtGraphWidgetImage(self.tab_41)
         self.ColorRow.setObjectName(u"ColorRow")
@@ -2274,7 +2338,7 @@ class Ui_MainWindow(object):
         self.ColorRow.setMinimumSize(QSize(0, 40))
         self.ColorRow.setMaximumSize(QSize(16777215, 40))
 
-        self.verticalLayout_20.addWidget(self.ColorRow)
+        self.verticalLayout_17.addWidget(self.ColorRow)
 
         self.frame_102 = QFrame(self.tab_41)
         self.frame_102.setObjectName(u"frame_102")
@@ -2282,6 +2346,7 @@ class Ui_MainWindow(object):
         self.frame_102.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_106 = QHBoxLayout(self.frame_102)
         self.horizontalLayout_106.setObjectName(u"horizontalLayout_106")
+        self.horizontalLayout_106.setContentsMargins(0, -1, -1, -1)
         self.label_14 = QLabel(self.frame_102)
         self.label_14.setObjectName(u"label_14")
         self.label_14.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
@@ -2296,7 +2361,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_106.addWidget(self.FormSettingsColorsScaleType)
 
 
-        self.verticalLayout_20.addWidget(self.frame_102)
+        self.verticalLayout_17.addWidget(self.frame_102)
 
         self.frame_72 = QFrame(self.tab_41)
         self.frame_72.setObjectName(u"frame_72")
@@ -2327,7 +2392,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_78.addWidget(self.ColorContourDialogButton)
 
 
-        self.verticalLayout_20.addWidget(self.frame_72)
+        self.verticalLayout_17.addWidget(self.frame_72)
 
         self.frame_5 = QFrame(self.tab_41)
         self.frame_5.setObjectName(u"frame_5")
@@ -2343,7 +2408,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_57.addWidget(self.FormSettingsColorsFixed)
 
 
-        self.verticalLayout_20.addWidget(self.frame_5)
+        self.verticalLayout_17.addWidget(self.frame_5)
 
         self.frame_89 = QFrame(self.tab_41)
         self.frame_89.setObjectName(u"frame_89")
@@ -2371,7 +2436,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_90.addItem(self.horizontalSpacer_50)
 
 
-        self.verticalLayout_20.addWidget(self.frame_89)
+        self.verticalLayout_17.addWidget(self.frame_89)
 
         self.frame_90 = QFrame(self.tab_41)
         self.frame_90.setObjectName(u"frame_90")
@@ -2399,11 +2464,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_89.addItem(self.horizontalSpacer_52)
 
 
-        self.verticalLayout_20.addWidget(self.frame_90)
+        self.verticalLayout_17.addWidget(self.frame_90)
 
         self.verticalSpacer_19 = QSpacerItem(20, 215, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.verticalLayout_20.addItem(self.verticalSpacer_19)
+        self.verticalLayout_17.addItem(self.verticalSpacer_19)
 
         self.tabWidget_12.addTab(self.tab_41, "")
 
@@ -2546,7 +2611,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 98, 100))
+        self.page_8.setGeometry(QRect(0, 0, 642, 765))
         self.horizontalLayout = QHBoxLayout(self.page_8)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -2788,8 +2853,12 @@ class Ui_MainWindow(object):
         self.ColorBoxDialogButton.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.label_18.setText(QCoreApplication.translate("MainWindow", u"Axes color", None))
         self.ColorAxesDialogButton.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
-        self.label_27.setText(QCoreApplication.translate("MainWindow", u"Voronoi color", None))
-        self.ColorVoronoiDialogButton.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
+        self.label_27.setText(QCoreApplication.translate("MainWindow", u"Bond CP color", None))
+        self.color_bond_cp_button.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
+        self.label_33.setText(QCoreApplication.translate("MainWindow", u"Ring CP color", None))
+        self.color_ring_cp_button.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
+        self.label_35.setText(QCoreApplication.translate("MainWindow", u"Cage CP color", None))
+        self.color_cage_cp_button.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.label_29.setText(QCoreApplication.translate("MainWindow", u"Color scheme", None))
         self.FormSettingsColorsScale.setCurrentText("")
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"Scale", None))

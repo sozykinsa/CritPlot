@@ -30,6 +30,10 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.bcp_property: str = ""
         self.NLists = 10
 
+        self.color_of_bcp = (1, 0, 0)
+        self.color_of_ccp = (1, 1, 1)
+        self.color_of_rcp = (1, 1, 0)
+
         self.selected_cp_callback: Callable = None
 
         self.main_model = AtomicModelCP()
@@ -124,11 +128,11 @@ class GuiOpenGLCP(GuiOpenGLBase):
                 gl.glTranslatef(*(self.scale_factor * cp.xyz))
                 color = (0, 0, 0)
                 if cp.let == "xb":
-                    color = (1, 0, 0)
+                    color = self.color_of_bcp
                 if cp.let == "xr":
-                    color = (1, 1, 0)
+                    color = self.color_of_rcp
                 elif cp.let == "xc":
-                    color = (1, 1, 1)
+                    color = self.color_of_ccp
                 gl.glColor3f(*color)
                 mult = self.scale_factor
                 if cp.is_selected():
@@ -138,6 +142,21 @@ class GuiOpenGLCP(GuiOpenGLBase):
                 gl.glPopMatrix()
         gl.glEndList()
         self.is_cp_available = True
+        self.update()
+
+    def set_color_of_bcp(self, color):
+        self.color_of_bcp = color
+        self.add_critical_points()
+        self.update()
+
+    def set_color_of_rcp(self, color):
+        self.color_of_rcp = color
+        self.add_critical_points()
+        self.update()
+
+    def set_color_of_ccp(self, color):
+        self.color_of_ccp = color
+        self.add_critical_points()
         self.update()
 
     def add_bond_path(self):

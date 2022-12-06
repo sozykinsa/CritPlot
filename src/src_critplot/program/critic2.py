@@ -30,29 +30,10 @@ def structure_from_cro_file(filename):
 
         model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
 
+        crit_points = get_critical_points_info(filename)
+
         f = open(filename)
         str1 = f.readline()
-        while str1.find("* Critical point list, final report (non-equivalent cps)") < 0:
-            str1 = f.readline()
-        f.readline()
-        f.readline()
-        f.readline()
-        str1 = f.readline()
-        crit_points = []
-        while len(str1) > 5:
-            """
-            ncp   pg  type   CPname         position (cryst. coords.)       mult  name            f             |grad|           lap
-            1    C1  (3,-3) nucleus   0.41201875   0.19237040   0.32843532    1     H_      4.02547716E+00  0.00000000E+00 -1.04730465E+02
-            """
-            data1 = str1.split(")")
-            data2 = data1[0].split("(")
-            data = data1[1].split()
-            row = data2[0].split()
-            row.append(data2[1])
-            row += data
-            crit_points.append(row)
-            str1 = f.readline()
-
         while str1.find("* Complete CP list, bcp and rcp connectivity table") < 0:
             str1 = f.readline()
 
@@ -78,7 +59,6 @@ def structure_from_cro_file(filename):
                 title = let + data[0]
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 model.add_atom(new_atom)
-                # print(crit_points[number])
 
             if crit_info[3] == "nnattr":
                 pass
@@ -111,8 +91,52 @@ def structure_from_cro_file(filename):
             str1 = f.readline()
 
         f.readline()
+        f.close()
         model.convert_from_direct_to_cart()
     return [model]
+
+
+def get_critical_points_info(filename):
+    f = open(filename)
+    str1 = f.readline()
+    while str1.find("* Critical point list, final report (non-equivalent cps)") < 0:
+        str1 = f.readline()
+    f.readline()
+    f.readline()
+    f.readline()
+    str1 = f.readline()
+    crit_points = []
+
+    while len(str1) > 5:
+        """
+        ncp   pg  type   CPname         position (cryst. coords.)       mult  name            f             |grad|           lap
+        1    C1  (3,-3) nucleus   0.41201875   0.19237040   0.32843532    1     H_      4.02547716E+00  0.00000000E+00 -1.04730465E+02
+        """
+        data1 = str1.split(")")
+        data2 = data1[0].split("(")
+        data = data1[1].split()
+        row = data2[0].split()
+        row.append(data2[1])
+        row += data
+        crit_points.append(row)
+        str1 = f.readline()
+
+    while (str1.find("Additional properties at the critical points") < 0) and (len(str1) > 0):
+        str1 = f.readline()
+    str1 = f.readline()
+    point = 0
+
+    while str1.find("+ Critical point no.") >= 0:
+        text = ""
+        str1 = f.readline()
+        while not str1.startswith("+ "):
+            if len(str1) > 0:
+                text += str1
+            str1 = f.readline()
+        crit_points[point].append(text)
+        point += 1
+    f.close()
+    return crit_points
 
 
 def init_crit_point(crit_info, let, period_table, title, x, y, z):
@@ -122,6 +146,7 @@ def init_crit_point(crit_info, let, period_table, title, x, y, z):
     new_atom.set_property("rho", crit_info[9])
     new_atom.set_property("grad", crit_info[10])
     new_atom.set_property("lap", crit_info[11])
+    new_atom.set_property("text", crit_info[12])
     return new_atom
 
 
@@ -130,6 +155,7 @@ def parse_cp_properties(filename, model):
     molecules = []
     if os.path.exists(filename):
         f = open(filename)
+        print("parse_cp_properties: ", )
         number_of_atoms = int(math.fabs(int(f.readline())))
         new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f)
         new_model2 = model
@@ -159,58 +185,6 @@ def parse_cp_properties(filename, model):
         new_model = new_model2
     molecules.append(new_model)
     return molecules
-
-
-def check_cro_file(filename):
-    if os.path.exists(filename) and filename.endswith("cro"):
-        box_bohr = helpers.from_file_property(filename, "Lattice parameters (bohr):", 1, 'string').split()
-        box_bohr = np.array(helpers.list_str_to_float(box_bohr))
-        box_ang = helpers.from_file_property(filename, "Lattice parameters (ang):", 1, 'string').split()
-        box_ang = np.array(helpers.list_str_to_float(box_ang))
-        box_deg = helpers.from_file_property(filename, "Lattice angles (degrees):", 1, 'string').split()
-        box_deg = np.array(helpers.list_str_to_float(box_deg))
-
-        filename = open(filename)
-        str1 = filename.readline()
-        while (str1.find("Critical point list, final report (non-equivalent cps") < 0) and (len(str1) > 0):
-            str1 = filename.readline()
-        filename.readline()
-        filename.readline()
-        filename.readline()
-
-        cps = []
-        str1 = filename.readline()
-
-        while len(str1) > 3:
-            str1 = str1.split(')')[1].split()
-            x = float(str1[1]) * box_ang[0]
-            y = float(str1[2]) * box_ang[1]
-            z = float(str1[3]) * box_ang[2]
-
-            line = [str1[0], x, y, z, str1[6], str1[7], str1[8], "", ""]
-            cps.append(line)
-            str1 = filename.readline()
-
-        while (str1.find("Additional properties at the critical points") < 0) and (len(str1) > 0):
-            str1 = filename.readline()
-        str1 = filename.readline()
-        point = 0
-        while str1.find("+ Critical point no.") >= 0:
-            text = ""
-            title = str1.split("+ Critical point no.")
-            str1 = filename.readline()
-            while not str1.startswith("+ "):
-                if len(str1) > 0:
-                    text += str1
-                str1 = filename.readline()
-            cps[point][7] = text
-            cps[point][8] = cps[point][0][0] + helpers.spacedel(title[1])
-            point += 1
-
-        filename.close()
-        return box_bohr, box_ang, box_deg, cps
-    else:
-        return "", "", "", []
 
 
 def model_to_critic_xyz_file(model, cps):

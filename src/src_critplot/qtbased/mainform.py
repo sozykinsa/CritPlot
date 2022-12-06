@@ -115,7 +115,7 @@ class MainForm(QMainWindow):
         self.ui.ColorBackgroundDialogButton.clicked.connect(self.select_background_color)
         self.ui.ColorBondDialogButton.clicked.connect(self.select_bond_color)
         self.ui.ColorBoxDialogButton.clicked.connect(self.select_box_color)
-        self.ui.ColorVoronoiDialogButton.clicked.connect(self.select_voronoi_color)
+        self.ui.color_bond_cp_button.clicked.connect(self.select_bcp_color)
         self.ui.ColorAxesDialogButton.clicked.connect(self.select_axes_color)
         self.ui.ColorContourDialogButton.clicked.connect(self.select_contour_color)
         self.ui.manual_colors_default.clicked.connect(self.set_manual_colors_default)
@@ -843,8 +843,8 @@ class MainForm(QMainWindow):
         self.state_Color_Of_Box = str(settings.value(SETTINGS_Color_Of_Box, '0 0 0'))
         self.color_to_ui(self.ui.ColorBox, self.state_Color_Of_Box)
 
-        self.state_Color_Of_Voronoi = str(settings.value(SETTINGS_Color_Of_Voronoi, '255 0 0'))
-        self.color_to_ui(self.ui.ColorVoronoi, self.state_Color_Of_Voronoi)
+        # self.state_Color_Of_Voronoi = str(settings.value(SETTINGS_Color_Of_Voronoi, '255 0 0'))
+        # self.color_to_ui(self.ui.ColorVoronoi, self.state_Color_Of_Voronoi)
 
         self.state_Color_Of_Axes = str(settings.value(SETTINGS_Color_Of_Axes, '0 255 0'))
         self.color_to_ui(self.ui.ColorAxes, self.state_Color_Of_Axes)
@@ -1425,7 +1425,7 @@ class MainForm(QMainWindow):
             for key in model.cps[selected_cp].properties:
                 text += str(key) + ": " + str(model.cps[selected_cp].get_property(key)) + "\n"
 
-            text += str(model.cps[selected_cp].get_property("text"))
+            # text += str(model.cps[selected_cp].get_property("text"))
         else:
             text = "Select any critical point"
             self.ui.selectedCP.setText("...")
@@ -1485,6 +1485,18 @@ class MainForm(QMainWindow):
     def select_box_color(self):  # pragma: no cover
         boxcolor = self.change_color(self.ui.ColorBox, SETTINGS_Color_Of_Box)
         self.ui.openGLWidget.set_color_of_box(boxcolor)
+
+    def select_bcp_color(self):  # pragma: no cover
+        bcp_color = self.change_color(self.ui.ColorBox, SETTINGS_Color_Of_Box)
+        self.ui.openGLWidget.set_color_of_bcp(bcp_color)
+
+    def select_ccp_color(self):  # pragma: no cover
+        ccp_color = self.change_color(self.ui.ColorBox, SETTINGS_Color_Of_Box)
+        self.ui.openGLWidget.set_color_of_ccp(ccp_color)
+
+    def select_rcp_color(self):  # pragma: no cover
+        rcp_color = self.change_color(self.ui.ColorBox, SETTINGS_Color_Of_Box)
+        self.ui.openGLWidget.set_color_of_rcp(rcp_color)
 
     def add_cp_to_list(self):
         new_cp = self.ui.selectedCP.text()
@@ -1609,10 +1621,6 @@ class MainForm(QMainWindow):
             fname_dir = os.path.dirname(fname)
             helpers.write_text_to_file(fname_dir + "/POINTS.txt", te)
             helpers.write_text_to_file(fname_dir + "/POINTSatoms.txt", text)
-
-    def select_voronoi_color(self):  # pragma: no cover
-        voronoicolor = self.change_color(self.ui.ColorVoronoi, SETTINGS_Color_Of_Voronoi)
-        self.ui.openGLWidget.set_color_of_voronoi(voronoicolor)
 
     def select_background_color(self):  # pragma: no cover
         background_color = self.change_color(self.ui.ColorBackground, SETTINGS_Color_Of_Background)
