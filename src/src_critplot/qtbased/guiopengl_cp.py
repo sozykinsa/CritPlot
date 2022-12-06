@@ -90,6 +90,8 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_cp_available = ogl_model.is_cp_available
         self.is_bond_path_available = ogl_model.is_bond_path_available
         self.is_show_bcp = ogl_model.is_show_bcp
+        self.is_show_ccp = ogl_model.is_show_ccp
+        self.is_show_rcp = ogl_model.is_show_rcp
         self.is_show_bond_path = ogl_model.is_show_bond_path
 
     def copy_state(self, ogl_model):

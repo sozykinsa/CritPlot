@@ -1408,6 +1408,8 @@ class MainForm(QMainWindow):
                 self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
                 self.ui.selectedCP_nuclei.setText(atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let +
                                                   str(ind2 + 1))
+            else:
+                text += ")\n"
 
             self.ui.selectedCP.setText(str(selected_cp))
 
@@ -1561,7 +1563,7 @@ class MainForm(QMainWindow):
                 cp_list = range(len(model.cps))
             else:
                 print("TODO: all from file")
-            text = critic2.create_csv_file_cp(cp_list, model)
+            text = model.create_csv_file_cp(cp_list)
             helpers.write_text_to_file(f_name, text)
 
     def create_cri_file(self):  # pragma: no cover
