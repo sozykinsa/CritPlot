@@ -17,6 +17,7 @@ import numpy as np
 class GuiOpenGLBase(QOpenGLWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.main_model = None
         self.perspective_angle: int = 35
         self.background_color = np.array((1.0, 1.0, 1.0), dtype=float)
         self.is_check_atom_selection: bool = False
@@ -45,8 +46,9 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.y_scene = 0
         self.camera_position = np.array([0.0, 0.0, -20.0])
         self.rotation_angles = np.zeros(3, dtype=float)
-        self.color_of_bonds = [0, 0, 0]
-        self.color_of_axes = [0, 0, 0]
+        self.color_of_bonds = (0, 0, 0)
+        self.color_of_axes = (0, 0, 0)
+        self.color_of_box = (0, 0, 0)
 
         self.selected_fragment_mode = False
         self.SelectedFragmentAtomsListView = None
@@ -180,7 +182,7 @@ class GuiOpenGLBase(QOpenGLWidget):
         radius = min(width, height) * float(self.scale_factor)
         return (2.0 * x - width)/radius, -(2.0 * y - height)/radius
 
-    def set_atoms_numbred(self, state):
+    def set_atoms_numbered(self, state):
         self.is_atomic_numbers_visible = state
         self.update()
 
@@ -371,10 +373,6 @@ class GuiOpenGLBase(QOpenGLWidget):
             self.add_atoms()
             self.main_model.find_bonds_fast()
             self.add_bonds()
-            self.is_view_voronoi = False
-            self.is_view_surface = False
-            self.is_view_contour_fill = False
-            self.is_view_contour = False
             return True
 
     def rotat(self, x, y, width, height):
@@ -674,14 +672,15 @@ class GuiOpenGLBase(QOpenGLWidget):
         for row in text_to_render:
             fl = True
             x, y, z, st = row[0], row[1], row[2], row[3]
-            pos_x, pos_y, pos_z = self.get_screen_coords(x, y, z)
-            pos_y = height - pos_y  # y is inverted
-            for old in used_space:
-                if ((pos_x - old[0]) * (pos_x - old[0]) < 250) and ((pos_y - old[1]) * (pos_y - old[1]) < 250):
-                    fl = False
-            if fl:
-                used_space.append([pos_x, pos_y])
-                painter.drawText(pos_x - self.property_x_shift, pos_y - self.property_y_shift, st)
+            if z > self.camera_position[2]:
+                pos_x, pos_y, pos_z = self.get_screen_coords(x, y, z)
+                pos_y = height - pos_y  # y is inverted
+                for old in used_space:
+                    if ((pos_x - old[0]) * (pos_x - old[0]) < 250) and ((pos_y - old[1]) * (pos_y - old[1]) < 250):
+                        fl = False
+                if fl:
+                    used_space.append([pos_x, pos_y])
+                    painter.drawText(pos_x - self.property_x_shift, pos_y - self.property_y_shift, st)
         painter.end()
 
     @staticmethod

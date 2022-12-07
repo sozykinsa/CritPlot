@@ -358,16 +358,10 @@ class AtomicModel(object):
     def convert_from_scaled_to_cart(self, lat):
         for atom in self.atoms:
             atom.xyz *= lat
-            # atom.y *= lat
-            # atom.z *= lat
 
     def convert_from_direct_to_cart(self):
         for atom in self.atoms:
             atom.xyz = np.dot(self.lat_vectors, atom.xyz)
-            # x = atom.x * self.lat_vector1[0] + atom.y * self.lat_vector2[0] + atom.z * self.lat_vector3[0]
-            # y = atom.x * self.lat_vector1[1] + atom.y * self.lat_vector2[1] + atom.z * self.lat_vector3[1]
-            # z = atom.x * self.lat_vector1[2] + atom.y * self.lat_vector2[2] + atom.z * self.lat_vector3[2]
-            # atom.xyz = np.array([x, y, z])
 
     def convert_from_cart_to_direct(self):
         obr = np.linalg.inv(self.lat_vectors).transpose()
@@ -463,8 +457,11 @@ class AtomicModel(object):
         All atoms MUST be in the Cell!!!"""
         pos1 = self.atoms[at1].xyz
         pos2 = self.atoms[at2].xyz
-        delta_pos = pos2 - pos1
+        ro = self.point_point_distance(pos1, pos2)
+        return ro
 
+    def point_point_distance(self, pos1, pos2):
+        delta_pos = pos2 - pos1
         ro = norm(delta_pos)
         values = [-1, 0, 1]
         for i in values:
@@ -651,17 +648,11 @@ class AtomicModel(object):
 
     def toSIESTAfdf(self, filename):
         """Create an input file for the SIESTA."""
-        f = open(filename, 'w')
-        text = self.toSIESTAfdfdata("Fractional", "Ang", "LatticeVectors")
-        print(text, file=f)
-        f.close()
+        return self.toSIESTAfdfdata("Fractional", "Ang", "LatticeVectors")
 
     def toSIESTAxyz(self, filename):
         """Create an xyz file in XMol format."""
-        f = open(filename, 'w')
-        text = self.toSIESTAxyzdata()
-        print(text, file=f)
-        f.close()
+        return self.toSIESTAxyzdata()
 
     def toSIESTAfdfdata(self, coord_style, units_type, latt_style='LatticeParameters'):
         """Returns data for SIESTA fdf file."""

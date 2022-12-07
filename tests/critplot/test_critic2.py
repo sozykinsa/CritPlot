@@ -1,4 +1,3 @@
-from src.src_critplot.program.critic2 import cps_from_cro_file, create_cri_file
 from src.src_critplot.utils.importer import Importer
 from src.src_critplot.models.atomic_model_cp import AtomicModelCP
 

@@ -16,20 +16,13 @@ class AtomicModelCP(AtomicModel):
         self.cps = []
 
     def bond_path_points_optimize(self):
-        i = 0
-        while i < len(self.cps):
-            if self.cps[i].let == "xb":
-                bond1 = self.cps[i].bonds.get("bond1")
-                bond2 = self.cps[i].bonds.get("bond2")
-                if (bond1 is None) or (bond2 is None):
-                    i -= 1
-                else:
-                    if (bond1[-1].x == bond2[-1].x) and (bond1[-1].y == bond2[-1].y) and (bond1[-1].z == bond2[-1].z):
-                        self.cps.pop(i)
-                        i -= 1
-                self.critical_path_simplifier("bond1", self.cps[i])
-                self.critical_path_simplifier("bond2", self.cps[i])
-            i += 1
+        for cp in self.cps:
+            if cp.let == "xb":
+                bond1 = cp.bonds.get("bond1")
+                bond2 = cp.bonds.get("bond2")
+                if (bond1 is not None) and (bond2 is not None):
+                    self.critical_path_simplifier("bond1", cp)
+                    self.critical_path_simplifier("bond2", cp)
 
     @staticmethod
     def critical_path_simplifier(b, cp):
@@ -108,6 +101,18 @@ class AtomicModelCP(AtomicModel):
         for cp in self.cps:
             cp.xyz = np.dot(self.lat_vectors, cp.xyz)
 
+    def bond_path_len(self, cp):
+        bp_len = None
+        ind1 = cp.get_property("atom1")
+        ind2 = cp.get_property("atom2")
+        if (ind1 is not None) and (ind2 is not None):
+            if (ind1 < self.n_atoms()) and (ind2 < self.n_atoms()):
+                pos1 = self.atoms[ind1 - 1].xyz
+                pos2 = self.atoms[ind2 - 1].xyz
+                pos3 = cp.xyz
+                bp_len = self.point_point_distance(pos1, pos3) + self.point_point_distance(pos2, pos3)
+        return bp_len
+
     def add_critical_point(self, atom):
         self.cps.append(deepcopy(atom))
 
@@ -132,16 +137,17 @@ class AtomicModelCP(AtomicModel):
         for ind in cp_list:
             title = ""
             cp = self.cps[ind]
-            title += "BCP" + delimiter + "atoms" + delimiter + "dist" + delimiter
+            title += "CP" + delimiter
             data += str(ind) + delimiter
-            ind1 = cp.get_property("atom1")
-            ind2 = cp.get_property("atom2")
-            atom1 = self.atoms[ind1].let + str(ind1 + 1)
-            atom2 = self.atoms[ind2].let + str(ind2 + 1)
-            data += atom1 + "-" + atom2 + delimiter
-
-            dist_line = round(self.atom_atom_distance(ind1, ind2), 4)
-            data += '" ' + str(dist_line) + ' "' + delimiter
+            if cp.let == "xb":
+                title += "atoms" + delimiter + "dist" + delimiter
+                ind1 = cp.get_property("atom1")
+                ind2 = cp.get_property("atom2")
+                atom1 = self.atoms[ind1].let + str(ind1 + 1)
+                atom2 = self.atoms[ind2].let + str(ind2 + 1)
+                data += atom1 + "-" + atom2 + delimiter
+                dist_line = round(self.bond_path_len(cp), 4)
+                data += '" ' + str(dist_line) + ' "' + delimiter
 
             data_list = cp.get_property("text")
             if data_list:
@@ -153,7 +159,7 @@ class AtomicModelCP(AtomicModel):
                         col_title = helpers.spacedel(data_list[i].split(":")[0])
                         col_data = data_list[i].split(":")[1].split()
                         for k in range(len(col_data)):
-                            title += col_title
+                            title += '"' + col_title + '"'
                             if len(col_data) > 1:
                                 title += "_" + str(k + 1)
                             title += delimiter

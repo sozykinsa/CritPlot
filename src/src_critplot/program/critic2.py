@@ -155,7 +155,6 @@ def parse_cp_properties(filename, model):
     molecules = []
     if os.path.exists(filename):
         f = open(filename)
-        print("parse_cp_properties: ", )
         number_of_atoms = int(math.fabs(int(f.readline())))
         new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f)
         new_model2 = model

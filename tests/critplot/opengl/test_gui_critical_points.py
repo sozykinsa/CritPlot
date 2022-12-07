@@ -11,7 +11,7 @@ def test_critic2_section(critplot_application, tests_path):
     window.add_cp_to_list()
     assert window.ui.FormCPlist.count() == 0
     window.selected_cp_changed(1)
-    assert window.ui.selectedCP_nuclei.text() == "O3-O3"
+    assert window.ui.selectedCP_nuclei.text() == "..."
     window.ui.selectedCP.setText("2")
     window.add_cp_to_list()
     window.add_cp_to_list()

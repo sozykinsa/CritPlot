@@ -529,23 +529,31 @@ class MainForm(QMainWindow):
         self.ui.PropertyAtomAtomDistanceAt1.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistanceAt2.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistance.setText("")
-
-        #self.fill_cell_info(file_name)
         self.plot_r_rho()
 
     def plot_r_rho(self) -> None:
-        """!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1Plot energies for steps of output."""
-        energies = np.array([1])
+        model = self.models[self.active_model]
+        r = []
+        rho = []
+
+        for cp in model.cps:
+            if cp.let == "xb":
+                dist = model.bond_path_len(cp)
+                if dist is not None:
+                    r.append(dist)
+                    rho.append(float(cp.get_property("rho")))
+
         self.ui.PyqtGraphWidget.set_xticks(None)
 
-        x_title = "Step"
-        y_title = "Energy, eV"
-        title = "Energies"
+        x_title = "r"
+        y_title = "rho"
+        title = "rho(r)"
 
         self.ui.PyqtGraphWidget.clear()
         self.ui.PyqtGraphWidget.add_legend()
         self.ui.PyqtGraphWidget.enable_auto_range()
-        self.ui.PyqtGraphWidget.plot([np.arange(0, len(energies))], [energies], [None], title, x_title, y_title)
+        self.ui.PyqtGraphWidget.plot([], [], [None], title, x_title, y_title)
+        self.ui.PyqtGraphWidget.add_scatter(r, rho)
 
     def fill_file_name(self, f_name):
         self.ui.Form3Dand2DTabs.setItemText(0, "3D View: " + f_name)
@@ -1213,7 +1221,7 @@ class MainForm(QMainWindow):
     def save_state_view_show_atom_number(self):  # pragma: no cover
         self.save_property(SETTINGS_FormSettingsViewCheckShowAtomNumber,
                            self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
-        self.ui.openGLWidget.set_atoms_numbred(self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
+        self.ui.openGLWidget.set_atoms_numbered(self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
 
     def save_state_action_on_start(self):  # pragma: no cover
         self.save_property(SETTINGS_FormSettingsActionOnStart, self.action_on_start)
@@ -1404,14 +1412,19 @@ class MainForm(QMainWindow):
                 if bond1 is not None and bond2 is not None:
                     text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = " \
                             + str(len(bond1) + len(bond2)) + " points\n"
-                dist_line = round(model.atom_atom_distance(ind1, ind2), 4)
-                self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
-                self.ui.selectedCP_nuclei.setText(atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let +
-                                                  str(ind2 + 1))
+                dist = model.bond_path_len(cp)
+                if dist is not None:
+                    dist_line = round(dist, 4)
+                    self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
+                    self.ui.selectedCP_nuclei.setText(atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let +
+                                                      str(ind2 + 1))
+                else:
+                    self.ui.selectedCP_bpLenLine.setText("...")
+                    self.ui.selectedCP_nuclei.setText("...")
             else:
                 text += ")\n"
 
-            self.ui.selectedCP.setText(str(selected_cp))
+            self.ui.selectedCP.setText(str(selected_cp + 1))
 
             t = model.cps[selected_cp].get_property("title")
             self.ui.selected_cp_title.setText(t)
