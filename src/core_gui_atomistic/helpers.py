@@ -184,6 +184,21 @@ def property_from_sub_file(filename, k, prop, count, typen):
     return is_found, k, property_value
 
 
+def text_between_lines(filename, line1, line2):
+    file_name = open(filename)
+    str1 = file_name.readline()
+    while str1.find(line1) == -1:
+        str1 = file_name.readline()
+    str1 = file_name.readline()
+    fdf = []
+    while str1.find(line2) == -1:
+        if str1 != "":
+            fdf.append(str1)
+        str1 = file_name.readline()
+    file_name.close()
+    return fdf
+
+
 def utf8_letter(let):
     if (let == r'\Gamma') or (let == 'Gamma'):
         return '\u0393'
@@ -219,7 +234,7 @@ def check_format(filename):
         str1 = spacedel(f.readline())
         if len(str1.split()) > 4:
             return "XMolXYZ"
-        if len(str1.split()) == 0:
+        if len(str1.split()) <= 4:
             return "SiestaXYZ"
         return "unknown"
 

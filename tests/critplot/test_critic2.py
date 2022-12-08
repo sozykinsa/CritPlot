@@ -1,4 +1,4 @@
-from src.src_critplot.utils.importer import Importer
+from src.src_critplot.utils.import_export import ImporterExporter
 from src.src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
@@ -16,7 +16,7 @@ def test_create_critic2_xyz_file(tests_path):
 
 def test_atoms_of_bond_path(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
-    model, fl = Importer.import_from_file(f_name)
+    model, fl = ImporterExporter.import_from_file(f_name)
     # for cp in model[0].cps:
     #     print(cp.let, cp.xyz, cp.bonds, cp.properties)
     atom1, atom2 = AtomicModelCP.atoms_of_bond_path(model[0].cps[1])

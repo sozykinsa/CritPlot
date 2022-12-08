@@ -20,7 +20,7 @@ from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem, QTreeWid
 from PySide2.QtWidgets import QTreeWidgetItemIterator
 
 from src_critplot.utils.critplot_project_file import CritPlotProjectFile
-from src_critplot.utils.importer import Importer
+from src_critplot.utils.import_export import ImporterExporter
 from src_critplot.program import critic2
 from src_critplot.qtbased.image3dexporter import Image3Dexporter
 from src_critplot.ui.about import Ui_DialogAbout as Ui_about
@@ -61,6 +61,8 @@ class MainForm(QMainWindow):
         self.periodic_table = TPeriodTable()
 
         self.history_of_atom_selection = []
+
+        self.action_on_start: str = None
 
     def start_program(self):  # pragma: no cover
         if self.action_on_start == 'Open':
@@ -915,22 +917,16 @@ class MainForm(QMainWindow):
     def menu_export(self):  # pragma: no cover
         if self.ui.openGLWidget.main_model.n_atoms() > 0:
             try:
-                fname = self.get_file_name_from_save_dialog("GUI4dft project (*.data)")
+                file_name = self.get_file_name_from_save_dialog("GUI4dft project (*.data)")
 
-                if not fname:
+                if not file_name:
                     return
 
-                self.export_to_file(self.models[self.active_model], fname)
-                self.work_dir = os.path.dirname(fname)
+                ImporterExporter.export_to_file(self.models[self.active_model], file_name)
+                self.work_dir = os.path.dirname(file_name)
                 self.save_active_folder()
             except Exception as e:
                 self.show_error(e)
-
-    @staticmethod
-    def export_to_file(model, fname):  # pragma: no cover
-        if fname.endswith(".data"):
-            text = CritPlotProjectFile.project_file_writer(model)
-            helpers.write_text_to_file(fname, text)
 
     def menu_open(self, file_name=False):
         if len(self.models) > 0:   # pragma: no cover
@@ -944,7 +940,7 @@ class MainForm(QMainWindow):
             self.filename = file_name
             self.work_dir = os.path.dirname(file_name)
             try:
-                self.models, is_critic_open = Importer.import_from_file(file_name)
+                self.models, is_critic_open = ImporterExporter.import_from_file(file_name)
                 if is_critic_open:
                     self.ui.add_xyz_critic_data.setEnabled(True)
             except Exception as e:

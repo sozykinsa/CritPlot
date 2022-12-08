@@ -143,43 +143,33 @@ class AtomicModel(object):
             d1 = float(s[indexes[1]])
             d2 = float(s[indexes[2]])
             d3 = float(s[indexes[3]])
-            c = s[indexes[0]]
-            c = reg.sub('', c)
+            c = reg.sub('', s[indexes[0]])
             charge = mendeley.get_charge_by_letter(c)
-            a = [d1, d2, d3, c, charge]
-            atoms.append(a)
+            if charge > 0:
+                atoms.append([d1, d2, d3, c, charge])
         new_model = AtomicModel(atoms)
         new_model.set_lat_vectors_default()
         return new_model
 
-    def get_LatVect1_norm(self):
-        return norm(self.lat_vector1)
-
-    def get_LatVect2_norm(self):
-        return norm(self.lat_vector2)
-
-    def get_LatVect3_norm(self):
-        return norm(self.lat_vector3)
-
     def get_angle_alpha(self):
-        a = self.get_LatVect2_norm()
-        b = self.get_LatVect3_norm()
+        a = norm(self.lat_vector2)
+        b = norm(self.lat_vector3)
         ab = self.lat_vector2[0] * self.lat_vector3[0] + self.lat_vector2[1] * self.lat_vector3[1] + \
             self.lat_vector2[2] * self.lat_vector3[2]
         angle = math.acos(ab / (a * b))
         return 180 * angle / math.pi
 
     def get_angle_beta(self):
-        a = self.get_LatVect1_norm()
-        b = self.get_LatVect3_norm()
+        a = norm(self.lat_vector1)
+        b = norm(self.lat_vector3)
         ab = self.lat_vector1[0] * self.lat_vector3[0] + self.lat_vector1[1] * self.lat_vector3[1] + \
             self.lat_vector1[2] * self.lat_vector3[2]
         angle = math.acos(ab / (a * b))
         return 180 * angle / math.pi
 
     def get_angle_gamma(self):
-        a = self.get_LatVect2_norm()
-        b = self.get_LatVect1_norm()
+        a = norm(self.lat_vector2)
+        b = norm(self.lat_vector1)
         ab = self.lat_vector2[0] * self.lat_vector1[0] + self.lat_vector2[1] * self.lat_vector1[1] + \
             self.lat_vector2[2] * self.lat_vector1[2]
         angle = math.acos(ab / (a * b))
@@ -205,8 +195,8 @@ class AtomicModel(object):
             sz = 5
         self.lat_vectors = 1.4 * np.eye(3) * np.array((sx, sy, sz))
 
-    def delete_atom(self, ind):
-        print("delete_atom ", self.selected_atom, ind)
+    def delete_atom(self, ind: int) -> None:
+        """Remove atom from model."""
         if (ind >= 0) and (ind < self.n_atoms()):
             self.selected_atom = -1
             self.atoms.pop(ind)
@@ -241,7 +231,7 @@ class AtomicModel(object):
             for i in range(0, self.n_atoms()):
                 self.atoms[i].set_property(prop, value[i][1])
 
-    def AddBond(self, bond):
+    def add_bond(self, bond):
         self.bonds.append(bond)
 
     def n_bonds(self):
@@ -645,79 +635,6 @@ class AtomicModel(object):
         ym = self.minY()
         zm = self.minZ()
         self.go_to_positive_array(self.atoms, xm, ym, zm)
-
-    def toSIESTAfdf(self, filename):
-        """Create an input file for the SIESTA."""
-        return self.toSIESTAfdfdata("Fractional", "Ang", "LatticeVectors")
-
-    def toSIESTAxyz(self, filename):
-        """Create an xyz file in XMol format."""
-        return self.toSIESTAxyzdata()
-
-    def toSIESTAfdfdata(self, coord_style, units_type, latt_style='LatticeParameters'):
-        """Returns data for SIESTA fdf file."""
-        data = ""
-        periodic_table = TPeriodTable()
-        data += 'NumberOfAtoms ' + str(len(self.atoms)) + "\n"
-        types = self.types_of_atoms()
-        data += 'NumberOfSpecies ' + str(len(types)) + "\n"
-        data += '%block ChemicalSpeciesLabel\n'
-        for i in range(0, len(types)):
-            data += ' ' + str(i + 1) + '  ' + str(types[i][0]) + '  ' +\
-                    str(periodic_table.get_let(int(types[i][0]))) + "\n"
-        data += '%endblock ChemicalSpeciesLabel\n'
-
-        mult = 1
-        lattice_constant = 'LatticeConstant       1.0 Ang\n'
-
-        if (coord_style != "Zmatrix Cartesian") and (units_type == "Bohr"):
-            mult = 1.0 / 0.52917720859
-            lattice_constant = 'LatticeConstant       1.0 Bohr\n'
-
-        data += lattice_constant
-
-        if latt_style == 'LatticeParameters':
-            data += '%block LatticeParameters\n'
-            data += '  ' + str(self.get_LatVect1_norm() * mult) + '  ' + str(self.get_LatVect2_norm() * mult) + '  ' + \
-                    str(self.get_LatVect3_norm() * mult) + '  ' + str(self.get_angle_alpha()) + '  ' + \
-                    str(self.get_angle_beta()) + '  ' + str(self.get_angle_gamma()) + '\n'
-            data += '%endblock LatticeParameters\n'
-        # or
-        if latt_style == 'LatticeVectors':
-            data += '%block LatticeVectors\n'
-            data += '  ' + str(self.lat_vector1[0] * mult) + '  ' + str(self.lat_vector1[1] * mult) + '  ' + str(
-                self.lat_vector1[2] * mult) + '\n'
-            data += '  ' + str(self.lat_vector2[0] * mult) + '  ' + str(self.lat_vector2[1] * mult) + '  ' + str(
-                self.lat_vector2[2] * mult) + '\n'
-            data += '  ' + str(self.lat_vector3[0] * mult) + '  ' + str(self.lat_vector3[1] * mult) + '  ' + str(
-                self.lat_vector3[2] * mult) + '\n'
-            data += '%endblock LatticeVectors\n'
-
-        if coord_style == "Zmatrix Cartesian":
-            data += 'AtomicCoordinatesFormat NotScaledCartesianAng\n'
-            data += "ZM.UnitsLength Ang\n"
-            data += '%block Zmatrix\n'
-            data += 'cartesian\n'
-            data += self.coords_for_export(coord_style)
-            data += '%endblock Zmatrix\n'
-
-        if coord_style == "Fractional":
-            self.sort_atoms_by_type()
-            self.go_to_positive_coordinates()
-            self.convert_from_cart_to_direct()
-            data += 'AtomicCoordinatesFormat Fractional\n'
-            data += '%block AtomicCoordinatesAndAtomicSpecies\n'
-            data += self.coords_for_export(coord_style)
-            data += '%endblock AtomicCoordinatesAndAtomicSpecies\n'
-
-        if coord_style == "Cartesian":
-            self.sort_atoms_by_type()
-            data += 'AtomicCoordinatesFormat ' + units_type + '\n'
-            data += '%block AtomicCoordinatesAndAtomicSpecies\n'
-            data += self.coords_for_export(coord_style, units_type)
-            data += '%endblock AtomicCoordinatesAndAtomicSpecies\n'
-
-        return data
 
     def coords_for_export(self, coord_style, units="Ang"):
         data = ""

@@ -7,7 +7,7 @@ from src_critplot.program.critic2 import structure_from_cro_file
 from src_critplot.utils.critplot_project_file import CritPlotProjectFile
 
 
-class Importer(object):
+class ImporterExporter(object):
 
     @staticmethod
     def import_from_file(filename):
@@ -26,3 +26,9 @@ class Importer(object):
             else:
                 print("Wrong format")
         return models, is_critic_open
+
+    @staticmethod
+    def export_to_file(model, file_name):  # pragma: no cover
+        if file_name.endswith(".data"):
+            text = CritPlotProjectFile.project_file_writer(model)
+            helpers.write_text_to_file(file_name, text)
