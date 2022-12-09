@@ -106,10 +106,10 @@ class GuiOpenGLCP(GuiOpenGLBase):
 
     def set_structure_parameters(self, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box, box_color,
                                  is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes, axes_color,
-                                 contour_width, is_bcp_property_visible):
+                                 is_bcp_property_visible):
         super().set_structure_parameters(atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box,
                                          box_color, is_view_bonds, bonds_color, bond_width, bonds_by_atoms,
-                                         is_view_axes, axes_color, contour_width)
+                                         is_view_axes, axes_color, 8)
         self.is_bcp_property_visible = is_bcp_property_visible
         self.add_critical_points()
         self.add_bond_path()

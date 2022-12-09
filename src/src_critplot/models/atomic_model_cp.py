@@ -161,10 +161,10 @@ class AtomicModelCP(AtomicModel):
                         col_title = helpers.spacedel(data_list[i].split(":")[0])
                         col_data = data_list[i].split(":")[1].split()
                         for k in range(len(col_data)):
-                            title += '"' + col_title + '"'
+                            title += '"' + col_title
                             if len(col_data) > 1:
                                 title += "_" + str(k + 1)
-                            title += delimiter
+                            title += '"' + delimiter
                             data += '"' + col_data[k] + '"' + delimiter
                         i += 1
                     else:

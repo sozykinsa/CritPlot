@@ -121,7 +121,6 @@ class MainForm(QMainWindow):
         self.ui.color_ring_cp_button.clicked.connect(self.select_rcp_color)
         self.ui.color_cage_cp_button.clicked.connect(self.select_ccp_color)
         self.ui.ColorAxesDialogButton.clicked.connect(self.select_axes_color)
-        self.ui.ColorContourDialogButton.clicked.connect(self.select_contour_color)
         self.ui.manual_colors_default.clicked.connect(self.set_manual_colors_default)
 
         self.ui.FormModifyCellButton.clicked.connect(self.edit_cell)
@@ -802,9 +801,6 @@ class MainForm(QMainWindow):
         state_form_settings_view_spin_bond_width = int(settings.value(SETTINGS_FormSettingsViewSpinBondWidth, '20'))
         self.ui.FormSettingsViewSpinBondWidth.setValue(state_form_settings_view_spin_bond_width)
         self.ui.FormSettingsViewSpinBondWidth.valueChanged.connect(self.save_state_view_spin_bond_width)
-        state_contour_width = int(settings.value(SETTINGS_FormSettingsViewSpinContourWidth, '20'))
-        self.ui.FormSettingsViewSpinContourWidth.setValue(state_contour_width)
-        self.ui.FormSettingsViewSpinContourWidth.valueChanged.connect(self.save_state_view_spin_contour_width)
 
         state_color_scheme = str(settings.value(SETTINGS_Color_Of_Atoms_Scheme, ''))
         self.ui.manual_colors_default.setEnabled(False)
@@ -854,9 +850,6 @@ class MainForm(QMainWindow):
 
         self.state_Color_Of_Box = str(settings.value(SETTINGS_Color_Of_Box, '0 0 0'))
         self.color_to_ui(self.ui.ColorBox, self.state_Color_Of_Box)
-
-        # self.state_Color_Of_Voronoi = str(settings.value(SETTINGS_Color_Of_Voronoi, '255 0 0'))
-        # self.color_to_ui(self.ui.ColorVoronoi, self.state_Color_Of_Voronoi)
 
         self.state_Color_Of_Axes = str(settings.value(SETTINGS_Color_Of_Axes, '0 255 0'))
         self.color_to_ui(self.ui.ColorAxes, self.state_Color_Of_Axes)
@@ -1088,17 +1081,16 @@ class MainForm(QMainWindow):
         view_box = self.ui.FormSettingsViewCheckShowBox.isChecked()
         view_bonds = self.ui.FormSettingsViewCheckShowBonds.isChecked()
         bond_width = 0.005 * self.ui.FormSettingsViewSpinBondWidth.value()
-        bondscolor = self.get_color_from_setting(self.state_Color_Of_Bonds)
+        bonds_color = self.get_color_from_setting(self.state_Color_Of_Bonds)
         color_of_bonds_by_atoms = self.ui.FormSettingsViewRadioColorBondsManual.isChecked()
-        axescolor = self.get_color_from_setting(self.state_Color_Of_Axes)
+        axes_color = self.get_color_from_setting(self.state_Color_Of_Axes)
         view_axes = self.ui.FormSettingsViewCheckShowAxes.isChecked()
-        boxcolor = self.get_color_from_setting(self.state_Color_Of_Box)
-        atomscolor = self.colors_of_atoms()
-        contour_width = (self.ui.FormSettingsViewSpinContourWidth.value()) / 1000.0
+        box_color = self.get_color_from_setting(self.state_Color_Of_Box)
+        atoms_color = self.colors_of_atoms()
         is_show_bcp_text = self.ui.show_bcp_text.isChecked()
-        self.ui.openGLWidget.set_structure_parameters(atomscolor, view_atoms, view_atom_numbers, view_box, boxcolor,
-                                                      view_bonds, bondscolor, bond_width, color_of_bonds_by_atoms,
-                                                      view_axes, axescolor, contour_width, is_show_bcp_text)
+        self.ui.openGLWidget.set_structure_parameters(atoms_color, view_atoms, view_atom_numbers, view_box, box_color,
+                                                      view_bonds, bonds_color, bond_width, color_of_bonds_by_atoms,
+                                                      view_axes, axes_color, is_show_bcp_text)
         self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
         self.ui.AtomsInSelectedFragment.clear()
 
@@ -1642,19 +1634,15 @@ class MainForm(QMainWindow):
         axescolor = self.change_color(self.ui.ColorAxes, SETTINGS_Color_Of_Axes)
         self.ui.openGLWidget.set_color_of_axes(axescolor)
 
-    def select_contour_color(self):  # pragma: no cover
-        self.change_color(self.ui.ColorContour, SETTINGS_Color_Of_Contour)
-        self.plot_contour()
-
-    def change_color(self, colorUi, var_property):   # pragma: no cover
+    def change_color(self, color_ui, var_property):   # pragma: no cover
         color = QColorDialog.getColor()
-        colorUi.setStyleSheet(
+        color_ui.setStyleSheet(
             "background-color:rgb(" + str(color.getRgb()[0]) + "," + str(color.getRgb()[1]) + "," + str(
                 color.getRgb()[2]) + ")")
-        newcolor = [color.getRgbF()[0], color.getRgbF()[1], color.getRgbF()[2]]
+        new_color = [color.getRgbF()[0], color.getRgbF()[1], color.getRgbF()[2]]
         self.save_property(var_property,
                            str(color.getRgb()[0]) + " " + str(color.getRgb()[1]) + " " + str(color.getRgb()[2]))
-        return newcolor
+        return new_color
 
 
 SETTINGS_Folder_CP = 'home'

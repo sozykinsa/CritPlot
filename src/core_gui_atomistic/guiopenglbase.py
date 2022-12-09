@@ -832,7 +832,7 @@ class GuiOpenGLBase(QOpenGLWidget):
 
     def set_structure_parameters(self, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box, box_color,
                                  is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes, axes_color,
-                                 contour_width):
+                                 contour_width: int = 8):
         self.prop = "charge"
         self.is_view_box = is_view_box
         self.is_view_atoms = is_view_atoms
@@ -846,6 +846,7 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.color_of_bonds = bonds_color
         self.color_of_box = box_color
         self.contour_width = contour_width
+        print("self.contour_width: ", self.contour_width)
         self.add_all_elements()
         self.update()
 
