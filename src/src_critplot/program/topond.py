@@ -3,7 +3,8 @@ import os
 import numpy as np
 from core_gui_atomistic import helpers
 from core_gui_atomistic.periodic_table import TPeriodTable
-from src_critplot.models.atom_cp import AtomCp as Atom
+from core_gui_atomistic.atom import Atom
+from src_critplot.models.critical_point import CriticalPoint
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
@@ -203,9 +204,9 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
             if (ind1 is not None) and (ind2 is not None):
-                p1 = Atom([*model.atoms[ind1].xyz, "xz", 1])
-                p2 = Atom([*cp.xyz, "xz", 1])
-                p3 = Atom([*model.atoms[ind2].xyz, "xz", 1])
+                p1 = CriticalPoint([*model.atoms[ind1].xyz, "xz", 1])
+                p2 = CriticalPoint([*cp.xyz, "xz", 1])
+                p3 = CriticalPoint([*model.atoms[ind2].xyz, "xz", 1])
                 model.add_bond_path_point([p2, p1])
                 model.add_bond_path_point([p2, p3])
         model.bond_path_points_optimize()
@@ -219,7 +220,7 @@ def parse_cp_point(file1, let, text, title):
     x = float(data[0]) * 0.52917720859
     y = float(data[1]) * 0.52917720859
     z = float(data[2]) * 0.52917720859
-    cp = Atom([x, y, z, let, 1])
+    cp = CriticalPoint([x, y, z, let, 1])
     cp.set_property("title", title)
     text += helpers.spacedel(file1.readline()) + "\n"
     """COORD FRACT. CONV. CELL        :  2.5000E-01  2.5000E-01 -2.0484E-17"""

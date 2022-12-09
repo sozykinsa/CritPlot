@@ -3,10 +3,10 @@
 from core_gui_atomistic.atom import Atom
 
 
-class AtomCp(Atom):
+class CriticalPoint(Atom):
     """The atom class with bond paths."""
 
     def __init__(self, at_data):
         """Constructor"""
-        super(AtomCp, self).__init__(at_data)
+        super().__init__(at_data)
         self.bonds = {}

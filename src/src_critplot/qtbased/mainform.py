@@ -118,6 +118,8 @@ class MainForm(QMainWindow):
         self.ui.ColorBondDialogButton.clicked.connect(self.select_bond_color)
         self.ui.ColorBoxDialogButton.clicked.connect(self.select_box_color)
         self.ui.color_bond_cp_button.clicked.connect(self.select_bcp_color)
+        self.ui.color_ring_cp_button.clicked.connect(self.select_rcp_color)
+        self.ui.color_cage_cp_button.clicked.connect(self.select_ccp_color)
         self.ui.ColorAxesDialogButton.clicked.connect(self.select_axes_color)
         self.ui.ColorContourDialogButton.clicked.connect(self.select_contour_color)
         self.ui.manual_colors_default.clicked.connect(self.set_manual_colors_default)
@@ -859,9 +861,6 @@ class MainForm(QMainWindow):
         self.state_Color_Of_Axes = str(settings.value(SETTINGS_Color_Of_Axes, '0 255 0'))
         self.color_to_ui(self.ui.ColorAxes, self.state_Color_Of_Axes)
 
-        self.state_Color_Of_Contour = str(settings.value(SETTINGS_Color_Of_Contour, '0 255 0'))
-        self.color_to_ui(self.ui.ColorContour, self.state_Color_Of_Contour)
-
         self.coord_type = str(settings.value(SETTINGS_FormSettingsPreferredCoordinates, 'Cartesian'))
         self.units_type = str(settings.value(SETTINGS_FormSettingsPreferredUnits, 'Ang'))
         self.lattice_type = str(settings.value(SETTINGS_FormSettingsPreferredLattice, 'LatticeParameters'))
@@ -1496,15 +1495,15 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_color_of_box(boxcolor)
 
     def select_bcp_color(self):  # pragma: no cover
-        bcp_color = self.change_color(self.ui.ColorBox, SETTINGS_Color_Of_Box)
+        bcp_color = self.change_color(self.ui.color_bond_cp, SETTINGS_color_of_bcp)
         self.ui.openGLWidget.set_color_of_bcp(bcp_color)
 
     def select_ccp_color(self):  # pragma: no cover
-        ccp_color = self.change_color(self.ui.ColorBox, SETTINGS_Color_Of_Box)
+        ccp_color = self.change_color(self.ui.color_ring_cp, SETTINGS_color_of_rcp)
         self.ui.openGLWidget.set_color_of_ccp(ccp_color)
 
     def select_rcp_color(self):  # pragma: no cover
-        rcp_color = self.change_color(self.ui.ColorBox, SETTINGS_Color_Of_Box)
+        rcp_color = self.change_color(self.ui.color_cage_cp, SETTINGS_color_of_ccp)
         self.ui.openGLWidget.set_color_of_rcp(rcp_color)
 
     def add_cp_to_list(self):
@@ -1689,7 +1688,8 @@ SETTINGS_Color_Of_Atoms = 'colors/atoms'
 SETTINGS_Color_Of_Bonds = 'colors/bonds'
 SETTINGS_Color_Of_Background = 'colors/background'
 SETTINGS_Color_Of_Box = 'colors/box'
-SETTINGS_Color_Of_Voronoi = 'colors/voronoi'
 SETTINGS_Color_Of_Axes = 'colors/axes'
-SETTINGS_Color_Of_Contour = 'colors/contour'
+SETTINGS_color_of_bcp = 'colors/bcp'
+SETTINGS_color_of_rcp = 'colors/rcp'
+SETTINGS_color_of_ccp = 'colors/ccp'
 SETTINGS_perspective_angle = 'perspectiveangle'

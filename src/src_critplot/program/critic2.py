@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from typing import List
 import os
 import math
 import numpy as np
 from core_gui_atomistic import helpers
-from src_critplot.models.atom_cp import AtomCp as Atom
+from src_critplot.models.critical_point import CriticalPoint
 from core_gui_atomistic.periodic_table import TPeriodTable
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
@@ -96,7 +97,7 @@ def structure_from_cro_file(filename):
     return [model]
 
 
-def get_critical_points_info(filename):
+def get_critical_points_info(filename: str):
     f = open(filename)
     str1 = f.readline()
     while str1.find("* Critical point list, final report (non-equivalent cps)") < 0:
@@ -141,7 +142,7 @@ def get_critical_points_info(filename):
 
 def init_crit_point(crit_info, let, period_table, title, x, y, z):
     charge = period_table.get_charge_by_letter(let)
-    new_atom = Atom([x, y, z, let, charge])
+    new_atom = CriticalPoint([x, y, z, let, charge])
     new_atom.set_property("title", title)
     new_atom.set_property("rho", crit_info[9])
     new_atom.set_property("grad", crit_info[10])
@@ -150,7 +151,7 @@ def init_crit_point(crit_info, let, period_table, title, x, y, z):
     return new_atom
 
 
-def parse_bondpaths(filename: str, model: AtomicModelCP) -> list[AtomicModelCP]:
+def parse_bondpaths(filename: str, model: AtomicModelCP) -> List[AtomicModelCP]:
     """Import bond paths from *.xyz file.
     filename - name of file
     model - AtomicModelCP to add bondpaths from xyz file
@@ -159,7 +160,7 @@ def parse_bondpaths(filename: str, model: AtomicModelCP) -> list[AtomicModelCP]:
     if os.path.exists(filename):
         f = open(filename)
         number_of_atoms = int(math.fabs(int(f.readline())))
-        new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f, is_only_charge_correct=False)
+        new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f, is_allow_charge_incorrect=True)
         new_model2 = model
         xz_points = []
 
@@ -190,7 +191,10 @@ def parse_bondpaths(filename: str, model: AtomicModelCP) -> list[AtomicModelCP]:
 
 
 def model_to_critic_xyz_file(model, cps):
-    """Returns data for *.xyz file with CP and BCP."""
+    """Returns data for *.xyz file with CP and BCP.
+    model
+    cps
+    """
     text = ""
 
     n_atoms = model.n_atoms()

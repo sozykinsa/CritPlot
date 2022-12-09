@@ -1,5 +1,6 @@
 import os
 from core_gui_atomistic.gui4dft_project_file import GUI4dftProjectFile
+from src_critplot.models.critical_point import CriticalPoint
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
@@ -34,7 +35,16 @@ class CritPlotProjectFile(GUI4dftProjectFile):
                         if row[0] == "xb":
                             let = "xb"
                             title = let + row[0]
-                            # new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                            x = float(row[1])
+                            y = float(row[2])
+                            z = float(row[3])
+                            charge = -1
+                            new_atom = CriticalPoint([x, y, z, let, charge])
+                            # new_atom.set_property("title", title)
+                            # new_atom.set_property("rho", crit_info[9])
+                            # new_atom.set_property("grad", crit_info[10])
+                            # new_atom.set_property("lap", crit_info[11])
+                            # new_atom.set_property("text", crit_info[12])
                             # new_atom.set_property("atom1", int(data[6]))
                             # new_atom.set_property("atom2", int(data[10]))
                             # translation1 = int(data[7]) * model.lat_vector1 + int(data[8]) * model.lat_vector2 + \
@@ -43,7 +53,7 @@ class CritPlotProjectFile(GUI4dftProjectFile):
                             #                int(data[13]) * model.lat_vector3
                             # new_atom.set_property("atom1_translation", translation1)
                             # new_atom.set_property("atom2_translation", translation2)
-                            # model.add_critical_point(new_atom)
+                            model.add_critical_point(new_atom)
                         print(row)
                         row = f.readline()
                 row = f.readline()

@@ -135,7 +135,7 @@ class AtomicModel(object):
 
     @staticmethod
     def atoms_from_xyz_structure(number_of_atoms: int, ani_file, indexes=[0, 1, 2, 3],
-                                 is_only_charge_correct: bool = True):
+                                 is_allow_charge_incorrect: bool = False):
         """Get atoms from xyz file.
         number_of_atoms - number if data lines
         ani_file -
@@ -155,7 +155,7 @@ class AtomicModel(object):
             d3 = float(s[indexes[3]])
             c = reg.sub('', s[indexes[0]])
             charge = mendeley.get_charge_by_letter(c)
-            if (charge > 0) or is_only_charge_correct:
+            if (charge > 0) or is_allow_charge_incorrect:
                 atoms.append([d1, d2, d3, c, charge])
         new_model = AtomicModel(atoms)
         new_model.set_lat_vectors_default()

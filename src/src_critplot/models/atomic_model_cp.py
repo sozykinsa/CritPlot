@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 # Python 3
+from typing import List
 
 import math
 import numpy as np
 from copy import deepcopy
 from numpy.linalg import inv
-from src_critplot.models.atom_cp import AtomCp as Atom
+from src_critplot.models.critical_point import CriticalPoint
+from core_gui_atomistic.atom import Atom
 from core_gui_atomistic.atomic_model import AtomicModel
 from core_gui_atomistic import helpers
 
 
 class AtomicModelCP(AtomicModel):
-    def __init__(self, new_atoms: list = []):
+    def __init__(self, new_atoms: List[Atom] = []):
         super().__init__(new_atoms)
-        self.cps = []
+        self.cps: List[CriticalPoint] = []
 
     def bond_path_points_optimize(self):
         for cp in self.cps:
@@ -73,9 +75,9 @@ class AtomicModelCP(AtomicModel):
 
             ind1 = self.cps[i].get_property("atom1")
             ind2 = self.cps[i].get_property("atom2")
-            p1 = Atom([*self.atoms[ind1].xyz, "xz", 1])
-            p2 = Atom([*self.cps[i].xyz, "xz", 1])
-            p3 = Atom([*self.atoms[ind2].xyz, "xz", 1])
+            p1 = CriticalPoint([*self.atoms[ind1].xyz, "xz", 1])
+            p2 = CriticalPoint([*self.cps[i].xyz, "xz", 1])
+            p3 = CriticalPoint([*self.atoms[ind2].xyz, "xz", 1])
 
             self.add_bond_path_point([p2, p1])
             self.add_bond_path_point([p2, p3])
@@ -113,8 +115,8 @@ class AtomicModelCP(AtomicModel):
                 bp_len = self.point_point_distance(pos1, pos3) + self.point_point_distance(pos2, pos3)
         return bp_len
 
-    def add_critical_point(self, atom):
-        self.cps.append(deepcopy(atom))
+    def add_critical_point(self, cp):
+        self.cps.append(deepcopy(cp))
 
     def add_bond_path_point(self, points):
         for cp in self.cps:
