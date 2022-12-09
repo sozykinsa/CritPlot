@@ -347,7 +347,7 @@ class MainForm(QMainWindow):
             if os.path.exists(f_name):
                 self.work_dir = os.path.dirname(f_name)
                 model = self.models[-1]
-                critic2.parse_cp_properties(f_name, model, is_only_charge_correct=False)
+                critic2.parse_bondpaths(f_name, model)
                 self.plot_last_model()
         except Exception as exs:
             self.show_error(exs)

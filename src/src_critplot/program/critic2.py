@@ -150,13 +150,16 @@ def init_crit_point(crit_info, let, period_table, title, x, y, z):
     return new_atom
 
 
-def parse_cp_properties(filename, model):
-    """Import bond paths from *.xyz file."""
+def parse_bondpaths(filename: str, model: AtomicModelCP) -> list[AtomicModelCP]:
+    """Import bond paths from *.xyz file.
+    filename - name of file
+    model - AtomicModelCP to add bondpaths from xyz file
+    """
     molecules = []
     if os.path.exists(filename):
         f = open(filename)
         number_of_atoms = int(math.fabs(int(f.readline())))
-        new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f)
+        new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f, is_only_charge_correct=False)
         new_model2 = model
         xz_points = []
 

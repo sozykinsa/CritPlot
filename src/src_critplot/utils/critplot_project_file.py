@@ -33,7 +33,7 @@ class CritPlotProjectFile(GUI4dftProjectFile):
                     while row.find("%critical points") < 0:
                         if row[0] == "xb":
                             let = "xb"
-                            title = let + data[0]
+                            title = let + row[0]
                             # new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                             # new_atom.set_property("atom1", int(data[6]))
                             # new_atom.set_property("atom2", int(data[10]))
