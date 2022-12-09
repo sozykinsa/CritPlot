@@ -31,7 +31,7 @@ class CritPlotProjectFile(GUI4dftProjectFile):
                 if row.find("%critical points") >= 0:
                     row = f.readline().split()
                     while row.find("%critical points") < 0:
-                        if row1[0] == "xb":
+                        if row[0] == "xb":
                             let = "xb"
                             title = let + data[0]
                             # new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
@@ -44,7 +44,7 @@ class CritPlotProjectFile(GUI4dftProjectFile):
                             # new_atom.set_property("atom1_translation", translation1)
                             # new_atom.set_property("atom2_translation", translation2)
                             # model.add_critical_point(new_atom)
-                        print(row1)
+                        print(row)
                         row = f.readline()
                 row = f.readline()
             f.close()
