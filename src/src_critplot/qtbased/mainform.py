@@ -230,6 +230,8 @@ class MainForm(QMainWindow):
         self.setup_actions()
 
     def setup_actions(self):
+        if is_with_figure and os.path.exists(Path(__file__).parent / "images" / 'ico.png'):
+            self.setWindowIcon(QIcon(str(Path(__file__).parent / "images" / 'ico.png')))
         if is_with_figure and os.path.exists(Path(__file__).parent / "images" / 'Open.png'):
             open_action = QAction(QIcon(str(Path(__file__).parent / "images" / 'Open.png')), 'Open', self)
         else:
@@ -987,16 +989,18 @@ class MainForm(QMainWindow):
         self.show_property_enabling()
 
     def show_property_enabling(self):  # pragma: no cover
+        standart_prop = ["bond1", "bond2", "bond1opt", "bond2opt", "atom1", "atom2"]
+        standart_prop.extend(["text", "atom1_translation", "atom2_translation"])
         if self.ui.openGLWidget.main_model.n_atoms() > 0:
             atom = self.ui.openGLWidget.main_model.atoms[0]
             atom_prop_type = QStandardItemModel()
             for key in atom.properties:
-                atom_prop_type.appendRow(QStandardItem(str(key)))
+                if str(key) not in standart_prop:
+                    atom_prop_type.appendRow(QStandardItem(str(key)))
             self.ui.PropertyForColorOfAtom.setModel(atom_prop_type)
         if self.ui.openGLWidget.main_model.n_bcp() > 0:
             bcp = self.ui.openGLWidget.main_model.cps[0]
             bcp_prop_type = QStandardItemModel()
-            standart_prop = ["bond1", "bond2", "bond1opt", "bond2opt", "atom1", "atom2"]
             for key in bcp.properties:
                 if str(key) not in standart_prop:
                     bcp_prop_type.appendRow(QStandardItem(str(key)))

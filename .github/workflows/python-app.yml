@@ -84,7 +84,7 @@ jobs:
         sudo apt-get install libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0
         sudo apt-get install libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
         sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
-        xvfb-run python -m pytest tests --cov=src/src_critplot --cov-report=xml --cov-report=term-missing --ignore=src/core_gui_atomistic
+        xvfb-run python -m pytest tests --cov=src/src_critplot --cov-report=xml --cov-report=term-missing --ignore=src/core_gui_atomistic --ignore=tests/critplot/opengl
 
   test-windows:
 
