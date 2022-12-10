@@ -711,31 +711,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_10">
         <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Atoms</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="AtomPropertiesText">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>250</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Critical points</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="criticalPointProp"/>
+         <widget class="QTextBrowser" name="atom_and_cp_properties_text"/>
         </item>
        </layout>
       </widget>

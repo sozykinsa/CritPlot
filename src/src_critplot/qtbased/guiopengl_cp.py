@@ -35,7 +35,6 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.color_of_rcp = (1, 1, 0)
 
         self.selected_cp_callback: Callable = None
-
         self.main_model = AtomicModelCP()
 
     def init_params(self, the_object) -> None:
@@ -46,22 +45,6 @@ class GuiOpenGLCP(GuiOpenGLBase):
         super().add_all_elements()
         self.add_critical_points()
         self.add_bond_path()
-
-    def set_form_elements(self, check_atom_selection=None, orientation_model_changed: Callable = None,
-                          selected_atom_position: Callable = None, selected_atom_changed: Callable = None,
-                          selected_cp_changed: Callable = None, quality=1):
-        """Set pointers for Form update.
-            Args:
-                check_atom_selection: ...
-                orientation_model_changed: pointer to MainForm.orientation_model_changed();
-                selected_atom_position: pointer to MainForm.selected_atom_position();
-                selected_atom_changed: pointer to MainForm.selected_atom_changed();
-                selected_cp_changed: pointer to MainForm.selected_cp_changed().
-                quality: ... .
-        """
-        super().set_form_elements(check_atom_selection, orientation_model_changed, selected_atom_position,
-                                  selected_atom_changed, quality)
-        self.selected_cp_callback = selected_cp_changed
 
     def set_property_show_cp(self, show_bcp, show_ccp, show_rcp):
         self.is_show_bcp = show_bcp
@@ -104,20 +87,14 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.add_bond_path()
         self.update()
 
-    def set_structure_parameters(self, atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box, box_color,
-                                 is_view_bonds, bonds_color, bond_width, bonds_by_atoms, is_view_axes, axes_color,
-                                 is_bcp_property_visible):
-        super().set_structure_parameters(atoms_colors, is_view_atoms, is_view_atom_numbers, is_view_box,
-                                         box_color, is_view_bonds, bonds_color, bond_width, bonds_by_atoms,
-                                         is_view_axes, axes_color, 8)
+    def set_cp_parameters(self, is_bcp_property_visible):
         self.is_bcp_property_visible = is_bcp_property_visible
         self.add_critical_points()
         self.add_bond_path()
         self.update()
 
     def selected_atom_properties_to_form(self):
-        super().selected_atom_properties_to_form()
-        self.selected_cp_callback(self.selected_cp)
+        self.selected_atom_callback([self.selected_atom, self.selected_cp])
 
     def add_critical_points(self):
         gl.glNewList(self.object + self.list_for_cp, gl.GL_COMPILE)

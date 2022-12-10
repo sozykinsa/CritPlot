@@ -440,26 +440,10 @@ class Ui_MainWindow(object):
         self.tab_4.setObjectName(u"tab_4")
         self.verticalLayout_10 = QVBoxLayout(self.tab_4)
         self.verticalLayout_10.setObjectName(u"verticalLayout_10")
-        self.label = QLabel(self.tab_4)
-        self.label.setObjectName(u"label")
+        self.atom_and_cp_properties_text = QTextBrowser(self.tab_4)
+        self.atom_and_cp_properties_text.setObjectName(u"atom_and_cp_properties_text")
 
-        self.verticalLayout_10.addWidget(self.label)
-
-        self.AtomPropertiesText = QTextBrowser(self.tab_4)
-        self.AtomPropertiesText.setObjectName(u"AtomPropertiesText")
-        self.AtomPropertiesText.setMaximumSize(QSize(16777215, 250))
-
-        self.verticalLayout_10.addWidget(self.AtomPropertiesText)
-
-        self.label_3 = QLabel(self.tab_4)
-        self.label_3.setObjectName(u"label_3")
-
-        self.verticalLayout_10.addWidget(self.label_3)
-
-        self.criticalPointProp = QTextBrowser(self.tab_4)
-        self.criticalPointProp.setObjectName(u"criticalPointProp")
-
-        self.verticalLayout_10.addWidget(self.criticalPointProp)
+        self.verticalLayout_10.addWidget(self.atom_and_cp_properties_text)
 
         self.tabWidget.addTab(self.tab_4, "")
         self.FormTabActions = QWidget()
@@ -2688,8 +2672,6 @@ class Ui_MainWindow(object):
         self.delete_cp_from_model.setText(QCoreApplication.translate("MainWindow", u"Exclude selected", None))
         self.leave_cp_in_model.setText(QCoreApplication.translate("MainWindow", u"Limit to selected", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_51), QCoreApplication.translate("MainWindow", u"CPs", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Atoms", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Critical points", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Selection", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Add or Modify Atom", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"Element", None))

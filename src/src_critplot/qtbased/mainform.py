@@ -41,7 +41,7 @@ class MainForm(QMainWindow):
         self.models = []
         self.ui.openGLWidget.set_form_elements(self.ui.FormSettingsViewCheckAtomSelection,
                                                self.orientation_model_changed, self.selected_atom_position,
-                                               self.selected_atom_changed, self.selected_cp_changed, 1)
+                                               self.selected_atom_changed, 1)
         self.PDOSdata = []
         self.filename: str = ""
         self.work_dir: str = None
@@ -1087,10 +1087,11 @@ class MainForm(QMainWindow):
         view_axes = self.ui.FormSettingsViewCheckShowAxes.isChecked()
         box_color = self.get_color_from_setting(self.state_Color_Of_Box)
         atoms_color = self.colors_of_atoms()
-        is_show_bcp_text = self.ui.show_bcp_text.isChecked()
         self.ui.openGLWidget.set_structure_parameters(atoms_color, view_atoms, view_atom_numbers, view_box, box_color,
                                                       view_bonds, bonds_color, bond_width, color_of_bonds_by_atoms,
-                                                      view_axes, axes_color, is_show_bcp_text)
+                                                      view_axes, axes_color)
+        is_show_bcp_text = self.ui.show_bcp_text.isChecked()
+        self.ui.openGLWidget.set_cp_parameters(is_show_bcp_text)
         self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
         self.ui.AtomsInSelectedFragment.clear()
 
@@ -1306,7 +1307,9 @@ class MainForm(QMainWindow):
         self.ui.FormActionsPreSpinAtomsCoordZ.setValue(position[2])
         self.ui.FormActionsPreSpinAtomsCoordZ.update()
 
-    def selected_atom_changed(self, selected_atom):
+    def selected_atom_changed(self, selected):
+        selected_atom = selected[0]
+        selected_cp = selected[1]
         if selected_atom == -1:
             self.history_of_atom_selection = []
         else:
@@ -1331,25 +1334,6 @@ class MainForm(QMainWindow):
                 if (len(self.history_of_atom_selection) > 2) and \
                         (self.history_of_atom_selection[-1] != self.history_of_atom_selection[-2]) \
                         and (self.history_of_atom_selection[-3] != self.history_of_atom_selection[-2]):
-                    # x1 = model.atoms[self.history_of_atom_selection[-1]].x
-                    # y1 = model.atoms[self.history_of_atom_selection[-1]].y
-                    # z1 = model.atoms[self.history_of_atom_selection[-1]].z
-
-                    # x2 = model.atoms[self.history_of_atom_selection[-2]].x
-                    # y2 = model.atoms[self.history_of_atom_selection[-2]].y
-                    # z2 = model.atoms[self.history_of_atom_selection[-2]].z
-
-                    # x3 = model.atoms[self.history_of_atom_selection[-3]].x
-                    # y3 = model.atoms[self.history_of_atom_selection[-3]].y
-                    # z3 = model.atoms[self.history_of_atom_selection[-3]].z
-
-                    # vx1 = x1 - x2
-                    # vy1 = y1 - y2
-                    # vz1 = z1 - z2
-
-                    # vx2 = x3 - x2
-                    # vy2 = y3 - y2
-                    # vz2 = z3 - z2
 
                     vec1 = model.atoms[self.history_of_atom_selection[-1]].xyz - \
                            model.atoms[self.history_of_atom_selection[-2]].xyz
@@ -1357,11 +1341,8 @@ class MainForm(QMainWindow):
                     vec2 = model.atoms[self.history_of_atom_selection[-3]].xyz - \
                            model.atoms[self.history_of_atom_selection[-2]].xyz
 
-                    # a1 = vx1 * vx2 + vy1 * vy2 + vz1 * vz2
                     a = np.dot(vec1, vec2)
-                    # b = math.sqrt(vx1 * vx1 + vy1 * vy1 + vz1 * vz1)
                     b = np.linalg.norm(vec1)
-                    # c = math.sqrt(vx2 * vx2 + vy2 * vy2 + vz2 * vz2)
                     c = np.linalg.norm(vec2)
 
                     arg = a / (b * c)
@@ -1374,11 +1355,7 @@ class MainForm(QMainWindow):
                             str(self.history_of_atom_selection[-2] + 1) + " - " + \
                             str(self.history_of_atom_selection[-3] + 1) + " : " + \
                             str(round(math.degrees(angle), 3)) + " degrees\n"
-        if selected_atom < 0:
-            text += "Select any atom."
-        self.ui.AtomPropertiesText.setText(text)
 
-    def selected_cp_changed(self, selected_cp):
         if selected_cp >= 0:
             model = self.models[self.active_model]
             text = "Selected critical point: " + str(selected_cp + 1) + " ("
@@ -1425,9 +1402,7 @@ class MainForm(QMainWindow):
             for key in model.cps[selected_cp].properties:
                 text += str(key) + ": " + str(model.cps[selected_cp].get_property(key)) + "\n"
 
-            # text += str(model.cps[selected_cp].get_property("text"))
         else:
-            text = "Select any critical point"
             self.ui.selectedCP.setText("...")
             self.ui.FormSelectedCP_f.setText("...")
             self.ui.FormSelectedCP_g.setText("...")
@@ -1435,7 +1410,10 @@ class MainForm(QMainWindow):
             self.ui.selectedCP_bpLenLine.setText("...")
             self.ui.selected_cp_title.setText("...")
             self.ui.selectedCP_nuclei.setText("...")
-        self.ui.criticalPointProp.setText(text)
+
+        if (selected_atom < 0) and (selected_cp < 0):
+            text += "Select any atom or critical point."
+        self.ui.atom_and_cp_properties_text.setText(text)
 
     def set_manual_colors_default(self):
         self.periodic_table.init_manual_colors()
@@ -1504,7 +1482,6 @@ class MainForm(QMainWindow):
             return
 
         fl = True
-
         for i in range(0, self.ui.FormCPlist.count()):
             if self.ui.FormCPlist.item(i).text() == new_cp:
                 fl = False

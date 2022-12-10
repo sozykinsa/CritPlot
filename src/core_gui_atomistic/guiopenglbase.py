@@ -817,7 +817,7 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.orientation_model_changed(self.rotation_angles, self.camera_position, self.scale_factor)
 
     def selected_atom_properties_to_form(self):
-        self.selected_atom_callback(self.selected_atom)
+        self.selected_atom_callback([self.selected_atom])
 
     def selected_atom_changed(self):
         if self.selected_atom >= 0:

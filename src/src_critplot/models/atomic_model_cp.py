@@ -138,9 +138,10 @@ class AtomicModelCP(AtomicModel):
         data = ""
         for ind in cp_list:
             title = ""
-            cp = self.cps[ind]
+            cp = self.cps[ind - 1]
             title += "CP" + delimiter
             data += str(ind) + delimiter
+            print(cp.let)
             if cp.let == "xb":
                 title += "atoms" + delimiter + "dist" + delimiter
                 ind1 = cp.get_property("atom1")
@@ -150,24 +151,27 @@ class AtomicModelCP(AtomicModel):
                 data += atom1 + "-" + atom2 + delimiter
                 dist_line = round(self.bond_path_len(cp), 4)
                 data += '" ' + str(dist_line) + ' "' + delimiter
-
-            data_list = cp.get_property("text")
-            if data_list:
-                data_list = data_list.split("\n")
-                i = 0
-
-                while i < len(data_list):
-                    if (data_list[i].find("Hessian") < 0) and (len(data_list[i]) > 0):
-                        col_title = helpers.spacedel(data_list[i].split(":")[0])
-                        col_data = data_list[i].split(":")[1].split()
-                        for k in range(len(col_data)):
-                            title += '"' + col_title
-                            if len(col_data) > 1:
-                                title += "_" + str(k + 1)
-                            title += '"' + delimiter
-                            data += '"' + col_data[k] + '"' + delimiter
-                        i += 1
-                    else:
-                        i += 4
-                data += '\n'
+                data_list = cp.get_property("text")
+                if data_list:
+                    data, title = self.text_field_to_csv(data, data_list, delimiter, title)
         return title + "\n" + data
+
+    @staticmethod
+    def text_field_to_csv(data, data_list, delimiter, title):
+        data_list = data_list.split("\n")
+        i = 0
+        while i < len(data_list):
+            if (data_list[i].find("Hessian") < 0) and (len(data_list[i]) > 0):
+                col_title = helpers.spacedel(data_list[i].split(":")[0])
+                col_data = data_list[i].split(":")[1].split()
+                for k in range(len(col_data)):
+                    title += '"' + col_title
+                    if len(col_data) > 1:
+                        title += "_" + str(k + 1)
+                    title += '"' + delimiter
+                    data += '"' + col_data[k] + '"' + delimiter
+                i += 1
+            else:
+                i += 4
+        data += '\n'
+        return data, title
