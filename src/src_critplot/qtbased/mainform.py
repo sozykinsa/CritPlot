@@ -1525,7 +1525,7 @@ class MainForm(QMainWindow):
             model = self.models[self.active_model]
             for i in range(0, self.ui.FormCPlist.count()):
                 ind = int(self.ui.FormCPlist.item(i).text())
-                bcp_selected.append(model.cps[ind])
+                bcp_selected.append(model.cps[ind - 1])
         return bcp_selected
 
     def create_critic2_xyz_file(self):  # pragma: no cover
@@ -1552,10 +1552,8 @@ class MainForm(QMainWindow):
                 for i in range(0, self.ui.FormCPlist.count()):
                     ind = int(self.ui.FormCPlist.item(i).text())
                     cp_list.append(ind)
-            elif self.ui.form_critic_all.isChecked():
-                cp_list = range(len(model.cps))
             else:
-                print("TODO: all from file")
+                cp_list = range(1, len(model.cps) + 1)
             text = model.create_csv_file_cp(cp_list)
             helpers.write_text_to_file(f_name, text)
 

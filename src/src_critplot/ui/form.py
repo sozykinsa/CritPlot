@@ -232,13 +232,13 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.FormTabModel, "")
         self.tab_51 = QWidget()
         self.tab_51.setObjectName(u"tab_51")
-        self.verticalLayout_15 = QVBoxLayout(self.tab_51)
-        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.verticalLayout_12 = QVBoxLayout(self.tab_51)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
         self.add_xyz_critic_data = QPushButton(self.tab_51)
         self.add_xyz_critic_data.setObjectName(u"add_xyz_critic_data")
         self.add_xyz_critic_data.setEnabled(False)
 
-        self.verticalLayout_15.addWidget(self.add_xyz_critic_data)
+        self.verticalLayout_12.addWidget(self.add_xyz_critic_data)
 
         self.groupBox_30 = QGroupBox(self.tab_51)
         self.groupBox_30.setObjectName(u"groupBox_30")
@@ -387,7 +387,70 @@ class Ui_MainWindow(object):
         self.verticalLayout_16.addWidget(self.frame_113)
 
 
-        self.verticalLayout_15.addWidget(self.groupBox_30)
+        self.verticalLayout_12.addWidget(self.groupBox_30)
+
+        self.groupBox_6 = QGroupBox(self.tab_51)
+        self.groupBox_6.setObjectName(u"groupBox_6")
+        self.groupBox_6.setMinimumSize(QSize(0, 0))
+        self.verticalLayout_9 = QVBoxLayout(self.groupBox_6)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.verticalLayout_9.setContentsMargins(-1, 0, -1, 0)
+        self.frame_3 = QFrame(self.groupBox_6)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setFrameShape(QFrame.NoFrame)
+        self.frame_3.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_7 = QHBoxLayout(self.frame_3)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.horizontalLayout_7.setContentsMargins(0, 5, 0, 0)
+        self.show_bcp = QCheckBox(self.frame_3)
+        self.show_bcp.setObjectName(u"show_bcp")
+        self.show_bcp.setChecked(True)
+
+        self.horizontalLayout_7.addWidget(self.show_bcp)
+
+        self.show_bond_path = QCheckBox(self.frame_3)
+        self.show_bond_path.setObjectName(u"show_bond_path")
+        self.show_bond_path.setChecked(True)
+
+        self.horizontalLayout_7.addWidget(self.show_bond_path)
+
+        self.show_rcp = QCheckBox(self.frame_3)
+        self.show_rcp.setObjectName(u"show_rcp")
+        self.show_rcp.setChecked(True)
+
+        self.horizontalLayout_7.addWidget(self.show_rcp)
+
+        self.show_ccp = QCheckBox(self.frame_3)
+        self.show_ccp.setObjectName(u"show_ccp")
+        self.show_ccp.setChecked(True)
+
+        self.horizontalLayout_7.addWidget(self.show_ccp)
+
+
+        self.verticalLayout_9.addWidget(self.frame_3)
+
+        self.frame_160 = QFrame(self.groupBox_6)
+        self.frame_160.setObjectName(u"frame_160")
+        self.frame_160.setFrameShape(QFrame.NoFrame)
+        self.frame_160.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_178 = QHBoxLayout(self.frame_160)
+        self.horizontalLayout_178.setObjectName(u"horizontalLayout_178")
+        self.horizontalLayout_178.setContentsMargins(0, -1, 0, -1)
+        self.show_bcp_text = QCheckBox(self.frame_160)
+        self.show_bcp_text.setObjectName(u"show_bcp_text")
+
+        self.horizontalLayout_178.addWidget(self.show_bcp_text)
+
+        self.PropertyForBCPtext = QComboBox(self.frame_160)
+        self.PropertyForBCPtext.setObjectName(u"PropertyForBCPtext")
+
+        self.horizontalLayout_178.addWidget(self.PropertyForBCPtext)
+
+
+        self.verticalLayout_9.addWidget(self.frame_160)
+
+
+        self.verticalLayout_12.addWidget(self.groupBox_6)
 
         self.groupBox_5 = QGroupBox(self.tab_51)
         self.groupBox_5.setObjectName(u"groupBox_5")
@@ -433,7 +496,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.addWidget(self.frame_16)
 
 
-        self.verticalLayout_15.addWidget(self.groupBox_5)
+        self.verticalLayout_12.addWidget(self.groupBox_5)
 
         self.tabWidget.addTab(self.tab_51, "")
         self.tab_4 = QWidget()
@@ -957,11 +1020,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_99.addWidget(self.form_critic_all)
 
-        self.form_critic_from_file = QRadioButton(self.frame_58)
-        self.form_critic_from_file.setObjectName(u"form_critic_from_file")
-
-        self.verticalLayout_99.addWidget(self.form_critic_from_file)
-
 
         self.verticalLayout_88.addWidget(self.frame_58)
 
@@ -1261,23 +1319,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addWidget(self.tabWidget_15)
 
         self.tabWidget.addTab(self.tab_2, "")
-        self.tab_29 = QWidget()
-        self.tab_29.setObjectName(u"tab_29")
-        self.verticalLayout_23 = QVBoxLayout(self.tab_29)
-        self.verticalLayout_23.setObjectName(u"verticalLayout_23")
-        self.tabWidget_9 = QTabWidget(self.tab_29)
-        self.tabWidget_9.setObjectName(u"tabWidget_9")
-        self.tab_32 = QWidget()
-        self.tab_32.setObjectName(u"tab_32")
-        self.verticalLayout_18 = QVBoxLayout(self.tab_32)
-        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
-        self.FormSettingsViewCheckShowAtoms = QCheckBox(self.tab_32)
-        self.FormSettingsViewCheckShowAtoms.setObjectName(u"FormSettingsViewCheckShowAtoms")
-        self.FormSettingsViewCheckShowAtoms.setEnabled(True)
-
-        self.verticalLayout_18.addWidget(self.FormSettingsViewCheckShowAtoms)
-
-        self.frame_36 = QFrame(self.tab_32)
+        self.tab = QWidget()
+        self.tab.setObjectName(u"tab")
+        self.verticalLayout_15 = QVBoxLayout(self.tab)
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.frame_36 = QFrame(self.tab)
         self.frame_36.setObjectName(u"frame_36")
         self.frame_36.setFrameShape(QFrame.NoFrame)
         self.frame_36.setFrameShadow(QFrame.Raised)
@@ -1295,7 +1341,198 @@ class Ui_MainWindow(object):
         self.horizontalLayout_177.addWidget(self.PropertyForColorOfAtom)
 
 
-        self.verticalLayout_18.addWidget(self.frame_36)
+        self.verticalLayout_15.addWidget(self.frame_36)
+
+        self.ActivateFragmentSelectionModeCheckBox = QCheckBox(self.tab)
+        self.ActivateFragmentSelectionModeCheckBox.setObjectName(u"ActivateFragmentSelectionModeCheckBox")
+
+        self.verticalLayout_15.addWidget(self.ActivateFragmentSelectionModeCheckBox)
+
+        self.groupBox_21 = QGroupBox(self.tab)
+        self.groupBox_21.setObjectName(u"groupBox_21")
+        self.groupBox_21.setMinimumSize(QSize(0, 60))
+        self.horizontalLayout_72 = QHBoxLayout(self.groupBox_21)
+        self.horizontalLayout_72.setObjectName(u"horizontalLayout_72")
+        self.label_52 = QLabel(self.groupBox_21)
+        self.label_52.setObjectName(u"label_52")
+
+        self.horizontalLayout_72.addWidget(self.label_52)
+
+        self.ActivateFragmentSelectionTransp = QDoubleSpinBox(self.groupBox_21)
+        self.ActivateFragmentSelectionTransp.setObjectName(u"ActivateFragmentSelectionTransp")
+        self.ActivateFragmentSelectionTransp.setMaximum(1.000000000000000)
+        self.ActivateFragmentSelectionTransp.setSingleStep(0.100000000000000)
+        self.ActivateFragmentSelectionTransp.setValue(0.700000000000000)
+
+        self.horizontalLayout_72.addWidget(self.ActivateFragmentSelectionTransp)
+
+        self.horizontalSpacer_47 = QSpacerItem(228, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_72.addItem(self.horizontalSpacer_47)
+
+
+        self.verticalLayout_15.addWidget(self.groupBox_21)
+
+        self.AtomsInSelectedFragment = QListWidget(self.tab)
+        self.AtomsInSelectedFragment.setObjectName(u"AtomsInSelectedFragment")
+
+        self.verticalLayout_15.addWidget(self.AtomsInSelectedFragment)
+
+        self.frame_61 = QFrame(self.tab)
+        self.frame_61.setObjectName(u"frame_61")
+        self.frame_61.setFrameShape(QFrame.NoFrame)
+        self.frame_61.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_53 = QHBoxLayout(self.frame_61)
+        self.horizontalLayout_53.setObjectName(u"horizontalLayout_53")
+        self.label_55 = QLabel(self.frame_61)
+        self.label_55.setObjectName(u"label_55")
+
+        self.horizontalLayout_53.addWidget(self.label_55)
+
+        self.xminborder = QDoubleSpinBox(self.frame_61)
+        self.xminborder.setObjectName(u"xminborder")
+        self.xminborder.setMinimum(-99.989999999999995)
+
+        self.horizontalLayout_53.addWidget(self.xminborder)
+
+        self.label_57 = QLabel(self.frame_61)
+        self.label_57.setObjectName(u"label_57")
+
+        self.horizontalLayout_53.addWidget(self.label_57)
+
+        self.xmaxborder = QDoubleSpinBox(self.frame_61)
+        self.xmaxborder.setObjectName(u"xmaxborder")
+        self.xmaxborder.setMinimum(-99.989999999999995)
+        self.xmaxborder.setValue(2.000000000000000)
+
+        self.horizontalLayout_53.addWidget(self.xmaxborder)
+
+        self.changeFragment1StatusByX = QPushButton(self.frame_61)
+        self.changeFragment1StatusByX.setObjectName(u"changeFragment1StatusByX")
+        self.changeFragment1StatusByX.setEnabled(False)
+
+        self.horizontalLayout_53.addWidget(self.changeFragment1StatusByX)
+
+
+        self.verticalLayout_15.addWidget(self.frame_61)
+
+        self.frame_62 = QFrame(self.tab)
+        self.frame_62.setObjectName(u"frame_62")
+        self.frame_62.setFrameShape(QFrame.NoFrame)
+        self.frame_62.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_54 = QHBoxLayout(self.frame_62)
+        self.horizontalLayout_54.setObjectName(u"horizontalLayout_54")
+        self.label_58 = QLabel(self.frame_62)
+        self.label_58.setObjectName(u"label_58")
+
+        self.horizontalLayout_54.addWidget(self.label_58)
+
+        self.yminborder = QDoubleSpinBox(self.frame_62)
+        self.yminborder.setObjectName(u"yminborder")
+        self.yminborder.setMinimum(-99.989999999999995)
+
+        self.horizontalLayout_54.addWidget(self.yminborder)
+
+        self.label_59 = QLabel(self.frame_62)
+        self.label_59.setObjectName(u"label_59")
+
+        self.horizontalLayout_54.addWidget(self.label_59)
+
+        self.ymaxborder = QDoubleSpinBox(self.frame_62)
+        self.ymaxborder.setObjectName(u"ymaxborder")
+        self.ymaxborder.setMinimum(-99.989999999999995)
+        self.ymaxborder.setValue(2.000000000000000)
+
+        self.horizontalLayout_54.addWidget(self.ymaxborder)
+
+        self.changeFragment1StatusByY = QPushButton(self.frame_62)
+        self.changeFragment1StatusByY.setObjectName(u"changeFragment1StatusByY")
+        self.changeFragment1StatusByY.setEnabled(False)
+
+        self.horizontalLayout_54.addWidget(self.changeFragment1StatusByY)
+
+
+        self.verticalLayout_15.addWidget(self.frame_62)
+
+        self.frame_63 = QFrame(self.tab)
+        self.frame_63.setObjectName(u"frame_63")
+        self.frame_63.setFrameShape(QFrame.NoFrame)
+        self.frame_63.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_55 = QHBoxLayout(self.frame_63)
+        self.horizontalLayout_55.setObjectName(u"horizontalLayout_55")
+        self.label_60 = QLabel(self.frame_63)
+        self.label_60.setObjectName(u"label_60")
+
+        self.horizontalLayout_55.addWidget(self.label_60)
+
+        self.zminborder = QDoubleSpinBox(self.frame_63)
+        self.zminborder.setObjectName(u"zminborder")
+        self.zminborder.setMinimum(-99.989999999999995)
+
+        self.horizontalLayout_55.addWidget(self.zminborder)
+
+        self.label_61 = QLabel(self.frame_63)
+        self.label_61.setObjectName(u"label_61")
+
+        self.horizontalLayout_55.addWidget(self.label_61)
+
+        self.zmaxborder = QDoubleSpinBox(self.frame_63)
+        self.zmaxborder.setObjectName(u"zmaxborder")
+        self.zmaxborder.setMinimum(-99.989999999999995)
+        self.zmaxborder.setValue(2.000000000000000)
+
+        self.horizontalLayout_55.addWidget(self.zmaxborder)
+
+        self.changeFragment1StatusByZ = QPushButton(self.frame_63)
+        self.changeFragment1StatusByZ.setObjectName(u"changeFragment1StatusByZ")
+        self.changeFragment1StatusByZ.setEnabled(False)
+
+        self.horizontalLayout_55.addWidget(self.changeFragment1StatusByZ)
+
+
+        self.verticalLayout_15.addWidget(self.frame_63)
+
+        self.frame_64 = QFrame(self.tab)
+        self.frame_64.setObjectName(u"frame_64")
+        self.frame_64.setMinimumSize(QSize(0, 40))
+        self.frame_64.setFrameShape(QFrame.NoFrame)
+        self.frame_64.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_56 = QHBoxLayout(self.frame_64)
+        self.horizontalLayout_56.setObjectName(u"horizontalLayout_56")
+        self.horizontalLayout_56.setContentsMargins(-1, 0, -1, 0)
+        self.horizontalSpacer_28 = QSpacerItem(107, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_56.addItem(self.horizontalSpacer_28)
+
+        self.fragment1Clear = QPushButton(self.frame_64)
+        self.fragment1Clear.setObjectName(u"fragment1Clear")
+        self.fragment1Clear.setEnabled(False)
+
+        self.horizontalLayout_56.addWidget(self.fragment1Clear)
+
+        self.horizontalSpacer_29 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_56.addItem(self.horizontalSpacer_29)
+
+
+        self.verticalLayout_15.addWidget(self.frame_64)
+
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_29 = QWidget()
+        self.tab_29.setObjectName(u"tab_29")
+        self.verticalLayout_23 = QVBoxLayout(self.tab_29)
+        self.verticalLayout_23.setObjectName(u"verticalLayout_23")
+        self.tabWidget_9 = QTabWidget(self.tab_29)
+        self.tabWidget_9.setObjectName(u"tabWidget_9")
+        self.tab_32 = QWidget()
+        self.tab_32.setObjectName(u"tab_32")
+        self.verticalLayout_18 = QVBoxLayout(self.tab_32)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.FormSettingsViewCheckShowAtoms = QCheckBox(self.tab_32)
+        self.FormSettingsViewCheckShowAtoms.setObjectName(u"FormSettingsViewCheckShowAtoms")
+        self.FormSettingsViewCheckShowAtoms.setEnabled(True)
+
+        self.verticalLayout_18.addWidget(self.FormSettingsViewCheckShowAtoms)
 
         self.FormSettingsViewCheckShowBox = QCheckBox(self.tab_32)
         self.FormSettingsViewCheckShowBox.setObjectName(u"FormSettingsViewCheckShowBox")
@@ -1479,73 +1716,6 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_18.addWidget(self.groupBox_34)
-
-        self.groupBox_6 = QGroupBox(self.tab_32)
-        self.groupBox_6.setObjectName(u"groupBox_6")
-        self.groupBox_6.setMinimumSize(QSize(0, 0))
-        self.verticalLayout_9 = QVBoxLayout(self.groupBox_6)
-        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
-        self.verticalLayout_9.setContentsMargins(-1, 0, -1, 0)
-        self.frame_3 = QFrame(self.groupBox_6)
-        self.frame_3.setObjectName(u"frame_3")
-        self.frame_3.setFrameShape(QFrame.NoFrame)
-        self.frame_3.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_7 = QHBoxLayout(self.frame_3)
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.label_4 = QLabel(self.frame_3)
-        self.label_4.setObjectName(u"label_4")
-
-        self.horizontalLayout_7.addWidget(self.label_4)
-
-        self.show_bcp = QCheckBox(self.frame_3)
-        self.show_bcp.setObjectName(u"show_bcp")
-        self.show_bcp.setChecked(True)
-
-        self.horizontalLayout_7.addWidget(self.show_bcp)
-
-        self.show_rcp = QCheckBox(self.frame_3)
-        self.show_rcp.setObjectName(u"show_rcp")
-        self.show_rcp.setChecked(True)
-
-        self.horizontalLayout_7.addWidget(self.show_rcp)
-
-        self.show_ccp = QCheckBox(self.frame_3)
-        self.show_ccp.setObjectName(u"show_ccp")
-        self.show_ccp.setChecked(True)
-
-        self.horizontalLayout_7.addWidget(self.show_ccp)
-
-
-        self.verticalLayout_9.addWidget(self.frame_3)
-
-        self.show_bond_path = QCheckBox(self.groupBox_6)
-        self.show_bond_path.setObjectName(u"show_bond_path")
-        self.show_bond_path.setChecked(True)
-
-        self.verticalLayout_9.addWidget(self.show_bond_path)
-
-        self.frame_160 = QFrame(self.groupBox_6)
-        self.frame_160.setObjectName(u"frame_160")
-        self.frame_160.setFrameShape(QFrame.NoFrame)
-        self.frame_160.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_178 = QHBoxLayout(self.frame_160)
-        self.horizontalLayout_178.setObjectName(u"horizontalLayout_178")
-        self.horizontalLayout_178.setContentsMargins(0, -1, 0, -1)
-        self.show_bcp_text = QCheckBox(self.frame_160)
-        self.show_bcp_text.setObjectName(u"show_bcp_text")
-
-        self.horizontalLayout_178.addWidget(self.show_bcp_text)
-
-        self.PropertyForBCPtext = QComboBox(self.frame_160)
-        self.PropertyForBCPtext.setObjectName(u"PropertyForBCPtext")
-
-        self.horizontalLayout_178.addWidget(self.PropertyForBCPtext)
-
-
-        self.verticalLayout_9.addWidget(self.frame_160)
-
-
-        self.verticalLayout_18.addWidget(self.groupBox_6)
 
         self.groupBox_29 = QGroupBox(self.tab_32)
         self.groupBox_29.setObjectName(u"groupBox_29")
@@ -1812,185 +1982,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_58.addItem(self.verticalSpacer_27)
 
         self.tabWidget_9.addTab(self.tab_33, "")
-        self.tab_34 = QWidget()
-        self.tab_34.setObjectName(u"tab_34")
-        self.verticalLayout_89 = QVBoxLayout(self.tab_34)
-        self.verticalLayout_89.setObjectName(u"verticalLayout_89")
-        self.ActivateFragmentSelectionModeCheckBox = QCheckBox(self.tab_34)
-        self.ActivateFragmentSelectionModeCheckBox.setObjectName(u"ActivateFragmentSelectionModeCheckBox")
-
-        self.verticalLayout_89.addWidget(self.ActivateFragmentSelectionModeCheckBox)
-
-        self.groupBox_21 = QGroupBox(self.tab_34)
-        self.groupBox_21.setObjectName(u"groupBox_21")
-        self.groupBox_21.setMinimumSize(QSize(0, 60))
-        self.horizontalLayout_72 = QHBoxLayout(self.groupBox_21)
-        self.horizontalLayout_72.setObjectName(u"horizontalLayout_72")
-        self.label_52 = QLabel(self.groupBox_21)
-        self.label_52.setObjectName(u"label_52")
-
-        self.horizontalLayout_72.addWidget(self.label_52)
-
-        self.ActivateFragmentSelectionTransp = QDoubleSpinBox(self.groupBox_21)
-        self.ActivateFragmentSelectionTransp.setObjectName(u"ActivateFragmentSelectionTransp")
-        self.ActivateFragmentSelectionTransp.setMaximum(1.000000000000000)
-        self.ActivateFragmentSelectionTransp.setSingleStep(0.100000000000000)
-        self.ActivateFragmentSelectionTransp.setValue(0.700000000000000)
-
-        self.horizontalLayout_72.addWidget(self.ActivateFragmentSelectionTransp)
-
-        self.horizontalSpacer_47 = QSpacerItem(228, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_72.addItem(self.horizontalSpacer_47)
-
-
-        self.verticalLayout_89.addWidget(self.groupBox_21)
-
-        self.AtomsInSelectedFragment = QListWidget(self.tab_34)
-        self.AtomsInSelectedFragment.setObjectName(u"AtomsInSelectedFragment")
-
-        self.verticalLayout_89.addWidget(self.AtomsInSelectedFragment)
-
-        self.frame_61 = QFrame(self.tab_34)
-        self.frame_61.setObjectName(u"frame_61")
-        self.frame_61.setFrameShape(QFrame.NoFrame)
-        self.frame_61.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_53 = QHBoxLayout(self.frame_61)
-        self.horizontalLayout_53.setObjectName(u"horizontalLayout_53")
-        self.label_55 = QLabel(self.frame_61)
-        self.label_55.setObjectName(u"label_55")
-
-        self.horizontalLayout_53.addWidget(self.label_55)
-
-        self.xminborder = QDoubleSpinBox(self.frame_61)
-        self.xminborder.setObjectName(u"xminborder")
-        self.xminborder.setMinimum(-99.989999999999995)
-
-        self.horizontalLayout_53.addWidget(self.xminborder)
-
-        self.label_57 = QLabel(self.frame_61)
-        self.label_57.setObjectName(u"label_57")
-
-        self.horizontalLayout_53.addWidget(self.label_57)
-
-        self.xmaxborder = QDoubleSpinBox(self.frame_61)
-        self.xmaxborder.setObjectName(u"xmaxborder")
-        self.xmaxborder.setMinimum(-99.989999999999995)
-        self.xmaxborder.setValue(2.000000000000000)
-
-        self.horizontalLayout_53.addWidget(self.xmaxborder)
-
-        self.changeFragment1StatusByX = QPushButton(self.frame_61)
-        self.changeFragment1StatusByX.setObjectName(u"changeFragment1StatusByX")
-        self.changeFragment1StatusByX.setEnabled(False)
-
-        self.horizontalLayout_53.addWidget(self.changeFragment1StatusByX)
-
-
-        self.verticalLayout_89.addWidget(self.frame_61)
-
-        self.frame_62 = QFrame(self.tab_34)
-        self.frame_62.setObjectName(u"frame_62")
-        self.frame_62.setFrameShape(QFrame.NoFrame)
-        self.frame_62.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_54 = QHBoxLayout(self.frame_62)
-        self.horizontalLayout_54.setObjectName(u"horizontalLayout_54")
-        self.label_58 = QLabel(self.frame_62)
-        self.label_58.setObjectName(u"label_58")
-
-        self.horizontalLayout_54.addWidget(self.label_58)
-
-        self.yminborder = QDoubleSpinBox(self.frame_62)
-        self.yminborder.setObjectName(u"yminborder")
-        self.yminborder.setMinimum(-99.989999999999995)
-
-        self.horizontalLayout_54.addWidget(self.yminborder)
-
-        self.label_59 = QLabel(self.frame_62)
-        self.label_59.setObjectName(u"label_59")
-
-        self.horizontalLayout_54.addWidget(self.label_59)
-
-        self.ymaxborder = QDoubleSpinBox(self.frame_62)
-        self.ymaxborder.setObjectName(u"ymaxborder")
-        self.ymaxborder.setMinimum(-99.989999999999995)
-        self.ymaxborder.setValue(2.000000000000000)
-
-        self.horizontalLayout_54.addWidget(self.ymaxborder)
-
-        self.changeFragment1StatusByY = QPushButton(self.frame_62)
-        self.changeFragment1StatusByY.setObjectName(u"changeFragment1StatusByY")
-        self.changeFragment1StatusByY.setEnabled(False)
-
-        self.horizontalLayout_54.addWidget(self.changeFragment1StatusByY)
-
-
-        self.verticalLayout_89.addWidget(self.frame_62)
-
-        self.frame_63 = QFrame(self.tab_34)
-        self.frame_63.setObjectName(u"frame_63")
-        self.frame_63.setFrameShape(QFrame.NoFrame)
-        self.frame_63.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_55 = QHBoxLayout(self.frame_63)
-        self.horizontalLayout_55.setObjectName(u"horizontalLayout_55")
-        self.label_60 = QLabel(self.frame_63)
-        self.label_60.setObjectName(u"label_60")
-
-        self.horizontalLayout_55.addWidget(self.label_60)
-
-        self.zminborder = QDoubleSpinBox(self.frame_63)
-        self.zminborder.setObjectName(u"zminborder")
-        self.zminborder.setMinimum(-99.989999999999995)
-
-        self.horizontalLayout_55.addWidget(self.zminborder)
-
-        self.label_61 = QLabel(self.frame_63)
-        self.label_61.setObjectName(u"label_61")
-
-        self.horizontalLayout_55.addWidget(self.label_61)
-
-        self.zmaxborder = QDoubleSpinBox(self.frame_63)
-        self.zmaxborder.setObjectName(u"zmaxborder")
-        self.zmaxborder.setMinimum(-99.989999999999995)
-        self.zmaxborder.setValue(2.000000000000000)
-
-        self.horizontalLayout_55.addWidget(self.zmaxborder)
-
-        self.changeFragment1StatusByZ = QPushButton(self.frame_63)
-        self.changeFragment1StatusByZ.setObjectName(u"changeFragment1StatusByZ")
-        self.changeFragment1StatusByZ.setEnabled(False)
-
-        self.horizontalLayout_55.addWidget(self.changeFragment1StatusByZ)
-
-
-        self.verticalLayout_89.addWidget(self.frame_63)
-
-        self.frame_64 = QFrame(self.tab_34)
-        self.frame_64.setObjectName(u"frame_64")
-        self.frame_64.setMinimumSize(QSize(0, 40))
-        self.frame_64.setFrameShape(QFrame.NoFrame)
-        self.frame_64.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_56 = QHBoxLayout(self.frame_64)
-        self.horizontalLayout_56.setObjectName(u"horizontalLayout_56")
-        self.horizontalLayout_56.setContentsMargins(-1, 0, -1, 0)
-        self.horizontalSpacer_28 = QSpacerItem(107, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_56.addItem(self.horizontalSpacer_28)
-
-        self.fragment1Clear = QPushButton(self.frame_64)
-        self.fragment1Clear.setObjectName(u"fragment1Clear")
-        self.fragment1Clear.setEnabled(False)
-
-        self.horizontalLayout_56.addWidget(self.fragment1Clear)
-
-        self.horizontalSpacer_29 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_56.addItem(self.horizontalSpacer_29)
-
-
-        self.verticalLayout_89.addWidget(self.frame_64)
-
-        self.tabWidget_9.addTab(self.tab_34, "")
         self.tab_37 = QWidget()
         self.tab_37.setObjectName(u"tab_37")
         self.verticalLayout_14 = QVBoxLayout(self.tab_37)
@@ -2666,6 +2657,12 @@ class Ui_MainWindow(object):
         self.FormSelectedCP_g.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_87.setText(QCoreApplication.translate("MainWindow", u"Lap:", None))
         self.FormSelectedCP_lap.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Show", None))
+        self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"BCP", None))
+        self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Show bond path", None))
+        self.show_rcp.setText(QCoreApplication.translate("MainWindow", u"RCP", None))
+        self.show_ccp.setText(QCoreApplication.translate("MainWindow", u"CCP", None))
+        self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"Show BCP property", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"List of CP", None))
         self.add_cp_to_list.setText(QCoreApplication.translate("MainWindow", u"Add to List", None))
         self.delete_cp_from_list.setText(QCoreApplication.translate("MainWindow", u"Delete selected from List", None))
@@ -2706,7 +2703,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("MainWindow", u"Bonds", None))
         self.form_critic_list.setText(QCoreApplication.translate("MainWindow", u"From list", None))
         self.form_critic_all.setText(QCoreApplication.translate("MainWindow", u"All CP", None))
-        self.form_critic_from_file.setText(QCoreApplication.translate("MainWindow", u"All from file", None))
         self.export_cp_to_csv.setText(QCoreApplication.translate("MainWindow", u"Export to *.csv", None))
         self.tabWidget_15.setTabText(self.tabWidget_15.indexOf(self.tab_39), QCoreApplication.translate("MainWindow", u"*.csv", None))
         self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_48), QCoreApplication.translate("MainWindow", u"Imports", None))
@@ -2736,8 +2732,22 @@ class Ui_MainWindow(object):
         self.save_all_data.setText(QCoreApplication.translate("MainWindow", u"SaveAllData", None))
         self.tabWidget_15.setTabText(self.tabWidget_15.indexOf(self.tab_52), QCoreApplication.translate("MainWindow", u"*.xyz", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Export", None))
-        self.FormSettingsViewCheckShowAtoms.setText(QCoreApplication.translate("MainWindow", u"Show atoms", None))
         self.ColorAtomsProperty.setText(QCoreApplication.translate("MainWindow", u"Color atoms with property", None))
+        self.ActivateFragmentSelectionModeCheckBox.setText(QCoreApplication.translate("MainWindow", u"Activate fragment selection mode", None))
+        self.groupBox_21.setTitle(QCoreApplication.translate("MainWindow", u"Visual effect for selected fragment", None))
+        self.label_52.setText(QCoreApplication.translate("MainWindow", u"Transparency", None))
+        self.label_55.setText(QCoreApplication.translate("MainWindow", u"x from", None))
+        self.label_57.setText(QCoreApplication.translate("MainWindow", u"to", None))
+        self.changeFragment1StatusByX.setText(QCoreApplication.translate("MainWindow", u"change status", None))
+        self.label_58.setText(QCoreApplication.translate("MainWindow", u"y from", None))
+        self.label_59.setText(QCoreApplication.translate("MainWindow", u"to", None))
+        self.changeFragment1StatusByY.setText(QCoreApplication.translate("MainWindow", u"change status", None))
+        self.label_60.setText(QCoreApplication.translate("MainWindow", u"z from", None))
+        self.label_61.setText(QCoreApplication.translate("MainWindow", u"to", None))
+        self.changeFragment1StatusByZ.setText(QCoreApplication.translate("MainWindow", u"change status", None))
+        self.fragment1Clear.setText(QCoreApplication.translate("MainWindow", u"clear", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Coloring", None))
+        self.FormSettingsViewCheckShowAtoms.setText(QCoreApplication.translate("MainWindow", u"Show atoms", None))
         self.FormSettingsViewCheckShowBox.setText(QCoreApplication.translate("MainWindow", u"Show box", None))
         self.FormSettingsViewCheckShowAtomNumber.setText(QCoreApplication.translate("MainWindow", u"Show atom number", None))
         self.FormSettingsViewCheckShowAxes.setText(QCoreApplication.translate("MainWindow", u"Show axes", None))
@@ -2753,13 +2763,6 @@ class Ui_MainWindow(object):
         self.label_30.setText(QCoreApplication.translate("MainWindow", u"A", None))
         self.groupBox_34.setTitle(QCoreApplication.translate("MainWindow", u"OpenGl", None))
         self.OpenGL_GL_CULL_FACE.setText(QCoreApplication.translate("MainWindow", u"GL_CULL_FACE", None))
-        self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Critical points", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Show", None))
-        self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"BCP", None))
-        self.show_rcp.setText(QCoreApplication.translate("MainWindow", u"RCP", None))
-        self.show_ccp.setText(QCoreApplication.translate("MainWindow", u"CCP", None))
-        self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Show bond path", None))
-        self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"Show BCP property", None))
         self.groupBox_29.setTitle(QCoreApplication.translate("MainWindow", u"Text", None))
         self.label_132.setText(QCoreApplication.translate("MainWindow", u"Position: X", None))
         self.label_133.setText(QCoreApplication.translate("MainWindow", u", Y", None))
@@ -2776,20 +2779,6 @@ class Ui_MainWindow(object):
         self.label_28.setText(QCoreApplication.translate("MainWindow", u"Line width", None))
         self.FormStylesFor2DGraph.setText(QCoreApplication.translate("MainWindow", u"Apply style", None))
         self.tabWidget_9.setTabText(self.tabWidget_9.indexOf(self.tab_33), QCoreApplication.translate("MainWindow", u"View 2D", None))
-        self.ActivateFragmentSelectionModeCheckBox.setText(QCoreApplication.translate("MainWindow", u"Activate fragment selection mode", None))
-        self.groupBox_21.setTitle(QCoreApplication.translate("MainWindow", u"Visual effect for selected fragment", None))
-        self.label_52.setText(QCoreApplication.translate("MainWindow", u"Transparency", None))
-        self.label_55.setText(QCoreApplication.translate("MainWindow", u"x from", None))
-        self.label_57.setText(QCoreApplication.translate("MainWindow", u"to", None))
-        self.changeFragment1StatusByX.setText(QCoreApplication.translate("MainWindow", u"change status", None))
-        self.label_58.setText(QCoreApplication.translate("MainWindow", u"y from", None))
-        self.label_59.setText(QCoreApplication.translate("MainWindow", u"to", None))
-        self.changeFragment1StatusByY.setText(QCoreApplication.translate("MainWindow", u"change status", None))
-        self.label_60.setText(QCoreApplication.translate("MainWindow", u"z from", None))
-        self.label_61.setText(QCoreApplication.translate("MainWindow", u"to", None))
-        self.changeFragment1StatusByZ.setText(QCoreApplication.translate("MainWindow", u"change status", None))
-        self.fragment1Clear.setText(QCoreApplication.translate("MainWindow", u"clear", None))
-        self.tabWidget_9.setTabText(self.tabWidget_9.indexOf(self.tab_34), QCoreApplication.translate("MainWindow", u"Fragment", None))
         self.cpk_radio.setText(QCoreApplication.translate("MainWindow", u"cpk", None))
         self.jmol_radio.setText(QCoreApplication.translate("MainWindow", u"jmol", None))
         self.manual_colors_radio.setText(QCoreApplication.translate("MainWindow", u"manual", None))

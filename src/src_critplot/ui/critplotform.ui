@@ -375,7 +375,7 @@
        <attribute name="title">
         <string>CPs</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_15">
+       <layout class="QVBoxLayout" name="verticalLayout_12">
         <item>
          <widget class="QPushButton" name="add_xyz_critic_data">
           <property name="enabled">
@@ -624,6 +624,119 @@
                  <string>...</string>
                 </property>
                </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Show</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QFrame" name="frame_3">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>5</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="show_bcp">
+                <property name="text">
+                 <string>BCP</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="show_bond_path">
+                <property name="text">
+                 <string>Show bond path</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="show_rcp">
+                <property name="text">
+                 <string>RCP</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="show_ccp">
+                <property name="text">
+                 <string>CCP</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_160">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_178">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="show_bcp_text">
+                <property name="text">
+                 <string>Show BCP property</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="PropertyForBCPtext"/>
               </item>
              </layout>
             </widget>
@@ -1690,13 +1803,6 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <widget class="QRadioButton" name="form_critic_from_file">
-                 <property name="text">
-                  <string>All from file</string>
-                 </property>
-                </widget>
-               </item>
               </layout>
              </widget>
             </item>
@@ -2224,6 +2330,318 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Coloring</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_15">
+        <item>
+         <widget class="QFrame" name="frame_36">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_177">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="ColorAtomsProperty">
+             <property name="text">
+              <string>Color atoms with property</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="PropertyForColorOfAtom"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ActivateFragmentSelectionModeCheckBox">
+          <property name="text">
+           <string>Activate fragment selection mode</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_21">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Visual effect for selected fragment</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_72">
+           <item>
+            <widget class="QLabel" name="label_52">
+             <property name="text">
+              <string>Transparency</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="ActivateFragmentSelectionTransp">
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.700000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_47">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>228</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="AtomsInSelectedFragment"/>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_61">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_53">
+           <item>
+            <widget class="QLabel" name="label_55">
+             <property name="text">
+              <string>x from</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="xminborder">
+             <property name="minimum">
+              <double>-99.989999999999995</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_57">
+             <property name="text">
+              <string>to</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="xmaxborder">
+             <property name="minimum">
+              <double>-99.989999999999995</double>
+             </property>
+             <property name="value">
+              <double>2.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="changeFragment1StatusByX">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>change status</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_62">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_54">
+           <item>
+            <widget class="QLabel" name="label_58">
+             <property name="text">
+              <string>y from</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="yminborder">
+             <property name="minimum">
+              <double>-99.989999999999995</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_59">
+             <property name="text">
+              <string>to</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="ymaxborder">
+             <property name="minimum">
+              <double>-99.989999999999995</double>
+             </property>
+             <property name="value">
+              <double>2.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="changeFragment1StatusByY">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>change status</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_63">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_55">
+           <item>
+            <widget class="QLabel" name="label_60">
+             <property name="text">
+              <string>z from</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="zminborder">
+             <property name="minimum">
+              <double>-99.989999999999995</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_61">
+             <property name="text">
+              <string>to</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="zmaxborder">
+             <property name="minimum">
+              <double>-99.989999999999995</double>
+             </property>
+             <property name="value">
+              <double>2.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="changeFragment1StatusByZ">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>change status</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_64">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_56">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <spacer name="horizontalSpacer_28">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>107</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="fragment1Clear">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>clear</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_29">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>106</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="tab_29">
        <attribute name="title">
         <string>View</string>
@@ -2247,34 +2665,6 @@
               <property name="text">
                <string>Show atoms</string>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QFrame" name="frame_36">
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_177">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QCheckBox" name="ColorAtomsProperty">
-                 <property name="text">
-                  <string>Color atoms with property</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QComboBox" name="PropertyForColorOfAtom"/>
-               </item>
-              </layout>
              </widget>
             </item>
             <item>
@@ -2635,114 +3025,6 @@
                  <property name="text">
                   <string>GL_CULL_FACE</string>
                  </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox_6">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="title">
-               <string>Critical points</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_9">
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QFrame" name="frame_3">
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_7">
-                  <item>
-                   <widget class="QLabel" name="label_4">
-                    <property name="text">
-                     <string>Show</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="show_bcp">
-                    <property name="text">
-                     <string>BCP</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="show_rcp">
-                    <property name="text">
-                     <string>RCP</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="show_ccp">
-                    <property name="text">
-                     <string>CCP</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="show_bond_path">
-                 <property name="text">
-                  <string>Show bond path</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="frame_160">
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_178">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QCheckBox" name="show_bcp_text">
-                    <property name="text">
-                     <string>Show BCP property</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QComboBox" name="PropertyForBCPtext"/>
-                  </item>
-                 </layout>
                 </widget>
                </item>
               </layout>
@@ -3208,290 +3490,6 @@
                </size>
               </property>
              </spacer>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab_34">
-           <attribute name="title">
-            <string>Fragment</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_89">
-            <item>
-             <widget class="QCheckBox" name="ActivateFragmentSelectionModeCheckBox">
-              <property name="text">
-               <string>Activate fragment selection mode</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox_21">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>60</height>
-               </size>
-              </property>
-              <property name="title">
-               <string>Visual effect for selected fragment</string>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_72">
-               <item>
-                <widget class="QLabel" name="label_52">
-                 <property name="text">
-                  <string>Transparency</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="ActivateFragmentSelectionTransp">
-                 <property name="maximum">
-                  <double>1.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>0.100000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.700000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_47">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>228</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QListWidget" name="AtomsInSelectedFragment"/>
-            </item>
-            <item>
-             <widget class="QFrame" name="frame_61">
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_53">
-               <item>
-                <widget class="QLabel" name="label_55">
-                 <property name="text">
-                  <string>x from</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="xminborder">
-                 <property name="minimum">
-                  <double>-99.989999999999995</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_57">
-                 <property name="text">
-                  <string>to</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="xmaxborder">
-                 <property name="minimum">
-                  <double>-99.989999999999995</double>
-                 </property>
-                 <property name="value">
-                  <double>2.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="changeFragment1StatusByX">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>change status</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QFrame" name="frame_62">
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_54">
-               <item>
-                <widget class="QLabel" name="label_58">
-                 <property name="text">
-                  <string>y from</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="yminborder">
-                 <property name="minimum">
-                  <double>-99.989999999999995</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_59">
-                 <property name="text">
-                  <string>to</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="ymaxborder">
-                 <property name="minimum">
-                  <double>-99.989999999999995</double>
-                 </property>
-                 <property name="value">
-                  <double>2.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="changeFragment1StatusByY">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>change status</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QFrame" name="frame_63">
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_55">
-               <item>
-                <widget class="QLabel" name="label_60">
-                 <property name="text">
-                  <string>z from</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="zminborder">
-                 <property name="minimum">
-                  <double>-99.989999999999995</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_61">
-                 <property name="text">
-                  <string>to</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="zmaxborder">
-                 <property name="minimum">
-                  <double>-99.989999999999995</double>
-                 </property>
-                 <property name="value">
-                  <double>2.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="changeFragment1StatusByZ">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>change status</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QFrame" name="frame_64">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_56">
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <spacer name="horizontalSpacer_28">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>107</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QPushButton" name="fragment1Clear">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>clear</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_29">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>106</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </widget>
             </item>
            </layout>
           </widget>
