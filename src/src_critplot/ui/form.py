@@ -401,7 +401,7 @@ class Ui_MainWindow(object):
         self.frame_3.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_7 = QHBoxLayout(self.frame_3)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.horizontalLayout_7.setContentsMargins(0, 5, 0, 0)
+        self.horizontalLayout_7.setContentsMargins(0, -1, 0, 0)
         self.show_bcp = QCheckBox(self.frame_3)
         self.show_bcp.setObjectName(u"show_bcp")
         self.show_bcp.setChecked(True)
@@ -413,6 +413,12 @@ class Ui_MainWindow(object):
         self.show_bond_path.setChecked(True)
 
         self.horizontalLayout_7.addWidget(self.show_bond_path)
+
+        self.show_ncp = QCheckBox(self.frame_3)
+        self.show_ncp.setObjectName(u"show_ncp")
+        self.show_ncp.setChecked(True)
+
+        self.horizontalLayout_7.addWidget(self.show_ncp)
 
         self.show_rcp = QCheckBox(self.frame_3)
         self.show_rcp.setObjectName(u"show_rcp")
@@ -2554,7 +2560,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 642, 765))
+        self.page_8.setGeometry(QRect(0, 0, 79, 100))
         self.horizontalLayout = QHBoxLayout(self.page_8)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -2659,7 +2665,8 @@ class Ui_MainWindow(object):
         self.FormSelectedCP_lap.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Show", None))
         self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"BCP", None))
-        self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Show bond path", None))
+        self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Bond path", None))
+        self.show_ncp.setText(QCoreApplication.translate("MainWindow", u"NCP", None))
         self.show_rcp.setText(QCoreApplication.translate("MainWindow", u"RCP", None))
         self.show_ccp.setText(QCoreApplication.translate("MainWindow", u"CCP", None))
         self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"Show BCP property", None))

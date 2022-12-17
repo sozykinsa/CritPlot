@@ -168,8 +168,6 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                     if len(row1) < 4:
                         row1 = file1.readline().split()
                         row2 = file1.readline().split()
-                        # print("1---> ", row1)
-                        # print("2---> ", row2)
                         b_len = round((float(row1[6]) + float(row2[6])) * 0.52917720859, 4)
 
                         cp = model.cps[i]
@@ -179,16 +177,16 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                         atom2 = int(row2[2])
                         correction = "-"
                         text_new = cp.get_property("text")
-                        f1 = (atom1_old == atom1 - 1) and (atom2_old == atom2 - 1)
-                        if not (f1 or (atom1_old == atom2 - 1) and (atom2_old == atom1 - 1)):
-                            cp.set_property("atom1", atom1 - 1)
-                            cp.set_property("atom2", atom2 - 1)
-                            let1 = model.atoms[atom1_old].let
-                            let2 = model.atoms[atom2_old].let
-                            dist_line = round(model.atom_atom_distance(atom1_old, atom2_old), 4)
+                        f1 = (atom1_old == atom1) and (atom2_old == atom2)
+                        if not (f1 or (atom1_old == atom2) and (atom2_old == atom1)):
+                            cp.set_property("atom1", atom1)
+                            cp.set_property("atom2", atom2)
+                            let1 = model.atoms[atom1_old - 1].let
+                            let2 = model.atoms[atom2_old - 1].let
+                            dist_line = round(model.atom_atom_distance(atom1_old - 1, atom2_old - 1), 4)
                             let1n = model.atoms[atom1 - 1].let
                             let2n = model.atoms[atom2 - 1].let
-                            correction = "(" + let1 + str(atom1_old + 1) + "-" + let2 + str(atom2_old + 1) + ")r=" + \
+                            correction = "(" + let1 + str(atom1_old) + "-" + let2 + str(atom2_old) + ")r=" + \
                                          str(dist_line) + "->(" + let1n + str(atom1) + "-" + let2n + str(atom2) + ")" +\
                                          "r=" + str(b_len)
                         text_new += "\ncorrections : " + correction
@@ -204,9 +202,9 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
             if (ind1 is not None) and (ind2 is not None):
-                p1 = CriticalPoint([*model.atoms[ind1].xyz, "xz", 1])
+                p1 = CriticalPoint([*model.atoms[ind1 - 1].xyz, "xz", 1])
                 p2 = CriticalPoint([*cp.xyz, "xz", 1])
-                p3 = CriticalPoint([*model.atoms[ind2].xyz, "xz", 1])
+                p3 = CriticalPoint([*model.atoms[ind2 - 1].xyz, "xz", 1])
                 model.add_bond_path_point([p2, p1])
                 model.add_bond_path_point([p2, p3])
         model.bond_path_points_optimize()
@@ -254,7 +252,7 @@ def parse_cp_point(file1, let, text, title):
 
 
 def add_associated_atoms(cp, model, row1):
-    ind1, ind2 = int(row1[5]) - 1, int(row1[8]) - 1
+    ind1, ind2 = int(row1[5]), int(row1[8])
     cp.set_property("atom1", ind1)
     cp.set_property("atom2", ind2)
     # print(row1)

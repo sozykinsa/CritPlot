@@ -94,6 +94,7 @@ class MainForm(QMainWindow):
         self.ui.show_bcp.stateChanged.connect(self.show_bcp)
         self.ui.show_ccp.stateChanged.connect(self.show_bcp)
         self.ui.show_rcp.stateChanged.connect(self.show_bcp)
+        self.ui.show_ncp.stateChanged.connect(self.show_bcp)
         self.ui.show_bond_path.stateChanged.connect(self.show_bond_path)
 
         self.ui.FormAtomsList1.currentIndexChanged.connect(self.bond_len_to_screen)
@@ -1036,7 +1037,7 @@ class MainForm(QMainWindow):
 
     def show_bcp(self):  # pragma: no cover
         self.ui.openGLWidget.set_property_show_cp(self.ui.show_bcp.isChecked(), self.ui.show_ccp.isChecked(),
-                                                  self.ui.show_rcp.isChecked())
+                                                  self.ui.show_rcp.isChecked(), self.ui.show_ncp.isChecked())
         self.show_cp_property()
 
     def show_bond_path(self):  # pragma: no cover

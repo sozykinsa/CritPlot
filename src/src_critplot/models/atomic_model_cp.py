@@ -137,11 +137,10 @@ class AtomicModelCP(AtomicModel):
         title = ""
         data = ""
         for ind in cp_list:
-            title = ""
             cp = self.cps[ind - 1]
-            title += "CP" + delimiter
-            data += str(ind) + delimiter
             if cp.let == "xb":
+                title = "CP" + delimiter
+                data += str(ind) + delimiter
                 title += "atoms" + delimiter + "dist" + delimiter
                 ind1 = cp.get_property("atom1")
                 ind2 = cp.get_property("atom2")

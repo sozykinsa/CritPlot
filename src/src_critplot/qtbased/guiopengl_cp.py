@@ -46,13 +46,14 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.add_critical_points()
         self.add_bond_path()
 
-    def set_property_show_cp(self, show_bcp, show_ccp, show_rcp):
+    def set_property_show_cp(self, show_bcp, show_ccp, show_rcp, show_ncp) -> None:
         self.is_show_bcp = show_bcp
         self.is_show_ccp = show_ccp
         self.is_show_rcp = show_rcp
+        self.is_show_ncp = show_ncp
         self.add_critical_points()
 
-    def set_property_bond_path(self, bond_path):
+    def set_property_bond_path(self, bond_path) -> None:
         self.is_show_bond_path = bond_path
 
     def show_cp_property(self, prop: str = ""):
