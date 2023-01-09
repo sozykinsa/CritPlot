@@ -95,10 +95,9 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 title = "b" + title
                 let = "xb"
                 cp, row = parse_cp_point(file1, let, text, title)
-                # print(int(row1[5]) - 1)
-                if (row1[5] is not None) and (row1[8] is not None):
-                    add_associated_atoms(cp, model, row1)
-                    model.add_critical_point(cp)
+                print("point3")
+                print(row1)
+                add_assotiated_atom_from_row(cp, model, row1)
             elif data == "(3,-3)":
                 """
                 CP N.      9
@@ -119,7 +118,6 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 model.add_critical_point(cp)
             elif data == "(3,+1)":
                 """ CP TYPE                        :  (3,+1) """
-                # print("ring (3,+1) ----->")
                 """
                 CP N.      7  NON-EQUIV. ATOM      2 O  ---     31 O (     0      0      0 )  DISTANCE(ANG)= 2.3736
                 *********
@@ -137,9 +135,7 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 title = "r" + title
                 let = "xr"
                 cp, row = parse_cp_point(file1, let, text, title)
-                if (row1[5] is not None) and (row1[8] is not None):
-                    add_associated_atoms(cp, model, row1)
-                    model.add_critical_point(cp)
+                add_assotiated_atom_from_row(cp, model, row1)
             elif data == "(3,+3)":
                 """ CP TYPE                        :  (3,+3) """
                 # print("cage (3,+3) ----->")
@@ -147,13 +143,8 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 title = "c" + title
                 let = "xc"
                 cp, row = parse_cp_point(file1, let, text, title)
-                if (row1[5] is not None) and (row1[8] is not None):
-                    add_associated_atoms(cp, model, row1)
-                    model.add_critical_point(cp)
-                    # print(data)
+                add_assotiated_atom_from_row(cp, model, row1)
             else:
-                print("else")
-                print(row)
                 row = file1.readline()
             while (row.find("NUMBER OF UNIQUE CRI. POINT FOUND") < 0) and (row.find("CP N.") < 0):
                 row = file1.readline()
@@ -216,6 +207,13 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
         model.bond_path_points_optimize()
 
 
+def add_assotiated_atom_from_row(cp, model, row1):
+    if len(row1) > 8:
+        if (row1[5] is not None) and (row1[8] is not None):
+            add_associated_atoms(cp, model, row1)
+    model.add_critical_point(cp)
+
+
 def parse_cp_point(file1, let, text, title):
     row = file1.readline()
     text += helpers.spacedel(row) + "\n"
@@ -269,11 +267,15 @@ def add_associated_atoms(cp, model, row1):
 
 
 def atomic_data_from_output(filename):
-    """import lattice and positions from TOPOND output."""
+    """Import lattice and positions from TOPOND output."""
     model = AtomicModelCP()
     if os.path.exists(filename):
         lat_vectors = get_cell(filename)
+        print("lat_vectors: ", lat_vectors)
         model = get_atoms(filename)
+        print("atoms: ",  len(model.atoms))
         model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
+        print("parse_cp_data start")
         parse_cp_data(filename, model)
+        print("parse_cp_data finish")
     return [model]

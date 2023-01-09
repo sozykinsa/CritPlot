@@ -91,10 +91,11 @@ class MainForm(QMainWindow):
         self.ui.font_size_3d.valueChanged.connect(self.font_size_3d_changed)
         self.ui.property_shift_x.valueChanged.connect(self.property_position_changed)
         self.ui.property_shift_y.valueChanged.connect(self.property_position_changed)
-        self.ui.show_bcp.stateChanged.connect(self.show_bcp)
-        self.ui.show_ccp.stateChanged.connect(self.show_bcp)
-        self.ui.show_rcp.stateChanged.connect(self.show_bcp)
-        self.ui.show_ncp.stateChanged.connect(self.show_bcp)
+        self.ui.show_bcp.stateChanged.connect(self.show_cps)
+        self.ui.show_ccp.stateChanged.connect(self.show_cps)
+        self.ui.show_rcp.stateChanged.connect(self.show_cps)
+        self.ui.show_ncp.stateChanged.connect(self.show_cps)
+        self.ui.show_nnatr.stateChanged.connect(self.show_cps)
         self.ui.show_bond_path.stateChanged.connect(self.show_bond_path)
 
         self.ui.FormAtomsList1.currentIndexChanged.connect(self.bond_len_to_screen)
@@ -1035,9 +1036,10 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_property_shift(dx, dy)
         self.show_cp_property()
 
-    def show_bcp(self):  # pragma: no cover
+    def show_cps(self):  # pragma: no cover
         self.ui.openGLWidget.set_property_show_cp(self.ui.show_bcp.isChecked(), self.ui.show_ccp.isChecked(),
-                                                  self.ui.show_rcp.isChecked(), self.ui.show_ncp.isChecked())
+                                                  self.ui.show_rcp.isChecked(), self.ui.show_ncp.isChecked(),
+                                                  self.ui.show_show_nnatr.isChecked())
         self.show_cp_property()
 
     def show_bond_path(self):  # pragma: no cover
@@ -1365,7 +1367,6 @@ class MainForm(QMainWindow):
             model = self.models[self.active_model]
             text = "Selected critical point: " + str(selected_cp + 1) + " ("
             cp = model.cps[selected_cp]
-            atoms = model.atoms
 
             bond1 = cp.get_property("bond1")
             bond2 = cp.get_property("bond2")
@@ -1374,19 +1375,16 @@ class MainForm(QMainWindow):
             ind2 = cp.get_property("atom2")
 
             if (ind1 is not None) and (ind2 is not None):
-                ind1 -= 1
-                ind2 -= 1
-
-                text += atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let + str(ind2 + 1) + ")\n"
+                text += model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2) + ")\n"
                 if bond1 is not None and bond2 is not None:
-                    text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = " \
-                            + str(len(bond1) + len(bond2)) + " points\n"
+                    text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = "
+                    text += str(len(bond1) + len(bond2)) + " points\n"
                 dist = model.bond_path_len(cp)
                 if dist is not None:
                     dist_line = round(dist, 4)
                     self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
-                    self.ui.selectedCP_nuclei.setText(atoms[ind1].let + str(ind1 + 1) + "-" + atoms[ind2].let +
-                                                      str(ind2 + 1))
+                    cp_nuclei_text = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
+                    self.ui.selectedCP_nuclei.setText(cp_nuclei_text)
                 else:
                     self.ui.selectedCP_bpLenLine.setText("...")
                     self.ui.selectedCP_nuclei.setText("...")

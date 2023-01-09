@@ -24,6 +24,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_show_ccp: bool = True
         self.is_show_rcp: bool = True
         self.is_show_ncp: bool = True
+        self.is_show_nna: bool = True
         self.is_show_bond_path: bool = True
         self.selected_cp = -1
         self.is_bcp_property_visible: bool = False
@@ -46,11 +47,12 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.add_critical_points()
         self.add_bond_path()
 
-    def set_property_show_cp(self, show_bcp, show_ccp, show_rcp, show_ncp) -> None:
+    def set_property_show_cp(self, show_bcp, show_ccp, show_rcp, show_ncp, show_nnatr) -> None:
         self.is_show_bcp = show_bcp
         self.is_show_ccp = show_ccp
         self.is_show_rcp = show_rcp
         self.is_show_ncp = show_ncp
+        self.is_show_nna = show_nnatr
         self.add_critical_points()
 
     def set_property_bond_path(self, bond_path) -> None:
@@ -101,16 +103,19 @@ class GuiOpenGLCP(GuiOpenGLBase):
         gl.glNewList(self.object + self.list_for_cp, gl.GL_COMPILE)
         for cp in self.main_model.cps:
             if (self.is_show_bcp and (cp.let == "xb")) or (self.is_show_ccp and (cp.let == "xc")) or \
-                    (self.is_show_rcp and (cp.let == "xr")) or (self.is_show_ncp and (cp.let == "A")):
+                    (self.is_show_rcp and (cp.let == "xr")) or (self.is_show_nna and (cp.let == "nn")) or \
+                    (self.is_show_ncp and (cp.let == "A")):
                 gl.glPushMatrix()
                 gl.glTranslatef(*(self.scale_factor * cp.xyz))
                 color = (0, 0, 0)
                 if cp.let == "xb":
                     color = self.color_of_bcp
-                if cp.let == "xr":
+                elif cp.let == "xr":
                     color = self.color_of_rcp
                 elif cp.let == "xc":
                     color = self.color_of_ccp
+                elif cp.let == "nn":
+                    color = self.color_of_nna
                 gl.glColor3f(*color)
                 mult = self.scale_factor
                 if cp.is_selected():

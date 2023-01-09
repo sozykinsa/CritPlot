@@ -678,9 +678,9 @@
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="show_bond_path">
+               <widget class="QCheckBox" name="show_nnatr">
                 <property name="text">
-                 <string>Bond path</string>
+                 <string>NATTR</string>
                 </property>
                 <property name="checked">
                  <bool>true</bool>
@@ -721,6 +721,59 @@
             </widget>
            </item>
            <item>
+            <widget class="QFrame" name="frame_4">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="show_bond_path">
+                <property name="text">
+                 <string>Bond path</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>281</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
             <widget class="QFrame" name="frame_160">
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
@@ -738,7 +791,7 @@
               <item>
                <widget class="QCheckBox" name="show_bcp_text">
                 <property name="text">
-                 <string>Show BCP property</string>
+                 <string>BCP property</string>
                 </property>
                </widget>
               </item>
@@ -4620,8 +4673,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>79</width>
-         <height>100</height>
+         <width>642</width>
+         <height>765</height>
         </rect>
        </property>
        <attribute name="label">

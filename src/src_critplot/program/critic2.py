@@ -60,9 +60,13 @@ def structure_from_cro_file(filename):
                 title = let + data[0]
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 model.add_atom(new_atom)
+                model.add_critical_point(new_atom)
 
             if crit_info[3] == "nnattr":
-                pass
+                let = "nn"
+                title = let + data[0]
+                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                model.add_critical_point(new_atom)
 
             if crit_info[3] == "bond":
                 let = "xb"
@@ -77,13 +81,13 @@ def structure_from_cro_file(filename):
                 new_atom.set_property("atom1_translation", translation1)
                 new_atom.set_property("atom2_translation", translation2)
                 model.add_critical_point(new_atom)
-                # print(crit_info)
-                # print(data)
+
             if crit_info[3] == "ring":
                 let = "xr"
                 title = let + data[0]
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 model.add_critical_point(new_atom)
+
             if crit_info[3] == "cage":
                 let = "xc"
                 title = let + data[0]
@@ -207,8 +211,8 @@ def model_to_critic_xyz_file(model, cps):
 
     n_bcp = 0
     for cp in cps:
-        bond1 = cp.get_property("bond1")
-        bond2 = cp.get_property("bond2")
+        bond1 = cp.bonds.get("bond1")
+        bond2 = cp.bonds.get("bond2")
 
         for i in range(0, len(bond1)):
             n_bcp += 1

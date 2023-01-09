@@ -408,11 +408,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_7.addWidget(self.show_bcp)
 
-        self.show_bond_path = QCheckBox(self.frame_3)
-        self.show_bond_path.setObjectName(u"show_bond_path")
-        self.show_bond_path.setChecked(True)
+        self.show_nnatr = QCheckBox(self.frame_3)
+        self.show_nnatr.setObjectName(u"show_nnatr")
+        self.show_nnatr.setChecked(True)
 
-        self.horizontalLayout_7.addWidget(self.show_bond_path)
+        self.horizontalLayout_7.addWidget(self.show_nnatr)
 
         self.show_ncp = QCheckBox(self.frame_3)
         self.show_ncp.setObjectName(u"show_ncp")
@@ -434,6 +434,27 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_9.addWidget(self.frame_3)
+
+        self.frame_4 = QFrame(self.groupBox_6)
+        self.frame_4.setObjectName(u"frame_4")
+        self.frame_4.setMinimumSize(QSize(0, 0))
+        self.frame_4.setFrameShape(QFrame.NoFrame)
+        self.frame_4.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_8 = QHBoxLayout(self.frame_4)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.show_bond_path = QCheckBox(self.frame_4)
+        self.show_bond_path.setObjectName(u"show_bond_path")
+        self.show_bond_path.setChecked(True)
+
+        self.horizontalLayout_8.addWidget(self.show_bond_path)
+
+        self.horizontalSpacer_7 = QSpacerItem(281, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_8.addItem(self.horizontalSpacer_7)
+
+
+        self.verticalLayout_9.addWidget(self.frame_4)
 
         self.frame_160 = QFrame(self.groupBox_6)
         self.frame_160.setObjectName(u"frame_160")
@@ -2560,7 +2581,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 79, 100))
+        self.page_8.setGeometry(QRect(0, 0, 642, 765))
         self.horizontalLayout = QHBoxLayout(self.page_8)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -2665,11 +2686,12 @@ class Ui_MainWindow(object):
         self.FormSelectedCP_lap.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("MainWindow", u"Show", None))
         self.show_bcp.setText(QCoreApplication.translate("MainWindow", u"BCP", None))
-        self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Bond path", None))
+        self.show_nnatr.setText(QCoreApplication.translate("MainWindow", u"NATTR", None))
         self.show_ncp.setText(QCoreApplication.translate("MainWindow", u"NCP", None))
         self.show_rcp.setText(QCoreApplication.translate("MainWindow", u"RCP", None))
         self.show_ccp.setText(QCoreApplication.translate("MainWindow", u"CCP", None))
-        self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"Show BCP property", None))
+        self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Bond path", None))
+        self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"BCP property", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"List of CP", None))
         self.add_cp_to_list.setText(QCoreApplication.translate("MainWindow", u"Add to List", None))
         self.delete_cp_from_list.setText(QCoreApplication.translate("MainWindow", u"Delete selected from List", None))
