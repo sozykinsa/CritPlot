@@ -143,12 +143,14 @@ class AtomicModelCP(AtomicModel):
                 title = "CP" + delimiter
                 data += str(ind) + delimiter
                 title += "atoms" + delimiter + "dist" + delimiter
-                ind1 = cp.get_property("atom1")
-                ind2 = cp.get_property("atom2")
-                atom1 = self.atoms[ind1 - 1].let + str(ind1)
-                atom2 = self.atoms[ind2 - 1].let + str(ind2)
-                data += atom1 + "-" + atom2 + delimiter
-                dist_line = round(self.bond_path_len(cp), 4)
+                #ind1 = cp.get_property("atom1")
+                #ind2 = cp.get_property("atom2")
+                #atom1 = self.cps[ind1 - 1].let + str(ind1)
+                #atom2 = self.cps[ind2 - 1].let + str(ind2)
+                atom_to_atom = cp.get_property("atom_to_atom")
+                data += atom_to_atom + delimiter
+                cp_bp_len = cp.get_property("cp_bp_len")
+                dist_line = round(cp_bp_len, 4)
                 data += '" ' + str(dist_line) + ' "' + delimiter
                 data_list = cp.get_property("text")
                 if data_list:

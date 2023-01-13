@@ -34,6 +34,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.color_of_bcp = (1, 0, 0)
         self.color_of_ccp = (1, 1, 1)
         self.color_of_rcp = (1, 1, 0)
+        self.color_of_nna = (1, 0, 1)
 
         self.selected_cp_callback: Callable = None
         self.main_model = AtomicModelCP()
@@ -42,7 +43,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         super().init_params(the_object)
         self.selected_cp = the_object.selected_cp
 
-    def add_all_elements(self):
+    def add_all_elements(self) -> None:
         super().add_all_elements()
         self.add_critical_points()
         self.add_bond_path()
@@ -84,22 +85,22 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_show_rcp = ogl_model.is_show_rcp
         self.is_show_bond_path = ogl_model.is_show_bond_path
 
-    def copy_state(self, ogl_model):
+    def copy_state(self, ogl_model) -> None:
         super().copy_state(ogl_model)
         self.add_critical_points()
         self.add_bond_path()
         self.update()
 
-    def set_cp_parameters(self, is_bcp_property_visible):
+    def set_cp_parameters(self, is_bcp_property_visible) -> None:
         self.is_bcp_property_visible = is_bcp_property_visible
         self.add_critical_points()
         self.add_bond_path()
         self.update()
 
-    def selected_atom_properties_to_form(self):
+    def selected_atom_properties_to_form(self) -> None:
         self.selected_atom_callback([self.selected_atom, self.selected_cp])
 
-    def add_critical_points(self):
+    def add_critical_points(self) -> None:
         gl.glNewList(self.object + self.list_for_cp, gl.GL_COMPILE)
         for cp in self.main_model.cps:
             if (self.is_show_bcp and (cp.let == "xb")) or (self.is_show_ccp and (cp.let == "xc")) or \
@@ -127,22 +128,22 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_cp_available = True
         self.update()
 
-    def set_color_of_bcp(self, color):
+    def set_color_of_bcp(self, color) -> None:
         self.color_of_bcp = color
         self.add_critical_points()
         self.update()
 
-    def set_color_of_rcp(self, color):
+    def set_color_of_rcp(self, color) -> None:
         self.color_of_rcp = color
         self.add_critical_points()
         self.update()
 
-    def set_color_of_ccp(self, color):
+    def set_color_of_ccp(self, color) -> None:
         self.color_of_ccp = color
         self.add_critical_points()
         self.update()
 
-    def add_bond_path(self):
+    def add_bond_path(self) -> None:
         gl.glNewList(self.object + self.list_for_bondpath, gl.GL_COMPILE)
 
         for cp in self.main_model.cps:
@@ -153,7 +154,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_bond_path_available = True
         self.update()
 
-    def add_critical_path(self, bond):
+    def add_critical_path(self, bond) -> None:
         if not bond:
             return
 
@@ -166,7 +167,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
                           self.scale_factor * bond[i].xyz,
                           self.scale_factor * 0.03)
 
-    def paintGL(self):
+    def paintGL(self) -> None:
         self.makeCurrent()
         self.configure_gl()
         try:
@@ -215,7 +216,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
             print(exc)
             pass
 
-    def get_atom_on_screen(self):
+    def get_atom_on_screen(self) -> None:
         point = self.get_point_in_3d(self.x_scene, self.y_scene)
         old_selected = self.selected_atom
         old_selected_cp = self.selected_cp

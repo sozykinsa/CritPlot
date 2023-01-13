@@ -98,6 +98,20 @@ def structure_from_cro_file(filename):
         f.readline()
         f.close()
         model.convert_from_direct_to_cart()
+
+        for cp in model.cps:
+            ind1 = cp.get_property("atom1")
+            ind2 = cp.get_property("atom2")
+            if (ind1 is not None) and (ind2 is not None):
+                p1 = CriticalPoint([*model.cps[ind1 - 1].xyz, "xz", 1])
+                p2 = CriticalPoint([*cp.xyz, "xz", 1])
+                p3 = CriticalPoint([*model.cps[ind2 - 1].xyz, "xz", 1])
+                atom_to_atom = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
+                cp.set_property("atom_to_atom", atom_to_atom)
+                cp_bp_len = model.point_point_distance(cp.xyz, model.cps[ind1 - 1].xyz) + \
+                            model.point_point_distance(model.cps[ind2 - 1].xyz, cp.xyz)
+                cp.set_property("cp_bp_len", cp_bp_len)
+
     return [model]
 
 

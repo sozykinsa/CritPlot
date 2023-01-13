@@ -95,8 +95,6 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 title = "b" + title
                 let = "xb"
                 cp, row = parse_cp_point(file1, let, text, title)
-                print("point3")
-                print(row1)
                 add_assotiated_atom_from_row(cp, model, row1)
             elif data == "(3,-3)":
                 """
@@ -204,6 +202,11 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 p3 = CriticalPoint([*model.atoms[ind2 - 1].xyz, "xz", 1])
                 model.add_bond_path_point([p2, p1])
                 model.add_bond_path_point([p2, p3])
+                atom_to_atom = model.atoms[ind1 - 1].let + str(ind1) + "-" + model.atoms[ind2 - 1].let + str(ind2)
+                cp.set_property("atom_to_atom", atom_to_atom)
+                cp_bp_len = model.point_point_distance(cp.xyz, model.atoms[ind1 - 1].xyz) + \
+                            model.point_point_distance(model.atoms[ind2 - 1].xyz, cp.xyz)
+                cp.set_property("cp_bp_len", cp_bp_len)
         model.bond_path_points_optimize()
 
 
@@ -271,11 +274,11 @@ def atomic_data_from_output(filename):
     model = AtomicModelCP()
     if os.path.exists(filename):
         lat_vectors = get_cell(filename)
-        print("lat_vectors: ", lat_vectors)
+        #print("lat_vectors: ", lat_vectors)
         model = get_atoms(filename)
-        print("atoms: ",  len(model.atoms))
+        #print("atoms: ",  len(model.atoms))
         model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
-        print("parse_cp_data start")
+        #print("parse_cp_data start")
         parse_cp_data(filename, model)
-        print("parse_cp_data finish")
+        #print("parse_cp_data finish")
     return [model]

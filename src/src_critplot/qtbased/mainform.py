@@ -1039,7 +1039,7 @@ class MainForm(QMainWindow):
     def show_cps(self):  # pragma: no cover
         self.ui.openGLWidget.set_property_show_cp(self.ui.show_bcp.isChecked(), self.ui.show_ccp.isChecked(),
                                                   self.ui.show_rcp.isChecked(), self.ui.show_ncp.isChecked(),
-                                                  self.ui.show_show_nnatr.isChecked())
+                                                  self.ui.show_nnatr.isChecked())
         self.show_cp_property()
 
     def show_bond_path(self):  # pragma: no cover
@@ -1374,17 +1374,21 @@ class MainForm(QMainWindow):
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
 
+            atom_to_atom = cp.get_property("atom_to_atom")
+            cp_bp_len = cp.get_property("cp_bp_len")
+
             if (ind1 is not None) and (ind2 is not None):
-                text += model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2) + ")\n"
+                # text += model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2) + ")\n"
+                text += atom_to_atom + ")\n"
                 if bond1 is not None and bond2 is not None:
                     text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = "
                     text += str(len(bond1) + len(bond2)) + " points\n"
-                dist = model.bond_path_len(cp)
+                dist = cp_bp_len # model.bond_path_len(cp)
                 if dist is not None:
                     dist_line = round(dist, 4)
                     self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
-                    cp_nuclei_text = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
-                    self.ui.selectedCP_nuclei.setText(cp_nuclei_text)
+                    #cp_nuclei_text = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
+                    self.ui.selectedCP_nuclei.setText(atom_to_atom)
                 else:
                     self.ui.selectedCP_bpLenLine.setText("...")
                     self.ui.selectedCP_nuclei.setText("...")
@@ -1504,7 +1508,16 @@ class MainForm(QMainWindow):
 
     def leave_cp_in_model(self):
         model = self.models[self.active_model]
-        model.cps = self.selected_cp()
+        new_cps = []
+        sel_cps = self.selected_cp()
+        for cp  in model.cps:
+            f = False
+            for b in sel_cps:
+                if cp.to_string() == b.to_string():
+                    f = True
+            if (cp.let not in ["xb", "xr", "xc"]) or f:
+                new_cps.append(cp)
+        model.cps = new_cps
         self.ui.openGLWidget.selected_cp = -1
         self.ui.FormCPlist.clear()
         self.plot_model(self.active_model)
