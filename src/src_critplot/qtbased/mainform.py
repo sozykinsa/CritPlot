@@ -617,23 +617,19 @@ class MainForm(QMainWindow):
 
     def fill_bonds(self):
         c1, c2 = self.fill_bonds_charges()
-        bonds = self.ui.openGLWidget.main_model.find_bonds_exact()
         self.ui.FormActionsPosTableBonds.setRowCount(0)
 
-        mean = 0
-        n = 0
+        bonds_ok, bonds_mean, bonds_err = self.ui.openGLWidget.main_model.get_bonds_for_charges(c1, c2)
 
-        for bond in bonds:
-            if ((c1 == 0) or (c2 == 0)) or ((c1 == bond[0]) and (c2 == bond[1])) or (
-                    (c1 == bond[1]) and (c2 == bond[2])):
-                self.ui.FormActionsPosTableBonds.setRowCount(self.ui.FormActionsPosTableBonds.rowCount() + 1)
-                s = str(bond[3]) + str(bond[4]) + "-" + str(bond[5]) + str(bond[6])
-                self.ui.FormActionsPosTableBonds.setItem(n, 0, QTableWidgetItem(s))
-                self.ui.FormActionsPosTableBonds.setItem(n, 1, QTableWidgetItem(str(bond[2])))
-                mean += bond[2]
-                n += 1
-        if n > 0:
-            self.ui.FormActionsPostLabelMeanBond.setText("Mean value: " + str(round(mean / n, 5)))
+        n = 0
+        for bond in bonds_ok:
+            self.ui.FormActionsPosTableBonds.setRowCount(self.ui.FormActionsPosTableBonds.rowCount() + 1)
+            s = str(bond[3]) + str(bond[4]) + "-" + str(bond[5]) + str(bond[6])
+            self.ui.FormActionsPosTableBonds.setItem(n, 0, QTableWidgetItem(s))
+            self.ui.FormActionsPosTableBonds.setItem(n, 1, QTableWidgetItem(str(bond[2])))
+            n += 1
+        bonds_text = "Mean value: " + str(bonds_mean) + " \u00B1 " + str(bonds_err)
+        self.ui.FormActionsPostLabelMeanBond.setText(bonds_text)
 
     def fill_bonds_charges(self):
         bonds_category = self.ui.FormActionsPostComboBonds.currentText()
@@ -1094,6 +1090,7 @@ class MainForm(QMainWindow):
         view_axes = self.ui.FormSettingsViewCheckShowAxes.isChecked()
         box_color = self.get_color_from_setting(self.state_Color_Of_Box)
         atoms_color = self.colors_of_atoms()
+        self.show_cps()
         self.ui.openGLWidget.set_structure_parameters(atoms_color, view_atoms, view_atom_numbers, view_box, box_color,
                                                       view_bonds, bonds_color, bond_width, color_of_bonds_by_atoms,
                                                       view_axes, axes_color)
@@ -1108,14 +1105,12 @@ class MainForm(QMainWindow):
         self.ui.PyqtGraphWidget.set_xticks(None)
         self.ui.Form3Dand2DTabs.setCurrentIndex(1)
         c1, c2 = self.fill_bonds_charges()
-        bonds = self.ui.openGLWidget.main_model.find_bonds_exact()
+        bonds, bonds_mean, bonds_err = self.ui.openGLWidget.main_model.get_bonds_for_charges(c1, c2)
 
         self.ui.PyqtGraphWidget.clear()
         b = []
         for bond in bonds:
-            if ((c1 == 0) or (c2 == 0)) or ((c1 == bond[0]) and (c2 == bond[1])) or (
-                    (c1 == bond[1]) and (c2 == bond[2])):
-                b.append(bond[2])
+            b.append(bond[2])
 
         num_bins = self.ui.FormActionsPostPlotBondsHistogramN.value()
         x_title = self.ui.bonds_x_label.text()

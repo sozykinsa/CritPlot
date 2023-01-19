@@ -83,6 +83,8 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_show_bcp = ogl_model.is_show_bcp
         self.is_show_ccp = ogl_model.is_show_ccp
         self.is_show_rcp = ogl_model.is_show_rcp
+        self.is_show_ncp = ogl_model.is_show_ncp
+        self.is_show_nna = ogl_model.is_show_nna
         self.is_show_bond_path = ogl_model.is_show_bond_path
 
     def copy_state(self, ogl_model) -> None:
