@@ -34,4 +34,4 @@ def test_create_cri_file(critplot_application, tests_path):
     window.ui.selectedCP.setText("2")
     window.add_cp_to_list()
     window.leave_cp_in_model()
-    assert len(window.models[-1].cps) == 1
+    assert len(window.models[-1].cps) == 2

@@ -4775,7 +4775,7 @@
          <x>0</x>
          <y>0</y>
          <width>642</width>
-         <height>765</height>
+         <height>734</height>
         </rect>
        </property>
        <attribute name="label">
@@ -4812,7 +4812,7 @@
          <x>0</x>
          <y>0</y>
          <width>642</width>
-         <height>765</height>
+         <height>734</height>
         </rect>
        </property>
        <attribute name="label">
@@ -4844,6 +4844,23 @@
             <width>0</width>
             <height>100</height>
            </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page">
+       <attribute name="label">
+        <string>Table</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_19">
+        <item>
+         <widget class="QTableWidget" name="cps_table">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
          </widget>
         </item>

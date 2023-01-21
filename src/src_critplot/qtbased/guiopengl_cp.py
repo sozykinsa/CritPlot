@@ -223,8 +223,11 @@ class GuiOpenGLCP(GuiOpenGLBase):
         old_selected = self.selected_atom
         old_selected_cp = self.selected_cp
 
+        cps_ind, cps_visible = self.cps_visible_list()
+
         atom_ind, atom_min_r = self.nearest_point(self.scale_factor, self.main_model.atoms, point)
-        cp_ind, cp_min_r = self.nearest_point(self.scale_factor, self.main_model.cps, point)
+        cp_ind, cp_min_r = self.nearest_point(self.scale_factor, cps_visible, point)
+        cp_ind = cps_ind[cp_ind]
 
         if (cp_min_r < 1.4) and (cp_min_r <= atom_min_r):
             if self.selected_cp == cp_ind:
@@ -257,3 +260,14 @@ class GuiOpenGLCP(GuiOpenGLBase):
             self.add_bonds()
             self.selected_atom_changed()
             self.update()
+
+    def cps_visible_list(self):
+        cps_visible = []
+        cps_ind = []
+        for ind, c_point in enumerate(self.main_model.cps):
+            if (c_point.let == "xb") and self.is_show_bcp or (c_point.let == "xr") and self.is_show_rcp or \
+                    (c_point.let == "xc") and self.is_show_ccp or (c_point.let == "nn") and self.is_show_nna or \
+                    (c_point.let[0].isupper()) and self.is_show_ncp:  # "a" - not correct
+                cps_visible.append(c_point)
+                cps_ind.append(ind)
+        return cps_ind, cps_visible

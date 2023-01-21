@@ -2603,7 +2603,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.setSizePolicy(sizePolicy3)
         self.page_7 = QWidget()
         self.page_7.setObjectName(u"page_7")
-        self.page_7.setGeometry(QRect(0, 0, 642, 765))
+        self.page_7.setGeometry(QRect(0, 0, 642, 734))
         self.horizontalLayout_3 = QHBoxLayout(self.page_7)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -2620,7 +2620,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 642, 765))
+        self.page_8.setGeometry(QRect(0, 0, 642, 734))
         self.horizontalLayout = QHBoxLayout(self.page_8)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -2633,6 +2633,18 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.PyqtGraphWidget)
 
         self.Form3Dand2DTabs.addItem(self.page_8, u"2D Figure")
+        self.page = QWidget()
+        self.page.setObjectName(u"page")
+        self.verticalLayout_19 = QVBoxLayout(self.page)
+        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.cps_table = QTableWidget(self.page)
+        self.cps_table.setObjectName(u"cps_table")
+        sizePolicy1.setHeightForWidth(self.cps_table.sizePolicy().hasHeightForWidth())
+        self.cps_table.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_19.addWidget(self.cps_table)
+
+        self.Form3Dand2DTabs.addItem(self.page, u"Table")
 
         self.horizontalLayout_2.addWidget(self.Form3Dand2DTabs)
 
@@ -2895,6 +2907,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabSettings), QCoreApplication.translate("MainWindow", u"Settings", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_7), QCoreApplication.translate("MainWindow", u"3D View", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_8), QCoreApplication.translate("MainWindow", u"2D Figure", None))
+        self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page), QCoreApplication.translate("MainWindow", u"Table", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"View", None))
         self.menuOrtho_Perspective.setTitle(QCoreApplication.translate("MainWindow", u"Ortho / Perspective", None))

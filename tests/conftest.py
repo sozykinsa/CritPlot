@@ -17,14 +17,14 @@ def tests_path() -> Path:
 @pytest.fixture
 def h2o_model() -> AtomicModel:
     #         x    y    z   let charge
-    atoms = [[0.0, 0.0, 0.0, "O", 8], [-1.2, 0.0, 0.0, "H", 1], [1.2, 0.0, 0.0, "H", 1]]
+    atoms = [[0.0, 0.0, 0.0, "O", 8], [-1.0, 0.0, 0.0, "H", 1], [1.0, 0.0, 0.0, "H", 1]]
     return AtomicModel(atoms)
 
 
 @pytest.fixture
 def h2o_model_cp() -> AtomicModelCP:
     #         x    y    z   let charge
-    atoms = [[0.0, 0.0, 0.0, "O", 8], [-1.2, 0.0, 0.0, "H", 1], [1.2, 0.0, 0.0, "H", 1]]
+    atoms = [[0.0, 0.0, 0.0, "O", 8], [-1.0, 0.0, 0.0, "H", 1], [1.0, 0.0, 0.0, "H", 1]]
     return AtomicModelCP(atoms)
 
 
