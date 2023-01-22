@@ -17,7 +17,9 @@ class ImporterExporter(object):
         if os.path.exists(filename):
             file_format = helpers.check_format(filename)
             if file_format == "topond_out":
+                print("import-export start")
                 models = atomic_data_from_output(filename)
+                print("import-export finish")
             elif file_format == "critic_cro":
                 models = structure_from_cro_file(filename)
                 is_critic_open = True

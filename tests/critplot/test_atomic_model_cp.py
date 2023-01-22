@@ -7,11 +7,11 @@ def test_critical_points(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     models: AtomicModelCP = structure_from_cro_file(f_name)
     assert len(models[0].cps) == 11
-    assert models[0].bond_path_len(models[0].cps[5]) == 3.5165430594833227
+    assert models[0].cps[5].get_property("cp_bp_len") == 3.5165430594833227
     f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
     models = atomic_data_from_output(f_name)
     assert len(models[0].cps) == 7
-    assert models[0].bond_path_len(models[0].cps[3]) == 4.4238456974571685
+    assert models[0].cps[3].get_property("cp_bp_len") == 4.275076459477063
 
 
 def test_critical_path_simplifier(tests_path):

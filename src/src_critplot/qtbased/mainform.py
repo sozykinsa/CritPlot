@@ -545,18 +545,18 @@ class MainForm(QMainWindow):
 
         for cp in model.cps:
             if cp.let == "xb":
-                dist = model.bond_path_len(cp)
+                dist = cp.get_property("cp_bp_len")
                 if dist is not None:
                     r.append(dist)
                     rho.append(float(cp.get_property("rho")))
 
         self.ui.PyqtGraphWidget.set_xticks(None)
-
+        self.ui.PyqtGraphWidget.clear()
+        if len(r) == 0:
+            return
         x_title = "r"
         y_title = "rho"
         title = "rho(r)"
-
-        self.ui.PyqtGraphWidget.clear()
         self.ui.PyqtGraphWidget.add_legend()
         self.ui.PyqtGraphWidget.enable_auto_range()
         self.ui.PyqtGraphWidget.plot([], [], [None], title, x_title, y_title)
@@ -933,6 +933,7 @@ class MainForm(QMainWindow):
             self.work_dir = os.path.dirname(file_name)
             try:
                 self.models, is_critic_open = ImporterExporter.import_from_file(file_name)
+                print("mainmodel-import-finish")
                 if is_critic_open:
                     self.ui.add_xyz_critic_data.setEnabled(True)
             except Exception as e:
@@ -944,11 +945,16 @@ class MainForm(QMainWindow):
                 self.show_error(e)
 
     def plot_last_model(self):
+        print("plot_last_model start")
         if len(self.models) > 0:
             if len(self.models[-1].atoms) > 0:
+                print("--->")
                 self.plot_model(-1)
+                print("--->2")
                 self.fill_gui()
+                print("--->3")
                 self.save_active_folder()
+        print("plot_last_model finish")
 
     def menu_ortho(self):  # pragma: no cover
         self.ui.openGLWidget.is_camera_ortho = True

@@ -65,6 +65,8 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
         while row:
             while row and (row.find("CP N.") < 0):
                 row = file1.readline()
+            if (not row) or (row.find("CP N.  X") >= 0):
+                return
             title = row.split("CP N.")[1].split()[0]
             row = row.replace("(", "")
             row = row.replace(")", "")
@@ -79,6 +81,7 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
 
             if data == "(3,-1)":
                 """
+                variant # 1
                 CP N.      8  NON-EQUIV. ATOM      3 C  ---    199 H (     1      1      0 )  DISTANCE(ANG)= 1.0859
                 *********
 
@@ -89,6 +92,15 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 KINETIC ENERGY DENSITIES (G,K) :  3.7054E-02  2.4369E-01
                 VIRIAL DENSITY                 : -2.8074E-01
                 ELF(PAA)                       :  9.8781E-01
+                
+                variant # 2                
+                CP N.      3
+                *********
+
+                CP TYPE                        :  (3,-1)
+                COORD(AU)  (X  Y  Z)           : -2.5571E-16 -4.5448E+00 -4.5448E+00
+                COORD FRACT. CONV. CELL        : -2.8133E-17  5.0000E-01  5.0000E-01
+                PROPERTIES (RHO,GRHO,LAP)      :  1.6510E-03  2.5625E-19  8.5997E-03                
                 """
                 # print("bcp (3,-1) ----->")
                 text = "Type : (3,-1)\n"
@@ -128,7 +140,7 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 VIRIAL DENSITY                 : -3.3154E-02
                 ELF(PAA)                       :  4.3030E-02
                 """
-
+                # print("ring (3,+1) ----->")
                 text = "Type : (3,+1)\n"
                 title = "r" + title
                 let = "xr"
@@ -144,11 +156,14 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 add_assotiated_atom_from_row(cp, model, row1)
             else:
                 row = file1.readline()
-            while (row.find("NUMBER OF UNIQUE CRI. POINT FOUND") < 0) and (row.find("CP N.") < 0):
+            while (row.find("NUMBER OF UNIQUE CRI. POINT FOUND") < 0) and \
+                    (row.find("NUMBER OF CRITICAL POINTS FOUND") < 0) and (row.find("CP N.") < 0):
                 row = file1.readline()
-            if row.find("NUMBER OF UNIQUE CRI. POINT FOUND") > 0:
+            if ((row.find("NUMBER OF UNIQUE CRI. POINT FOUND") > 0) or
+                    (row.find("NUMBER OF CRITICAL POINTS FOUND") > 0)):
                 """ correction """
-                n_cp = int(helpers.spacedel(row.split("NUMBER OF UNIQUE CRI. POINT FOUND:")[1]))
+                # print("start correction")
+                n_cp = int(helpers.spacedel(row.split(":")[1]))
                 row = file1.readline()
                 while len(row) < 10:
                     row = file1.readline()
@@ -167,32 +182,46 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                         atom1, atom2 = int(row1[2]), int(row2[2])
                         b_len = round((float(row1[6]) + float(row2[6])) * 0.52917720859, 4)
                         cp = model.cps[i]
-                        atom1_old = cp.get_property("atom1")
-                        atom2_old = cp.get_property("atom2")
-                        if (atom1 is not None) and (atom2 is not None) and \
-                                (atom1_old is not None) and (atom2_old is not None):
+
+                        if (atom1 is not None) and (atom2 is not None):
                             correction = "-"
+                            atom1_old = cp.get_property("atom1")
+                            atom2_old = cp.get_property("atom2")
                             text_new = cp.get_property("text")
                             f1 = (atom1_old == atom1) and (atom2_old == atom2)
                             if not (f1 or (atom1_old == atom2) and (atom2_old == atom1)):
                                 cp.set_property("atom1", atom1)
                                 cp.set_property("atom2", atom2)
-                                let1 = model.atoms[atom1_old - 1].let
-                                let2 = model.atoms[atom2_old - 1].let
-                                dist_line = round(model.atom_atom_distance(atom1_old - 1, atom2_old - 1), 4)
-                                let1n = model.atoms[atom1 - 1].let
-                                let2n = model.atoms[atom2 - 1].let
-                                correction = "(" + let1 + str(atom1_old) + "-" + let2 + str(atom2_old) + ")r=" + \
-                                             str(dist_line) + "->(" + let1n + str(atom1) + "-" + let2n + str(atom2) + \
-                                             ")" + "r=" + str(b_len)
+
+                                translation1 = int(row1[3]) * model.lat_vector1 + int(row1[4]) * model.lat_vector2 + \
+                                               int(row1[5]) * model.lat_vector3
+                                translation2 = int(row2[3]) * model.lat_vector1 + int(row2[4]) * model.lat_vector2 + \
+                                               int(row2[5]) * model.lat_vector3
+                                cp.set_property("atom1_translation", translation1)
+                                cp.set_property("atom2_translation", translation2)
+
+                                let1 = "None"
+                                let2 = "None"
+                                dist_line = "None"
+                                if atom1_old is not None:
+                                    let1 = model.atoms[atom1_old - 1].let + str(atom1_old)
+                                if atom2_old is not None:
+                                    let2 = model.atoms[atom2_old - 1].let + str(atom2_old)
+                                if (atom1_old is not None) and (atom2_old is not None):
+                                    dist_line = round(model.atom_atom_distance(atom1_old - 1, atom2_old - 1), 4)
+                                let1n = model.atoms[atom1 - 1].let + str(atom1)
+                                let2n = model.atoms[atom2 - 1].let + str(atom2)
+                                correction = "(" + let1 + "-" + let2 + ")r=" + str(dist_line) + "->(" + \
+                                             let1n + "-" + let2n + ")" + "r=" + str(b_len)
                             text_new += "\ncorrections : " + correction
                             cp.set_property("text", text_new)
                         for j in range(3):
                             file1.readline()
                     else:
                         for j in range(4):
-                            row = file1.readline()
+                            file1.readline()
                 row = ""
+        # print("correction - finish")
         for cp in model.cps:
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
@@ -211,6 +240,8 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
 
 
 def add_assotiated_atom_from_row(cp, model, row1):
+    if len(row1) > 5:
+        print(len(row1))
     if len(row1) > 8:
         if (row1[5] is not None) and (row1[8] is not None):
             add_associated_atoms(cp, model, row1)
@@ -239,21 +270,22 @@ def parse_cp_point(file1, let, text, title):
     cp.set_property("lap", data[2])
     text += "lap : " + data[2] + "\n"
     row = file1.readline()
-    if (let == "xb"): # or (let == "xr"):
-        """KINETIC ENERGY DENSITIES (G,K) :  2.4448E-03 -1.0254E-03"""
-        text += "KINETIC ENERGY DENSITIES (G) : " + row.split()[5] + "\n"
-        text += "KINETIC ENERGY DENSITIES (K) : " + row.split()[6] + "\n"
-        row = helpers.spacedel(file1.readline())
-        """VIRIAL DENSITY                 : -1.4194E-03"""
-        text += row + "\n"
-        row = helpers.spacedel(file1.readline()) + "\n"
-        """ELF(PAA)                       :  6.3365E-03"""
-        text += helpers.spacedel(row) + "\n"
-        for i in range(8):
-            file1.readline()
-        row = file1.readline()
-        """ELLIPTICITY                    :  1.4410E-01"""
-        text += helpers.spacedel(row)
+    if len(row) > 1:
+        if let == "xb":  # or (let == "xr"):
+            """KINETIC ENERGY DENSITIES (G,K) :  2.4448E-03 -1.0254E-03"""
+            text += "KINETIC ENERGY DENSITIES (G) : " + row.split()[5] + "\n"
+            text += "KINETIC ENERGY DENSITIES (K) : " + row.split()[6] + "\n"
+            row = helpers.spacedel(file1.readline())
+            """VIRIAL DENSITY                 : -1.4194E-03"""
+            text += row + "\n"
+            row = helpers.spacedel(file1.readline()) + "\n"
+            """ELF(PAA)                       :  6.3365E-03"""
+            text += helpers.spacedel(row) + "\n"
+            for i in range(8):
+                file1.readline()
+            row = file1.readline()
+            """ELLIPTICITY                    :  1.4410E-01"""
+            text += helpers.spacedel(row)
     cp.set_property("text", text)
     return cp, row
 
@@ -274,11 +306,9 @@ def atomic_data_from_output(filename):
     model = AtomicModelCP()
     if os.path.exists(filename):
         lat_vectors = get_cell(filename)
-        #print("lat_vectors: ", lat_vectors)
+        # print("lat_vectors: ", lat_vectors)
         model = get_atoms(filename)
-        #print("atoms: ",  len(model.atoms))
+        # print("atoms: ",  len(model.atoms))
         model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
-        #print("parse_cp_data start")
         parse_cp_data(filename, model)
-        #print("parse_cp_data finish")
     return [model]
