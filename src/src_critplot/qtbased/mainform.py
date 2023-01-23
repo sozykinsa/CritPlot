@@ -4,7 +4,7 @@ try:
     if os.environ["XDG_SESSION_TYPE"] == "wayland":
         os.environ["QT_QPA_PLATFORM"] = "wayland"
 except Exception as e:
-    print(str(e))
+    pass
 import math
 import sys
 from pathlib import Path
@@ -19,7 +19,7 @@ from PySide2.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QM
 from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem, QTreeWidgetItem
 from PySide2.QtWidgets import QTreeWidgetItemIterator
 
-from src_critplot.utils.critplot_project_file import CritPlotProjectFile
+# from src_critplot.utils.critplot_project_file import CritPlotProjectFile
 from src_critplot.utils.import_export import ImporterExporter
 from src_critplot.program import critic2
 from src_critplot.qtbased.image3dexporter import Image3Dexporter
@@ -933,7 +933,6 @@ class MainForm(QMainWindow):
             self.work_dir = os.path.dirname(file_name)
             try:
                 self.models, is_critic_open = ImporterExporter.import_from_file(file_name)
-                print("mainmodel-import-finish")
                 if is_critic_open:
                     self.ui.add_xyz_critic_data.setEnabled(True)
             except Exception as e:
@@ -945,16 +944,11 @@ class MainForm(QMainWindow):
                 self.show_error(e)
 
     def plot_last_model(self):
-        print("plot_last_model start")
         if len(self.models) > 0:
             if len(self.models[-1].atoms) > 0:
-                print("--->")
                 self.plot_model(-1)
-                print("--->2")
                 self.fill_gui()
-                print("--->3")
                 self.save_active_folder()
-        print("plot_last_model finish")
 
     def menu_ortho(self):  # pragma: no cover
         self.ui.openGLWidget.is_camera_ortho = True

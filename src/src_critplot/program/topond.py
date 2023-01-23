@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import os
 import numpy as np
 from core_gui_atomistic import helpers
@@ -221,14 +222,25 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                         for j in range(4):
                             file1.readline()
                 row = ""
-        # print("correction - finish")
         for cp in model.cps:
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
             if (ind1 is not None) and (ind2 is not None):
-                p1 = CriticalPoint([*model.atoms[ind1 - 1].xyz, "xz", 1])
+                trans1 = np.array(cp.get_property("atom1_translation"))
+                trans2 = np.array(cp.get_property("atom2_translation"))
+                p1 = CriticalPoint([*model.atoms[ind1 - 1].xyz + trans1, "xz", 1])
                 p2 = CriticalPoint([*cp.xyz, "xz", 1])
-                p3 = CriticalPoint([*model.atoms[ind2 - 1].xyz, "xz", 1])
+                p3 = CriticalPoint([*model.atoms[ind2 - 1].xyz + trans2, "xz", 1])
+                if np.linalg.norm(trans1) > 0:
+                    atom = copy.deepcopy(model.atoms[ind1 - 1])
+                    atom.xyz += trans1
+                    atom.tag = "translated"
+                    model.add_atom(atom, min_dist=-0.01)
+                if np.linalg.norm(trans2) > 0:
+                    atom = copy.deepcopy(model.atoms[ind2 - 1])
+                    atom.xyz += trans2
+                    atom.tag = "translated"
+                    model.add_atom(atom, min_dist=-0.01)
                 model.add_bond_path_point([p2, p1])
                 model.add_bond_path_point([p2, p3])
                 atom_to_atom = model.atoms[ind1 - 1].let + str(ind1) + "-" + model.atoms[ind2 - 1].let + str(ind2)

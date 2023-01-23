@@ -62,9 +62,9 @@ def test_selected_atom_from_form(critplot_application, tests_path):
     window.ui.openGLWidget.update()
     charge, let, position = window.selected_atom_from_form()
     assert charge == 8
-    assert len(window.ui.openGLWidget.main_model.atoms) == 3
+    assert window.ui.openGLWidget.main_model.n_atoms() == 6
     window.atom_add()
-    assert len(window.ui.openGLWidget.main_model.atoms) == 4
+    assert window.ui.openGLWidget.main_model.n_atoms() == 7
     window.ui.openGLWidget.selected_atom = 2
     window.atom_delete()
-    assert len(window.ui.openGLWidget.main_model.atoms) == 3
+    assert window.ui.openGLWidget.main_model.n_atoms() == 6

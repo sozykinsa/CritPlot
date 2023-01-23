@@ -61,8 +61,17 @@ class AtomicModelCP(AtomicModel):
             for bp in bond:
                 bp.xyz += dl
 
+    def translated_atoms_remove(self):
+        new_atoms = []
+        for atom in self.atoms:
+            if atom.tag != "translated":
+                new_atoms.append(atom)
+        self.atoms = new_atoms
+
     def go_to_positive_coordinates_translate(self):
+        self.translated_atoms_remove()
         self.go_to_positive_array_translate(self.atoms)
+        self.find_bonds_fast()
         self.go_to_positive_array_translate(self.cps)
         self.bond_path_opt_update()
 
@@ -104,20 +113,13 @@ class AtomicModelCP(AtomicModel):
         for cp in self.cps:
             cp.xyz = np.dot(self.lat_vectors, cp.xyz)
 
-    # def bond_path_len(self, cp):
-    #    bp_len = None
-    #    ind1 = cp.get_property("atom1")
-    #    ind2 = cp.get_property("atom2")
-    #    if (ind1 is not None) and (ind2 is not None):
-    #        if (ind1 < len(self.cps)) and (ind1 < len(self.cps)):
-    #            pos1 = self.cps[ind1 - 1].xyz
-    #            pos2 = self.cps[ind2 - 1].xyz
-    #            pos3 = cp.xyz
-    #            bp_len = self.point_point_distance(pos1, pos3) + self.point_point_distance(pos2, pos3)
-    #    return bp_len
-
     def add_critical_point(self, cp):
         self.cps.append(deepcopy(cp))
+
+    def delete_all_bond_paths(self):
+        for cp in self.cps:
+            cp.bonds["bond1"] = None
+            cp.bonds["bond2"] = None
 
     def add_bond_path_point(self, points):
         for cp in self.cps:

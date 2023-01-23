@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from typing import List
+import copy
 import os
 import math
 import numpy as np
@@ -98,20 +99,36 @@ def structure_from_cro_file(filename):
         f.readline()
         f.close()
         model.convert_from_direct_to_cart()
+        print("------>>>>> ", len(model.atoms))
 
         for cp in model.cps:
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
             if (ind1 is not None) and (ind2 is not None):
-                # p1 = CriticalPoint([*model.cps[ind1 - 1].xyz, "xz", 1])
-                # p2 = CriticalPoint([*cp.xyz, "xz", 1])
-                # p3 = CriticalPoint([*model.cps[ind2 - 1].xyz, "xz", 1])
+                trans1 = np.array(cp.get_property("atom1_translation"))
+                trans2 = np.array(cp.get_property("atom2_translation"))
+                p1 = CriticalPoint([*model.cps[ind1 - 1].xyz + trans1, "xz", 1])
+                p2 = CriticalPoint([*cp.xyz, "xz", 1])
+                p3 = CriticalPoint([*model.cps[ind2 - 1].xyz + trans2, "xz", 1])
+                if np.linalg.norm(trans1) > 0:
+                    atom = copy.deepcopy(model.atoms[ind1 - 1])
+                    atom.xyz += trans1
+                    atom.tag = "translated"
+                    model.add_atom(atom, min_dist=-0.01)
+                if np.linalg.norm(trans2) > 0:
+                    atom = copy.deepcopy(model.atoms[ind2 - 1])
+                    atom.xyz += trans2
+                    atom.tag = "translated"
+                    model.add_atom(atom, min_dist=-0.01)
+                model.add_bond_path_point([p2, p1])
+                model.add_bond_path_point([p2, p3])
                 atom_to_atom = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
                 cp.set_property("atom_to_atom", atom_to_atom)
                 cp_bp_len = model.point_point_distance(cp.xyz, model.cps[ind1 - 1].xyz) + \
                             model.point_point_distance(model.cps[ind2 - 1].xyz, cp.xyz)
                 cp.set_property("cp_bp_len", cp_bp_len)
-
+        model.bond_path_points_optimize()
+        print("------>>>>><<<<<< ", len(model.atoms))
     return [model]
 
 
@@ -179,7 +196,8 @@ def parse_bondpaths(filename: str, model: AtomicModelCP) -> List[AtomicModelCP]:
         f = open(filename)
         number_of_atoms = int(math.fabs(int(f.readline())))
         new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f, is_allow_charge_incorrect=True)
-        new_model2 = model
+        model.delete_all_bond_paths()
+
         xz_points = []
 
         for atom in new_model.atoms:
@@ -196,14 +214,14 @@ def parse_bondpaths(filename: str, model: AtomicModelCP) -> List[AtomicModelCP]:
                 if d < 0.09:
                     points.append(xz_points[i])
                 else:
-                    new_model2.add_bond_path_point(points)
+                    model.add_bond_path_point(points)
                     points = [xz_points[i]]
 
         if len(points) > 0:
-            new_model2.add_bond_path_point(points)
+            model.add_bond_path_point(points)
 
-        new_model2.bond_path_points_optimize()
-        new_model = new_model2
+        model.bond_path_points_optimize()
+        new_model = model
     molecules.append(new_model)
     return molecules
 

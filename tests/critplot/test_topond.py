@@ -20,4 +20,4 @@ def test_atomic_data_from_output(tests_path):
     f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
     models = atomic_data_from_output(f_name)
     pos = models[0].get_positions()
-    assert len(pos) == 4
+    assert len(pos) == 9

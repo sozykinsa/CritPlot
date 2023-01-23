@@ -6,7 +6,7 @@ import pytest
 
 
 @pytest.fixture
-def get_guiopengl_widget(qapp):
+def get_guiopengl_widget(qsapp):
 
     def factory_function():
         widget = GuiOpenGLCP()
@@ -53,7 +53,7 @@ def guiopengl_model_widget(get_guiopengl_model_widget):
 
 
 @pytest.fixture
-def get_application(qapp):
+def get_application(qsapp):
 
     def factory_function():
         ORGANIZATION_NAME = 'SUSU'
