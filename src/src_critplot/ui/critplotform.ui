@@ -4876,58 +4876,52 @@
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <widget class="QRadioButton" name="radioButton">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>20</y>
-             <width>95</width>
-             <height>20</height>
-            </rect>
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <property name="topMargin">
+            <number>0</number>
            </property>
-           <property name="text">
-            <string>RadioButton</string>
+           <property name="bottomMargin">
+            <number>0</number>
            </property>
-          </widget>
-          <widget class="QRadioButton" name="radioButton_2">
-           <property name="geometry">
-            <rect>
-             <x>140</x>
-             <y>20</y>
-             <width>95</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>RadioButton</string>
-           </property>
-          </widget>
-          <widget class="QRadioButton" name="radioButton_3">
-           <property name="geometry">
-            <rect>
-             <x>270</x>
-             <y>20</y>
-             <width>95</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>RadioButton</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton">
-           <property name="geometry">
-            <rect>
-             <x>480</x>
-             <y>20</y>
-             <width>93</width>
-             <height>28</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>PushButton</string>
-           </property>
-          </widget>
+           <item>
+            <widget class="QRadioButton" name="bcp_table">
+             <property name="text">
+              <string>bcp</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="natr_table">
+             <property name="text">
+              <string>natr</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="rcp_table">
+             <property name="text">
+              <string>rcp</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="ccp_table">
+             <property name="text">
+              <string>ccp</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>

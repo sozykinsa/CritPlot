@@ -2635,8 +2635,46 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_8, u"2D Figure")
         self.page = QWidget()
         self.page.setObjectName(u"page")
+        self.page.setGeometry(QRect(0, 0, 642, 734))
         self.verticalLayout_19 = QVBoxLayout(self.page)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.frame_14 = QFrame(self.page)
+        self.frame_14.setObjectName(u"frame_14")
+        self.frame_14.setMaximumSize(QSize(16777215, 50))
+        self.frame_14.setFrameShape(QFrame.StyledPanel)
+        self.frame_14.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_9 = QHBoxLayout(self.frame_14)
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.horizontalLayout_9.setContentsMargins(-1, 0, -1, 0)
+        self.bcp_table = QRadioButton(self.frame_14)
+        self.bcp_table.setObjectName(u"bcp_table")
+        self.bcp_table.setChecked(True)
+
+        self.horizontalLayout_9.addWidget(self.bcp_table)
+
+        self.natr_table = QRadioButton(self.frame_14)
+        self.natr_table.setObjectName(u"natr_table")
+
+        self.horizontalLayout_9.addWidget(self.natr_table)
+
+        self.rcp_table = QRadioButton(self.frame_14)
+        self.rcp_table.setObjectName(u"rcp_table")
+
+        self.horizontalLayout_9.addWidget(self.rcp_table)
+
+        self.ccp_table = QRadioButton(self.frame_14)
+        self.ccp_table.setObjectName(u"ccp_table")
+
+        self.horizontalLayout_9.addWidget(self.ccp_table)
+
+        self.pushButton = QPushButton(self.frame_14)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.horizontalLayout_9.addWidget(self.pushButton)
+
+
+        self.verticalLayout_19.addWidget(self.frame_14)
+
         self.cps_table = QTableWidget(self.page)
         self.cps_table.setObjectName(u"cps_table")
         sizePolicy1.setHeightForWidth(self.cps_table.sizePolicy().hasHeightForWidth())
@@ -2907,6 +2945,11 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabSettings), QCoreApplication.translate("MainWindow", u"Settings", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_7), QCoreApplication.translate("MainWindow", u"3D View", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_8), QCoreApplication.translate("MainWindow", u"2D Figure", None))
+        self.bcp_table.setText(QCoreApplication.translate("MainWindow", u"bcp", None))
+        self.natr_table.setText(QCoreApplication.translate("MainWindow", u"natr", None))
+        self.rcp_table.setText(QCoreApplication.translate("MainWindow", u"rcp", None))
+        self.ccp_table.setText(QCoreApplication.translate("MainWindow", u"ccp", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page), QCoreApplication.translate("MainWindow", u"Table", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"View", None))

@@ -17,6 +17,14 @@ class AtomicModelCP(AtomicModel):
         super().__init__(new_atoms)
         self.cps: List[CriticalPoint] = []
 
+    def n_cps(self):
+        lets = ("xb", "xr", "xc", "nn")
+        n = 0
+        for cp in self.cps:
+            if cp.let in lets:
+                n += 1
+        return n
+
     def bond_path_points_optimize(self):
         for cp in self.cps:
             if cp.let == "xb":

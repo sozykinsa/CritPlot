@@ -17,6 +17,7 @@ def structure_from_cro_file(filename):
     #cp  ncp   typ        position (cryst. coords.)            end1 (lvec)      end2 (lvec)
     1      1    n   0.41201875    0.19237040    0.32843532
     """
+    # print("structure_from_cro_file start")
     period_table = TPeriodTable()
     model = AtomicModelCP()
     if os.path.exists(filename) and filename.endswith("cro"):
@@ -56,6 +57,7 @@ def structure_from_cro_file(filename):
             """
             x, y, z = float(data[3]), float(data[4]), float(data[5])
             crit_info = crit_points[number]
+            # print(crit_info)
             if crit_info[3] == "nucleus":
                 let = crit_info[8].replace("_", "")
                 title = let + data[0]
@@ -99,7 +101,8 @@ def structure_from_cro_file(filename):
         f.readline()
         f.close()
         model.convert_from_direct_to_cart()
-        print("------>>>>> ", len(model.atoms))
+
+        # print("start postprocessing")
 
         for cp in model.cps:
             ind1 = cp.get_property("atom1")
@@ -110,12 +113,12 @@ def structure_from_cro_file(filename):
                 p1 = CriticalPoint([*model.cps[ind1 - 1].xyz + trans1, "xz", 1])
                 p2 = CriticalPoint([*cp.xyz, "xz", 1])
                 p3 = CriticalPoint([*model.cps[ind2 - 1].xyz + trans2, "xz", 1])
-                if np.linalg.norm(trans1) > 0:
+                if (np.linalg.norm(trans1) > 0) and (ind1 < model.n_atoms()):
                     atom = copy.deepcopy(model.atoms[ind1 - 1])
                     atom.xyz += trans1
                     atom.tag = "translated"
                     model.add_atom(atom, min_dist=-0.01)
-                if np.linalg.norm(trans2) > 0:
+                if (np.linalg.norm(trans2) > 0) and (ind2 < model.n_atoms()):
                     atom = copy.deepcopy(model.atoms[ind2 - 1])
                     atom.xyz += trans2
                     atom.tag = "translated"
@@ -128,7 +131,7 @@ def structure_from_cro_file(filename):
                             model.point_point_distance(model.cps[ind2 - 1].xyz, cp.xyz)
                 cp.set_property("cp_bp_len", cp_bp_len)
         model.bond_path_points_optimize()
-        print("------>>>>><<<<<< ", len(model.atoms))
+    # print("structure_from_cro_file finish")
     return [model]
 
 

@@ -19,7 +19,6 @@ from PySide2.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QM
 from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem, QTreeWidgetItem
 from PySide2.QtWidgets import QTreeWidgetItemIterator
 
-# from src_critplot.utils.critplot_project_file import CritPlotProjectFile
 from src_critplot.utils.import_export import ImporterExporter
 from src_critplot.program import critic2
 from src_critplot.qtbased.image3dexporter import Image3Dexporter
@@ -180,40 +179,40 @@ class MainForm(QMainWindow):
         self.ui.FormModelTableProperties.horizontalHeader().setStyleSheet(self.table_header_stylesheet)
         self.ui.FormModelTableProperties.verticalHeader().setStyleSheet(self.table_header_stylesheet)
 
-        form_settings_preferred_coordinates_type = QStandardItemModel()
-        form_settings_preferred_coordinates_type.appendRow(QStandardItem("Cartesian"))
-        form_settings_preferred_coordinates_type.appendRow(QStandardItem("Fractional"))
-        form_settings_preferred_coordinates_type.appendRow(QStandardItem("Zmatrix Cartesian"))
-        self.ui.FormSettingsPreferredCoordinates.setModel(form_settings_preferred_coordinates_type)
-        self.ui.FormSettingsPreferredCoordinates.setCurrentText(self.coord_type)
-        self.ui.FormSettingsPreferredCoordinates.currentIndexChanged.connect(
-            self.save_state_preferred_coordinates)
+        #form_settings_preferred_coordinates_type = QStandardItemModel()
+        #form_settings_preferred_coordinates_type.appendRow(QStandardItem("Cartesian"))
+        #form_settings_preferred_coordinates_type.appendRow(QStandardItem("Fractional"))
+        #form_settings_preferred_coordinates_type.appendRow(QStandardItem("Zmatrix Cartesian"))
+        #self.ui.FormSettingsPreferredCoordinates.setModel(form_settings_preferred_coordinates_type)
+        #self.ui.FormSettingsPreferredCoordinates.setCurrentText(self.coord_type)
+        #self.ui.FormSettingsPreferredCoordinates.currentIndexChanged.connect(
+        #    self.save_state_preferred_coordinates)
 
-        form_settings_preferred_units_type = QStandardItemModel()
-        form_settings_preferred_units_type.appendRow(QStandardItem("Bohr"))
-        form_settings_preferred_units_type.appendRow(QStandardItem("Ang"))
-        self.ui.FormSettingsPreferredUnits.setModel(form_settings_preferred_units_type)
-        self.ui.FormSettingsPreferredUnits.setCurrentText(self.units_type)
-        self.ui.FormSettingsPreferredUnits.currentIndexChanged.connect(self.save_state_preferred_units)
+        #form_settings_preferred_units_type = QStandardItemModel()
+        #form_settings_preferred_units_type.appendRow(QStandardItem("Bohr"))
+        #form_settings_preferred_units_type.appendRow(QStandardItem("Ang"))
+        #self.ui.FormSettingsPreferredUnits.setModel(form_settings_preferred_units_type)
+        #self.ui.FormSettingsPreferredUnits.setCurrentText(self.units_type)
+        #self.ui.FormSettingsPreferredUnits.currentIndexChanged.connect(self.save_state_preferred_units)
 
-        form_settings_preferred_lattice_type = QStandardItemModel()
-        form_settings_preferred_lattice_type.appendRow(QStandardItem("LatticeParameters"))
-        form_settings_preferred_lattice_type.appendRow(QStandardItem("LatticeVectors"))
-        self.ui.FormSettingsPreferredLattice.setModel(form_settings_preferred_lattice_type)
-        self.ui.FormSettingsPreferredLattice.setCurrentText(self.lattice_type)
-        self.ui.FormSettingsPreferredLattice.currentIndexChanged.connect(self.save_state_preferred_lattice)
+        #form_settings_preferred_lattice_type = QStandardItemModel()
+        #form_settings_preferred_lattice_type.appendRow(QStandardItem("LatticeParameters"))
+        #form_settings_preferred_lattice_type.appendRow(QStandardItem("LatticeVectors"))
+        #self.ui.FormSettingsPreferredLattice.setModel(form_settings_preferred_lattice_type)
+        #self.ui.FormSettingsPreferredLattice.setCurrentText(self.lattice_type)
+        #self.ui.FormSettingsPreferredLattice.currentIndexChanged.connect(self.save_state_preferred_lattice)
 
         self.ui.FormActionsPostComboBonds.currentIndexChanged.connect(self.fill_bonds)
 
-        ColorType = QStandardItemModel()
+        color_type = QStandardItemModel()
         color_types = ['flag', 'prism', 'ocean', 'gist_earth', 'terrain', 'gist_stern',
                        'gnuplot', 'gnuplot2', 'CMRmap', 'cubehelix', 'brg',
                        'gist_rainbow', 'rainbow', 'jet', 'nipy_spectral', 'gist_ncar']
 
         for t in color_types:
-            ColorType.appendRow(QStandardItem(t))
+            color_type.appendRow(QStandardItem(t))
 
-        self.ui.FormSettingsColorsScale.setModel(ColorType)
+        self.ui.FormSettingsColorsScale.setModel(color_type)
         self.ui.FormSettingsColorsScale.setCurrentText(self.ColorType)
 
         color_type_scale = QStandardItemModel()
@@ -228,6 +227,11 @@ class MainForm(QMainWindow):
         self.ui.FormActionsPosTableBonds.setColumnWidth(1, 170)
         self.ui.FormActionsPosTableBonds.horizontalHeader().setStyleSheet(self.table_header_stylesheet)
         self.ui.FormActionsPosTableBonds.verticalHeader().setStyleSheet(self.table_header_stylesheet)
+
+        self.ui.bcp_table.clicked.connect(self.fill_cps())
+        self.ui.natr_table.clicked.connect(self.fill_cps())
+        self.ui.rcp_table.clicked.connect(self.fill_cps())
+        self.ui.ccp_table.clicked.connect(self.fill_cps())
 
         self.setup_actions()
 
@@ -532,6 +536,7 @@ class MainForm(QMainWindow):
         self.fill_models_list()
         self.fill_atoms_table()
         self.fill_properties_table()
+        self.fill_cps()
 
         self.ui.PropertyAtomAtomDistanceAt1.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistanceAt2.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
@@ -590,20 +595,20 @@ class MainForm(QMainWindow):
 
     def fill_properties_table(self):
         properties = []
-
         model = self.ui.openGLWidget.get_model()
-
-        properties.append(["Natoms", str(len(model.atoms))])
+        properties.append(["Atoms", str(model.n_atoms())])
+        properties.append(["CPs", str(model.n_cps())])
         properties.append(["LatVect1", str(model.lat_vector1)])
         properties.append(["LatVect2", str(model.lat_vector2)])
         properties.append(["LatVect3", str(model.lat_vector3)])
         properties.append(["Formula", model.formula()])
 
-        self.ui.FormModelTableProperties.setRowCount(len(properties))
+        table = self.ui.FormModelTableProperties
 
+        table.setRowCount(len(properties))
         for i in range(0, len(properties)):
-            self.ui.FormModelTableProperties.setItem(i, 0, QTableWidgetItem(properties[i][0]))
-            self.ui.FormModelTableProperties.setItem(i, 1, QTableWidgetItem(properties[i][1]))
+            for j in range(len(properties[i])):
+                table.setItem(i, j, QTableWidgetItem(properties[i][j]))
 
         self.ui.FormModifyCellEditA1.setValue(model.lat_vector1[0])
         self.ui.FormModifyCellEditA2.setValue(model.lat_vector1[1])
@@ -614,6 +619,33 @@ class MainForm(QMainWindow):
         self.ui.FormModifyCellEditC1.setValue(model.lat_vector3[0])
         self.ui.FormModifyCellEditC2.setValue(model.lat_vector3[1])
         self.ui.FormModifyCellEditC3.setValue(model.lat_vector3[2])
+
+    def fill_cps(self):
+        print("fill_cps")
+        properties = []
+        model = self.ui.openGLWidget.get_model()
+        n_cols = 2
+        title = ["Property", "Value"]
+        if self.ui.bcp_table.isChecked():
+            n_cols = 2
+            title = ["atoms", "dist"]
+            for cp in model.cps:
+                if cp.let == "xb":
+                    properties.append([cp.get_property("atom_to_atom"), str(round(cp.get_property("cp_bp_len"), 4))])
+
+        cps_table = self.ui.cps_table
+        cps_table.clear()
+        cps_table.setColumnCount(n_cols)
+        cps_table.setHorizontalHeaderLabels(title)
+        cps_table.setColumnWidth(0, 85)
+        cps_table.setColumnWidth(1, 260)
+        cps_table.horizontalHeader().setStyleSheet(self.table_header_stylesheet)
+        cps_table.verticalHeader().setStyleSheet(self.table_header_stylesheet)
+
+        cps_table.setRowCount(len(properties))
+        for i in range(0, len(properties)):
+            for j in range(len(properties[i])):
+                cps_table.setItem(i, j, QTableWidgetItem(properties[i][j]))
 
     def fill_bonds(self):
         c1, c2 = self.fill_bonds_charges()
@@ -854,9 +886,9 @@ class MainForm(QMainWindow):
         self.state_Color_Of_Axes = str(settings.value(SETTINGS_Color_Of_Axes, '0 255 0'))
         self.color_to_ui(self.ui.ColorAxes, self.state_Color_Of_Axes)
 
-        self.coord_type = str(settings.value(SETTINGS_FormSettingsPreferredCoordinates, 'Cartesian'))
-        self.units_type = str(settings.value(SETTINGS_FormSettingsPreferredUnits, 'Ang'))
-        self.lattice_type = str(settings.value(SETTINGS_FormSettingsPreferredLattice, 'LatticeParameters'))
+        #self.coord_type = str(settings.value(SETTINGS_FormSettingsPreferredCoordinates, 'Cartesian'))
+        #self.units_type = str(settings.value(SETTINGS_FormSettingsPreferredUnits, 'Ang'))
+        #self.lattice_type = str(settings.value(SETTINGS_FormSettingsPreferredLattice, 'LatticeParameters'))
 
         self.action_on_start = str(settings.value(SETTINGS_FormSettingsActionOnStart, 'Nothing'))
 
@@ -945,7 +977,7 @@ class MainForm(QMainWindow):
 
     def plot_last_model(self):
         if len(self.models) > 0:
-            if len(self.models[-1].atoms) > 0:
+            if self.models[-1].n_atoms() > 0:
                 self.plot_model(-1)
                 self.fill_gui()
                 self.save_active_folder()
@@ -1075,7 +1107,7 @@ class MainForm(QMainWindow):
     def plot_model(self, value):
         if len(self.models) < value:
             return
-        if len(self.models[value].atoms) == 0:
+        if self.models[value].n_atoms() == 0:
             return
         self.active_model = value
         self.ui.Form3Dand2DTabs.setCurrentIndex(0)
@@ -1254,10 +1286,10 @@ class MainForm(QMainWindow):
         self.save_property(SETTINGS_FormSettingsColorsScaleType, self.ui.FormSettingsColorsScaleType.currentText())
         self.colors_cash = {}
 
-    def save_state_preferred_coordinates(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsPreferredCoordinates,
-                           self.ui.FormSettingsPreferredCoordinates.currentText())
-        self.coord_type = self.ui.FormSettingsPreferredCoordinates.currentText()
+    #def save_state_preferred_coordinates(self):  # pragma: no cover
+    #    self.save_property(SETTINGS_FormSettingsPreferredCoordinates,
+    #                       self.ui.FormSettingsPreferredCoordinates.currentText())
+    #    self.coord_type = self.ui.FormSettingsPreferredCoordinates.currentText()
 
     def save_state_preferred_coordinates_style(self):  # pragma: no cover
         self.save_property(SETTINGS_FormSettingsPreferredCoordinatesStyle,

@@ -252,8 +252,6 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
 
 
 def add_assotiated_atom_from_row(cp, model, row1):
-    if len(row1) > 5:
-        print(len(row1))
     if len(row1) > 8:
         if (row1[5] is not None) and (row1[8] is not None):
             add_associated_atoms(cp, model, row1)
