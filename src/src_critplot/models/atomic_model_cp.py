@@ -69,13 +69,6 @@ class AtomicModelCP(AtomicModel):
             for bp in bond:
                 bp.xyz += dl
 
-    def translated_atoms_remove(self):
-        new_atoms = []
-        for atom in self.atoms:
-            if atom.tag != "translated":
-                new_atoms.append(atom)
-        self.atoms = new_atoms
-
     def go_to_positive_coordinates_translate(self):
         self.translated_atoms_remove()
         self.go_to_positive_array_translate(self.atoms)

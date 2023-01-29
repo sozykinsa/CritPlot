@@ -35,8 +35,9 @@ class ImporterExporter(object):
         new_model.translated_atoms_remove()
         return new_model
 
-    def export_to_file(self, model, file_name):  # pragma: no cover
-        new_model = self.model_for_export(model)
+    @staticmethod
+    def export_to_file(model, file_name):  # pragma: no cover
+        new_model = ImporterExporter.model_for_export(model)
         if file_name.endswith(".data"):
             text = CritPlotProjectFile.project_file_writer(new_model)
             helpers.write_text_to_file(file_name, text)

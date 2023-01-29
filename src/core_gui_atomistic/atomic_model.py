@@ -276,6 +276,13 @@ class AtomicModel(object):
     def n_atoms(self):
         return len(self.atoms)
 
+    def translated_atoms_remove(self):
+        new_atoms = []
+        for atom in self.atoms:
+            if atom.tag != "translated":
+                new_atoms.append(atom)
+        self.atoms = new_atoms
+
     def center_mass(self, charge=0):
         """The method returns the center of mass of the molecule."""
         cxyz = np.zeros(3)
