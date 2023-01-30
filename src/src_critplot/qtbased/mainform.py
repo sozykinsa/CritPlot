@@ -111,6 +111,11 @@ class MainForm(QMainWindow):
         self.ui.camera_pos_z.valueChanged.connect(self.model_orientation_changed)
         self.ui.model_scale.valueChanged.connect(self.model_orientation_changed)
 
+        self.ui.bcp_table.clicked.connect(self.fill_cps)   # toggled
+        self.ui.natr_table.clicked.connect(self.fill_cps)
+        self.ui.rcp_table.clicked.connect(self.fill_cps)
+        self.ui.ccp_table.clicked.connect(self.fill_cps)
+
         # buttons
         self.ui.FormActionsPostButPlotBondsHistogram.clicked.connect(self.plot_bonds_histogram)
 
@@ -227,11 +232,6 @@ class MainForm(QMainWindow):
         self.ui.FormActionsPosTableBonds.setColumnWidth(1, 170)
         self.ui.FormActionsPosTableBonds.horizontalHeader().setStyleSheet(self.table_header_stylesheet)
         self.ui.FormActionsPosTableBonds.verticalHeader().setStyleSheet(self.table_header_stylesheet)
-
-        self.ui.bcp_table.clicked.connect(self.fill_cps())
-        self.ui.natr_table.clicked.connect(self.fill_cps())
-        self.ui.rcp_table.clicked.connect(self.fill_cps())
-        self.ui.ccp_table.clicked.connect(self.fill_cps())
 
         self.setup_actions()
 
@@ -621,17 +621,40 @@ class MainForm(QMainWindow):
         self.ui.FormModifyCellEditC3.setValue(model.lat_vector3[2])
 
     def fill_cps(self):
-        print("fill_cps")
+        is_bcp = False
+        is_ccp = False
+        is_rcp = False
+        is_natr = False
+        title = ["Property", "Value"]
+
+        if self.ui.bcp_table.isChecked():
+            is_bcp = True
+            let = "xb"
+            title = ["cp", "atoms", "rho", "dist"]
+        if self.ui.ccp_table.isChecked():
+            is_ccp = True
+            let = "xc"
+            title = ["cp", "rho"]
+        if self.ui.rcp_table.isChecked():
+            is_rcp = True
+            let = "xr"
+            title = ["cp", "rho"]
+        if self.ui.natr_table.isChecked():
+            is_natr = True
+            let = "nn"
+            title = ["cp", "rho"]
         properties = []
         model = self.ui.openGLWidget.get_model()
-        n_cols = 2
-        title = ["Property", "Value"]
-        if self.ui.bcp_table.isChecked():
-            n_cols = 2
-            title = ["atoms", "dist"]
-            for cp in model.cps:
-                if cp.let == "xb":
-                    properties.append([cp.get_property("atom_to_atom"), str(round(cp.get_property("cp_bp_len"), 4))])
+        n_cols = len(title)
+
+        for cp in model.cps:
+            if cp.let == let:
+                if is_bcp:
+                    properties.append([cp.get_property("title"), cp.get_property("atom_to_atom"),
+                                       cp.get_property("rho"),
+                                       str(round(cp.get_property("cp_bp_len"), 4))])
+                else:
+                    properties.append([cp.get_property("title"), cp.get_property("rho")])
 
         cps_table = self.ui.cps_table
         cps_table.clear()
@@ -1583,7 +1606,7 @@ class MainForm(QMainWindow):
         format_str = "csv files (*.csv)"
         f_name = self.get_file_name_from_save_dialog(format_str)
 
-        if len(f_name) > 0:
+        if f_name is not None:
             model = self.models[self.active_model]
 
             cp_list = []

@@ -131,7 +131,6 @@ def structure_from_cro_file(filename):
                             model.point_point_distance(model.cps[ind2 - 1].xyz, cp.xyz)
                 cp.set_property("cp_bp_len", cp_bp_len)
         model.bond_path_points_optimize()
-    # print("structure_from_cro_file finish")
     return [model]
 
 
