@@ -52,20 +52,15 @@ def lat_vectors_from_params(a, b, c, alpha, beta, gamma):
     tm = math.pow(math.cos(alpha), 2) + math.pow(math.cos(beta), 2) + math.pow(math.cos(gamma), 2)
     tmp = math.sqrt(1 + 2 * math.cos(alpha) * math.cos(beta) * math.cos(gamma) - tm)
     h = c * tmp / math.sin(gamma)
-    lat_vect_1 = [a, 0, 0]
-    lat_vect_2 = [b * math.cos(gamma), b * math.sin(gamma), 0]
-    lat_vect_3 = [c * math.cos(beta), c * math.cos(alpha) * math.sin(gamma), h]
-    if math.fabs(lat_vect_2[0]) < 1e-8:
-        lat_vect_2[0] = 0
-    if math.fabs(lat_vect_2[1]) < 1e-8:
-        lat_vect_2[1] = 0
-    if math.fabs(lat_vect_3[0]) < 1e-8:
-        lat_vect_3[0] = 0
-    if math.fabs(lat_vect_3[1]) < 1e-8:
-        lat_vect_3[1] = 0
-    if math.fabs(lat_vect_3[2]) < 1e-8:
-        lat_vect_3[2] = 0
-    return lat_vect_1, lat_vect_2, lat_vect_3
+    lat_vectors = np.zeros((3, 3), dtype=float)
+    lat_vectors[0] = np.array([a, 0, 0])
+    lat_vectors[1] = np.array([b * math.cos(gamma), b * math.sin(gamma), 0])
+    lat_vectors[2] = np.array([c * math.cos(beta), c * math.cos(alpha) * math.sin(gamma), h])
+    for i in range(3):
+        for j in range(3):
+            if math.fabs(lat_vectors[i][j]) < 1e-8:
+                lat_vectors[i][j] = 0
+    return lat_vectors
 
 
 def lattice_parameters_abc_angles(lattice_parameters, lat_constant):
@@ -78,12 +73,9 @@ def lattice_parameters_abc_angles(lattice_parameters, lat_constant):
         alpha = math.radians(float(data[3]))
         beta = math.radians(float(data[4]))
         gamma = math.radians(float(data[5]))
-
-        lat_vect_1, lat_vect_2, lat_vect_3 = lat_vectors_from_params(a, b, c, alpha, beta, gamma)
-
-        return lat_vect_1, lat_vect_2, lat_vect_3
+        return lat_vectors_from_params(a, b, c, alpha, beta, gamma)
     else:
-        return [False, False, False], [False, False, False], [False, False, False]
+        return None
 
 
 def list_str_to_float(x):
@@ -192,6 +184,21 @@ def property_from_sub_file(filename, k, prop, count, typen):
     return is_found, k, property_value
 
 
+def text_between_lines(filename, line1, line2):
+    file_name = open(filename)
+    str1 = file_name.readline()
+    while str1.find(line1) == -1:
+        str1 = file_name.readline()
+    str1 = file_name.readline()
+    fdf = []
+    while str1.find(line2) == -1:
+        if str1 != "":
+            fdf.append(str1)
+        str1 = file_name.readline()
+    file_name.close()
+    return fdf
+
+
 def utf8_letter(let):
     if (let == r'\Gamma') or (let == 'Gamma'):
         return '\u0393'
@@ -209,50 +216,64 @@ def utf8_letter(let):
 
 
 def check_format(filename):
-    """check file format"""
+    """Check file format"""
+    if not os.path.exists(filename):
+        return "unknown"
 
-    """check file format"""
-    if filename.endswith(".fdf") or filename.endswith(".FDF"):
+    name = filename.lower()
+    if name.endswith(".fdf"):
         return "SIESTAfdf"
 
-    if (filename.lower()).endswith(".out"):
+    if name.endswith(".out"):
+        f = open(filename)
+        str1 = f.readline()
+        while str1:
+            if str1.find("WELCOME TO SIESTA") >= 0:
+                f.close()
+                return "SIESTAout"
+            if str1.find("DIRECT LATTICE VECTORS CARTESIAN COMPONENTS (ANGSTROM)") >= 0:
+                f.close()
+                return "CRYSTALout"
+            str1 = f.readline()
+        f.close()
         return "SIESTAout"
 
-    if filename.endswith(".ani") or filename.endswith(".ANI"):
+    if name.endswith(".ani"):
         return "SIESTAANI"
 
-    if (filename.lower()).endswith(".xyz"):
+    if name.endswith(".xyz"):
         f = open(filename)
         f.readline()
         str1 = spacedel(f.readline())
+        f.close()
         if len(str1.split()) > 4:
             return "XMolXYZ"
-        if len(str1.split()) == 0:
+        if len(str1.split()) <= 4:
             return "SiestaXYZ"
         return "unknown"
 
-    if filename.endswith(".STRUCT_OUT"):
+    if name.endswith(".struct_out"):
         return "SIESTASTRUCT_OUT"
 
-    if filename.endswith(".MD_CAR"):
+    if name.endswith(".md_car"):
         return "SIESTAMD_CAR"
 
-    if filename.endswith(".XSF"):
+    if name.endswith(".xsf"):
         return "SIESTAXSF"
 
-    if filename.endswith(".cube"):
+    if name.endswith(".cube"):
         return "GAUSSIAN_cube"
 
-    if filename.endswith("POSCAR") or filename.endswith("CONTCAR"):
+    if name.endswith("poscar") or name.endswith("contcar"):
         return "VASPposcar"
 
-    if filename.endswith("outp") or filename.endswith("OUTP"):
+    if name.endswith("outp"):
         return "topond_out"
 
-    if filename.endswith("outp") or filename.endswith("OUTP"):
-        return "topond_out"
-
-    if filename.endswith("data") or filename.endswith("DATA"):
+    if name.endswith("data"):
         return "project"
+
+    if name.endswith("cro"):
+        return "critic_cro"
 
     return "unknown"

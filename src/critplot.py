@@ -4,7 +4,7 @@ try:
     if os.environ["XDG_SESSION_TYPE"] == "wayland":
         os.environ["QT_QPA_PLATFORM"] = "wayland"
 except Exception as e:
-    print(str(e))
+    pass
 import sys
 from pathlib import Path
 
@@ -12,7 +12,7 @@ from PySide2.QtCore import QCoreApplication, Qt
 from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import QApplication
 
-from qtbased.mainform import MainForm
+from src_critplot.qtbased.mainform import MainForm
 
 sys.path.append('.')
 

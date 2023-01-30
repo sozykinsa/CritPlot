@@ -24,8 +24,6 @@ class AtomicModel(object):
         self.bonds = []
         self.bonds_per = []  # for exact calculation in form
 
-        self.tags = []
-
         self.name = ""
         self.lat_vectors = 100 * np.eye(3)
         self.mendeley = TPeriodTable()
@@ -38,6 +36,9 @@ class AtomicModel(object):
             self.add_atom(atom)
 
         self.selected_atom = -1
+
+    def __getitem__(self, i):
+        return self.atoms[i]
 
     @property
     def lat_vector1(self) -> float:
@@ -84,7 +85,10 @@ class AtomicModel(object):
         return np.array(self.center_mass())
 
     def get_tags(self):
-        return self.tags
+        tags = []
+        for at in self.atoms:
+            tags.append(at.tag)
+        return tags
 
     def get_cell(self):
         return self.lat_vectors
@@ -115,10 +119,9 @@ class AtomicModel(object):
 
     def move(self, l_x, l_y, l_z):
         """Move model by the vector."""
+        dl = np.array((l_x, l_y, l_z))
         for atom in self.atoms:
-            atom.x += l_x
-            atom.y += l_y
-            atom.z += l_z
+            atom.xyz += dl
 
     @staticmethod
     def atoms_from_xmol_xyz(filename: str):
@@ -131,7 +134,14 @@ class AtomicModel(object):
         return molecules
 
     @staticmethod
-    def atoms_from_xyz_structure(number_of_atoms, ani_file, indexes=[0, 1, 2, 3]):
+    def atoms_from_xyz_structure(number_of_atoms: int, ani_file, indexes=[0, 1, 2, 3],
+                                 is_allow_charge_incorrect: bool = False):
+        """Get atoms from xyz file.
+        number_of_atoms - number if data lines
+        ani_file -
+        indexes -
+        is_only_charge_correct - check the charge for correctness
+        """
         if indexes[0] == 0:
             ani_file.readline()
         atoms = []
@@ -143,43 +153,33 @@ class AtomicModel(object):
             d1 = float(s[indexes[1]])
             d2 = float(s[indexes[2]])
             d3 = float(s[indexes[3]])
-            c = s[indexes[0]]
-            c = reg.sub('', c)
+            c = reg.sub('', s[indexes[0]])
             charge = mendeley.get_charge_by_letter(c)
-            a = [d1, d2, d3, c, charge]
-            atoms.append(a)
+            if (charge > 0) or is_allow_charge_incorrect:
+                atoms.append([d1, d2, d3, c, charge])
         new_model = AtomicModel(atoms)
         new_model.set_lat_vectors_default()
         return new_model
 
-    def get_LatVect1_norm(self):
-        return norm(self.lat_vector1)
-
-    def get_LatVect2_norm(self):
-        return norm(self.lat_vector2)
-
-    def get_LatVect3_norm(self):
-        return norm(self.lat_vector3)
-
     def get_angle_alpha(self):
-        a = self.get_LatVect2_norm()
-        b = self.get_LatVect3_norm()
+        a = norm(self.lat_vector2)
+        b = norm(self.lat_vector3)
         ab = self.lat_vector2[0] * self.lat_vector3[0] + self.lat_vector2[1] * self.lat_vector3[1] + \
             self.lat_vector2[2] * self.lat_vector3[2]
         angle = math.acos(ab / (a * b))
         return 180 * angle / math.pi
 
     def get_angle_beta(self):
-        a = self.get_LatVect1_norm()
-        b = self.get_LatVect3_norm()
+        a = norm(self.lat_vector1)
+        b = norm(self.lat_vector3)
         ab = self.lat_vector1[0] * self.lat_vector3[0] + self.lat_vector1[1] * self.lat_vector3[1] + \
             self.lat_vector1[2] * self.lat_vector3[2]
         angle = math.acos(ab / (a * b))
         return 180 * angle / math.pi
 
     def get_angle_gamma(self):
-        a = self.get_LatVect2_norm()
-        b = self.get_LatVect1_norm()
+        a = norm(self.lat_vector2)
+        b = norm(self.lat_vector1)
         ab = self.lat_vector2[0] * self.lat_vector1[0] + self.lat_vector2[1] * self.lat_vector1[1] + \
             self.lat_vector2[2] * self.lat_vector1[2]
         angle = math.acos(ab / (a * b))
@@ -205,28 +205,42 @@ class AtomicModel(object):
             sz = 5
         self.lat_vectors = 1.4 * np.eye(3) * np.array((sx, sy, sz))
 
-    def delete_atom(self, ind):
-        print("delete_atom ", self.selected_atom, ind)
+    def delete_atom(self, ind: int) -> None:
+        """Remove atom from model."""
         if (ind >= 0) and (ind < self.n_atoms()):
             self.selected_atom = -1
             self.atoms.pop(ind)
             self.find_bonds_fast()
 
-    def add_atom(self, atom, min_dist=0):
-        """Adds atom to the molecule is minimal distance to other atoms more then minDist."""
+    def add_atom(self, atom, min_dist=0) -> bool:
+        """Adds atom to the molecule is minimal distance to other atoms more then minDist.
+        Return value: True if atom was added
+        """
         dist = 10000
         if min_dist > 0:
             model = AtomicModel(self.atoms)
             model.set_lat_vectors(self.lat_vector1, self.lat_vector2, self.lat_vector3)
             model.add_atom(atom)
             for ind in range(0, len(self.atoms)):
-                r = model.atom_atom_distance(ind, len(model.atoms) - 1)
+                r = model.atom_atom_distance(ind, -1)  # len(model.atoms) - 1)
                 if r < dist:
                     dist = r
 
-        if dist > min_dist:
+        if min_dist < 0:
+            model = AtomicModel(self.atoms)
+            model.add_atom(atom)
+            for ind in range(0, len(self.atoms)):
+                xyz1 = model.atoms[ind].xyz
+                xyz2 = model.atoms[-1].xyz
+                r = np.linalg.norm(xyz1 - xyz2)
+                if r < dist:
+                    dist = r
+
+        if dist > math.fabs(min_dist):
             new_at = deepcopy(atom)
             self.atoms.append(new_at)
+            return True
+        return False
 
     def add_atomic_model(self, atomic_model, min_dist=0):
         for at in atomic_model:
@@ -241,14 +255,11 @@ class AtomicModel(object):
             for i in range(0, self.n_atoms()):
                 self.atoms[i].set_property(prop, value[i][1])
 
-    def AddBond(self, bond):
+    def add_bond(self, bond):
         self.bonds.append(bond)
 
     def n_bonds(self):
         return len(self.bonds)
-
-    def __getitem__(self, i):
-        return self.atoms[i]
 
     def modify_atoms_types(self, changes):
         for change in changes:
@@ -265,16 +276,25 @@ class AtomicModel(object):
     def n_atoms(self):
         return len(self.atoms)
 
+    def translated_atoms_remove(self):
+        new_atoms = []
+        for atom in self.atoms:
+            if atom.tag != "translated":
+                new_atoms.append(atom)
+        self.atoms = new_atoms
+
     def center_mass(self, charge=0):
         """The method returns the center of mass of the molecule."""
         cxyz = np.zeros(3)
         n = 0
+        tags = self.get_tags()
 
         if charge == 0:
             for j in range(0, len(self.atoms)):
-                m = self.mendeley.Atoms[self.atoms[j].charge].mass
-                cxyz += self.atoms[j].xyz * m
-                n += m
+                if tags[j] != "translated":
+                    m = self.mendeley.Atoms[self.atoms[j].charge].mass
+                    cxyz += self.atoms[j].xyz * m
+                    n += m
         else:
             for j in range(0, len(self.atoms)):
                 if int(self.atoms[j].charge) == int(charge):
@@ -321,7 +341,7 @@ class AtomicModel(object):
         self.rotate_y(betta)
         self.rotate_z(gamma)
 
-    def ProjectionToCylinder(self, atomslist, radius):
+    def projection_to_cylinder(self, atomslist, radius):
         """This method returns projections on cylinder with radius for atom at."""
         row = []
         for at in range(0, len(atomslist)):
@@ -341,7 +361,7 @@ class AtomicModel(object):
                 indexes.append(j)
         return indexes
 
-    def indexes_of_atoms_in_ball(self, ats, atom, r):
+    def indexes_of_atoms_in_sphere(self, ats, atom, r):
         """Indexes of atoms in the ball of radius R with center on atom 'atom'.
         Args:
             ats: list of indexes;
@@ -357,18 +377,11 @@ class AtomicModel(object):
 
     def convert_from_scaled_to_cart(self, lat):
         for atom in self.atoms:
-            atom.x *= lat
-            atom.y *= lat
-            atom.z *= lat
+            atom.xyz *= lat
 
     def convert_from_direct_to_cart(self):
         for atom in self.atoms:
-            x = atom.x * self.lat_vector1[0] + atom.y * self.lat_vector2[0] + atom.z * self.lat_vector3[0]
-            y = atom.x * self.lat_vector1[1] + atom.y * self.lat_vector2[1] + atom.z * self.lat_vector3[1]
-            z = atom.x * self.lat_vector1[2] + atom.y * self.lat_vector2[2] + atom.z * self.lat_vector3[2]
-            atom.x = x
-            atom.y = y
-            atom.z = z
+            atom.xyz = np.dot(self.lat_vectors, atom.xyz)
 
     def convert_from_cart_to_direct(self):
         obr = np.linalg.inv(self.lat_vectors).transpose()
@@ -464,8 +477,11 @@ class AtomicModel(object):
         All atoms MUST be in the Cell!!!"""
         pos1 = self.atoms[at1].xyz
         pos2 = self.atoms[at2].xyz
-        delta_pos = pos2 - pos1
+        ro = self.point_point_distance(pos1, pos2)
+        return ro
 
+    def point_point_distance(self, pos1, pos2):
+        delta_pos = pos2 - pos1
         ro = norm(delta_pos)
         values = [-1, 0, 1]
         for i in values:
@@ -516,7 +532,7 @@ class AtomicModel(object):
                 length = round(self.atom_atom_distance(i, j), 4)
                 t1 = int(self.atoms[i].charge)
                 t2 = int(self.atoms[j].charge)
-                if math.fabs(length - self.mendeley.Bonds[t1][t2]) < 0.2 * self.mendeley.Bonds[t1][t2]:
+                if (length > 1e-4) and (length < 1.2 * self.mendeley.Bonds[t1][t2]):
                     self.bonds_per.append([t1, t2, length, self.atoms[i].let, i, self.atoms[j].let, j])
         return self.bonds_per
 
@@ -532,6 +548,20 @@ class AtomicModel(object):
                 if (r > 1e-4) and (r < 1.2 * r_tab):
                     self.bonds.append([i, j])
         return self.bonds
+
+    def get_bonds_for_charges(self, c1, c2):
+        """The bonds of atoms with charges"""
+        bonds = self.find_bonds_exact()
+        bonds_len = []
+        bonds_ok = []
+        for bond in bonds:
+            if ((c1 == 0) or (c2 == 0)) or ((c1 == bond[0]) and (c2 == bond[1])) or (
+                    (c1 == bond[1]) and (c2 == bond[2])):
+                bonds_ok.append(bond)
+                bonds_len.append(bond[2])
+        bonds_mean = round(np.average(bonds_len), 5)
+        bonds_err = round((max(bonds_len) - min(bonds_len)) / 2.0, 5)
+        return bonds_ok, bonds_mean, bonds_err
 
     def delta(self, molecula):
         """ maximum distance from atoms in self to the atoms in the newMolecula"""
@@ -650,85 +680,6 @@ class AtomicModel(object):
         zm = self.minZ()
         self.go_to_positive_array(self.atoms, xm, ym, zm)
 
-    def toSIESTAfdf(self, filename):
-        """Create an input file for the SIESTA."""
-        f = open(filename, 'w')
-        text = self.toSIESTAfdfdata("Fractional", "Ang", "LatticeVectors")
-        print(text, file=f)
-        f.close()
-
-    def toSIESTAxyz(self, filename):
-        """Create an xyz file in XMol format."""
-        f = open(filename, 'w')
-        text = self.toSIESTAxyzdata()
-        print(text, file=f)
-        f.close()
-
-    def toSIESTAfdfdata(self, coord_style, units_type, latt_style='LatticeParameters'):
-        """Returns data for SIESTA fdf file."""
-        data = ""
-        periodic_table = TPeriodTable()
-        data += 'NumberOfAtoms ' + str(len(self.atoms)) + "\n"
-        types = self.types_of_atoms()
-        data += 'NumberOfSpecies ' + str(len(types)) + "\n"
-        data += '%block ChemicalSpeciesLabel\n'
-        for i in range(0, len(types)):
-            data += ' ' + str(i + 1) + '  ' + str(types[i][0]) + '  ' +\
-                    str(periodic_table.get_let(int(types[i][0]))) + "\n"
-        data += '%endblock ChemicalSpeciesLabel\n'
-
-        mult = 1
-        lattice_constant = 'LatticeConstant       1.0 Ang\n'
-
-        if (coord_style != "Zmatrix Cartesian") and (units_type == "Bohr"):
-            mult = 1.0 / 0.52917720859
-            lattice_constant = 'LatticeConstant       1.0 Bohr\n'
-
-        data += lattice_constant
-
-        if latt_style == 'LatticeParameters':
-            data += '%block LatticeParameters\n'
-            data += '  ' + str(self.get_LatVect1_norm() * mult) + '  ' + str(self.get_LatVect2_norm() * mult) + '  ' + \
-                    str(self.get_LatVect3_norm() * mult) + '  ' + str(self.get_angle_alpha()) + '  ' + \
-                    str(self.get_angle_beta()) + '  ' + str(self.get_angle_gamma()) + '\n'
-            data += '%endblock LatticeParameters\n'
-        # or
-        if latt_style == 'LatticeVectors':
-            data += '%block LatticeVectors\n'
-            data += '  ' + str(self.lat_vector1[0] * mult) + '  ' + str(self.lat_vector1[1] * mult) + '  ' + str(
-                self.lat_vector1[2] * mult) + '\n'
-            data += '  ' + str(self.lat_vector2[0] * mult) + '  ' + str(self.lat_vector2[1] * mult) + '  ' + str(
-                self.lat_vector2[2] * mult) + '\n'
-            data += '  ' + str(self.lat_vector3[0] * mult) + '  ' + str(self.lat_vector3[1] * mult) + '  ' + str(
-                self.lat_vector3[2] * mult) + '\n'
-            data += '%endblock LatticeVectors\n'
-
-        if coord_style == "Zmatrix Cartesian":
-            data += 'AtomicCoordinatesFormat NotScaledCartesianAng\n'
-            data += "ZM.UnitsLength Ang\n"
-            data += '%block Zmatrix\n'
-            data += 'cartesian\n'
-            data += self.coords_for_export(coord_style)
-            data += '%endblock Zmatrix\n'
-
-        if coord_style == "Fractional":
-            self.sort_atoms_by_type()
-            self.go_to_positive_coordinates()
-            self.convert_from_cart_to_direct()
-            data += 'AtomicCoordinatesFormat Fractional\n'
-            data += '%block AtomicCoordinatesAndAtomicSpecies\n'
-            data += self.coords_for_export(coord_style)
-            data += '%endblock AtomicCoordinatesAndAtomicSpecies\n'
-
-        if coord_style == "Cartesian":
-            self.sort_atoms_by_type()
-            data += 'AtomicCoordinatesFormat ' + units_type + '\n'
-            data += '%block AtomicCoordinatesAndAtomicSpecies\n'
-            data += self.coords_for_export(coord_style, units_type)
-            data += '%endblock AtomicCoordinatesAndAtomicSpecies\n'
-
-        return data
-
     def coords_for_export(self, coord_style, units="Ang"):
         data = ""
         types = self.types_of_atoms()
@@ -783,21 +734,21 @@ class AtomicModel(object):
     # Best fit a circle to these points
     def err_cylinder(self, par):
         w, v, r = par[0], par[1], par[2]
-        pts = [np.linalg.norm([x - w, y - v]) - r for x, y in zip(self.X, self.Y)]
+        pts = [np.linalg.norm([x - w, y - v]) - r for x, y in zip(self.x, self.y)]
         return (np.array(pts) ** 2).sum()
 
     def fit_with_cylinder(self):
         positions = self.get_positions()
-        self.X = positions[:, 0]
-        self.Y = positions[:, 1]
+        self.x = positions[:, 0]
+        self.y = positions[:, 1]
 
         # Choose the inital center of fit circle as the CM
-        xm = self.X.mean()
-        ym = self.Y.mean()
+        xm = self.x.mean()
+        ym = self.y.mean()
 
         # Choose the inital radius as the average distance to the CM
         cm = np.array([xm, ym]).reshape(1, 2)
-        rm = cdist(cm, np.array([self.X, self.Y]).T).mean()
+        rm = cdist(cm, np.array([self.x, self.y]).T).mean()
 
         xf, yf, rf = scipy.optimize.fmin(self.err_cylinder, [xm, ym, rm])
         return xf, yf, rf

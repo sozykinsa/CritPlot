@@ -1,1 +1,1 @@
-python gui4dft.py
+python critplot.py

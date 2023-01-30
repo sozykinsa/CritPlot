@@ -1,5 +1,5 @@
 import os
-from core_gui_atomistic import helpers
+import numpy as np
 from core_gui_atomistic.atomic_model import AtomicModel
 
 
@@ -31,14 +31,21 @@ class GUI4dftProjectFile(object):
     @staticmethod
     def project_file_reader(file_name):
         model = AtomicModel()
+        lat_vectors = 100 * np.eye(3, dtype=float)
         if os.path.exists(file_name):
             f = open(file_name)
             row = f.readline()
             while row:
+                if row.find("%vectors") >= 0:
+                    lat_vectors[0] = np.array(f.readline().split(), dtype=float)
+                    lat_vectors[1] = np.array(f.readline().split(), dtype=float)
+                    lat_vectors[2] = np.array(f.readline().split(), dtype=float)
+                    row = f.readline()
+
                 if row.find("%atoms") >= 0:
                     number_of_atoms = int(f.readline())
-                    #row = f.readline()
                     model = AtomicModel.atoms_from_xyz_structure(number_of_atoms, f)
+                    model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
                 row = f.readline()
             f.close()
         return [model]
