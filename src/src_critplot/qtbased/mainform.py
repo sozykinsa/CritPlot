@@ -59,7 +59,8 @@ class MainForm(QMainWindow):
         self.color_of_atoms_scheme = "cpk"
         self.periodic_table = TPeriodTable()
 
-        self.history_of_atom_selection = []
+        self.history_of_point_selection = []
+        self.history_of_point_selection_xyz = []
 
         self.action_on_start: str = None
 
@@ -393,7 +394,8 @@ class MainForm(QMainWindow):
         if self.ui.openGLWidget.selected_atom < 0:
             return
         self.models[self.active_model].delete_atom(self.ui.openGLWidget.selected_atom)
-        self.history_of_atom_selection = []
+        self.history_of_point_selection = []
+        self.history_of_point_selection_xyz = []
         self.model_to_screen(self.active_model)
 
     def atom_modify(self):
@@ -1367,99 +1369,13 @@ class MainForm(QMainWindow):
     def selected_atom_changed(self, selected):
         selected_atom = selected[0]
         selected_cp = selected[1]
-        if selected_atom == -1:
-            self.history_of_atom_selection = []
-        else:
-            self.history_of_atom_selection.append(selected_atom)
-
+        model = self.models[self.active_model]
         text = ""
-        if selected_atom >= 0:
-            model = self.models[self.active_model]
-            text += "Selected atom: " + str(selected_atom + 1) + "\n"
-            atom = model.atoms[selected_atom]
-            text += "Element: " + atom.let + "\n"
-            for key in atom.properties:
-                text += str(key) + ": " + str(atom.properties[key]) + "\n"
-
-            if len(self.history_of_atom_selection) > 1:
-                text += "\n\nHistory of atoms selection: " + str(np.array(self.history_of_atom_selection) + 1) + "\n"
-                text += "Distance from atom " + str(self.history_of_atom_selection[-1] + 1) + " to atom " + \
-                        str(self.history_of_atom_selection[-2] + 1) + " : "
-                dist = model.atom_atom_distance(self.history_of_atom_selection[-1], self.history_of_atom_selection[-2])
-                text += str(round(dist / 10, 6)) + " nm\n"
-
-                if (len(self.history_of_atom_selection) > 2) and \
-                        (self.history_of_atom_selection[-1] != self.history_of_atom_selection[-2]) \
-                        and (self.history_of_atom_selection[-3] != self.history_of_atom_selection[-2]):
-
-                    vec1 = model.atoms[self.history_of_atom_selection[-1]].xyz - \
-                           model.atoms[self.history_of_atom_selection[-2]].xyz
-
-                    vec2 = model.atoms[self.history_of_atom_selection[-3]].xyz - \
-                           model.atoms[self.history_of_atom_selection[-2]].xyz
-
-                    a = np.dot(vec1, vec2)
-                    b = np.linalg.norm(vec1)
-                    c = np.linalg.norm(vec2)
-
-                    arg = a / (b * c)
-                    if math.fabs(arg) > 1:
-                        arg = 1
-
-                    angle = math.acos(arg)
-
-                    text += "Angle " + str(self.history_of_atom_selection[-1] + 1) + " - " + \
-                            str(self.history_of_atom_selection[-2] + 1) + " - " + \
-                            str(self.history_of_atom_selection[-3] + 1) + " : " + \
-                            str(round(math.degrees(angle), 3)) + " degrees\n"
-
-        if selected_cp >= 0:
-            model = self.models[self.active_model]
-            text = "Selected critical point: " + str(selected_cp + 1) + " ("
-            cp = model.cps[selected_cp]
-
-            bond1 = cp.get_property("bond1")
-            bond2 = cp.get_property("bond2")
-
-            ind1 = cp.get_property("atom1")
-            ind2 = cp.get_property("atom2")
-
-            atom_to_atom = cp.get_property("atom_to_atom")
-            cp_bp_len = cp.get_property("cp_bp_len")
-
-            if (ind1 is not None) and (ind2 is not None):
-                # text += model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2) + ")\n"
-                text += atom_to_atom + ")\n"
-                if bond1 is not None and bond2 is not None:
-                    text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = "
-                    text += str(len(bond1) + len(bond2)) + " points\n"
-                dist = cp_bp_len # model.bond_path_len(cp)
-                if dist is not None:
-                    dist_line = round(dist, 4)
-                    self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
-                    #cp_nuclei_text = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
-                    self.ui.selectedCP_nuclei.setText(atom_to_atom)
-                else:
-                    self.ui.selectedCP_bpLenLine.setText("...")
-                    self.ui.selectedCP_nuclei.setText("...")
-            else:
-                text += ")\n"
-
-            self.ui.selectedCP.setText(str(selected_cp + 1))
-
-            t = model.cps[selected_cp].get_property("title")
-            self.ui.selected_cp_title.setText(t)
-            f = model.cps[selected_cp].get_property("rho")
-            self.ui.FormSelectedCP_f.setText(f)
-            g = model.cps[selected_cp].get_property("grad")
-            self.ui.FormSelectedCP_g.setText(g)
-            lap = model.cps[selected_cp].get_property("lap")
-            self.ui.FormSelectedCP_lap.setText(lap)
-
-            for key in model.cps[selected_cp].properties:
-                text += str(key) + ": " + str(model.cps[selected_cp].get_property(key)) + "\n"
-
-        else:
+        text_sel = ""
+        if (selected_atom == -1) and (selected_cp == -1):
+            self.history_of_point_selection = []
+            self.history_of_point_selection_xyz = []
+            text = "Select any atom or critical point."
             self.ui.selectedCP.setText("...")
             self.ui.FormSelectedCP_f.setText("...")
             self.ui.FormSelectedCP_g.setText("...")
@@ -1467,10 +1383,92 @@ class MainForm(QMainWindow):
             self.ui.selectedCP_bpLenLine.setText("...")
             self.ui.selected_cp_title.setText("...")
             self.ui.selectedCP_nuclei.setText("...")
+        else:
+            if selected_atom >= 0:
+                sel_atom = model.atoms[selected_atom]
+                self.history_of_point_selection.append(sel_atom.let + str(selected_atom + 1))
+                self.history_of_point_selection_xyz.append(sel_atom.xyz)
+            if selected_cp >= 0:
+                cp = model.cps[selected_cp]
+                self.history_of_point_selection.append(cp.let + str(selected_cp + 1))
+                self.history_of_point_selection_xyz.append(cp.xyz)
 
-        if (selected_atom < 0) and (selected_cp < 0):
-            text += "Select any atom or critical point."
-        self.ui.atom_and_cp_properties_text.setText(text)
+            if len(self.history_of_point_selection) > 1:
+                text_sel = "\nHistory of points selection: " + str(np.array(self.history_of_point_selection)) + "\n"
+                text_sel += "Distance from " + self.history_of_point_selection[-1] + " to " +\
+                            self.history_of_point_selection[-2] + " : "
+
+                dist = model.point_point_distance(self.history_of_point_selection_xyz[-1],
+                                                  self.history_of_point_selection_xyz[-2])
+                text_sel += str(round(dist / 10, 6)) + " nm\n"
+
+                if len(self.history_of_point_selection) > 2:
+                    xyz1 = self.history_of_point_selection_xyz[-1]
+                    xyz2 = self.history_of_point_selection_xyz[-2]
+                    xyz3 = self.history_of_point_selection_xyz[-3]
+                    if any(xyz1 != xyz2) and any(xyz3 != xyz2):
+                        angle = helpers.angle_for_3_points(xyz1, xyz2, xyz3)
+                        text_sel += "3 points: " + self.history_of_point_selection[-1] + " - " + \
+                                    self.history_of_point_selection[-2] + " - " + \
+                                    self.history_of_point_selection[-3] + "\n"
+                        text_sel += "    angle " + str(round(math.degrees(angle), 3)) + " degrees\n"
+                        plane = helpers.plane_for_3_points(xyz1, xyz2, xyz3)
+                        text_sel += "    Plane :"
+                        text_sel += str(round(plane[0], 6)) + "x +" + str(round(plane[1], 6)) + "y +"
+                        text_sel += str(round(plane[2], 6)) + "z +" + str(round(plane[3], 6)) + "= 0\n"
+
+            if selected_atom >= 0:
+                model = self.models[self.active_model]
+                text += "Selected atom: " + str(selected_atom + 1) + "\n"
+                atom = model.atoms[selected_atom]
+                text += "Element: " + atom.let + "\n"
+                for key in atom.properties:
+                    text += str(key) + ": " + str(atom.properties[key]) + "\n"
+
+            if selected_cp >= 0:
+                model = self.models[self.active_model]
+                text = "Selected critical point: " + str(selected_cp + 1) + " ("
+                cp = model.cps[selected_cp]
+
+                bond1 = cp.get_property("bond1")
+                bond2 = cp.get_property("bond2")
+
+                ind1 = cp.get_property("atom1")
+                ind2 = cp.get_property("atom2")
+
+                atom_to_atom = cp.get_property("atom_to_atom")
+                dist = cp.get_property("cp_bp_len")
+
+                if (ind1 is not None) and (ind2 is not None):
+                    text += atom_to_atom + ")\n"
+                    if bond1 is not None and bond2 is not None:
+                        text += "Bond critical path: " + str(len(bond1)) + " + " + str(len(bond2)) + " = "
+                        text += str(len(bond1) + len(bond2)) + " points\n"
+                    if dist is not None:
+                        dist_line = round(dist, 4)
+                        self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
+                        self.ui.selectedCP_nuclei.setText(atom_to_atom)
+                    else:
+                        self.ui.selectedCP_bpLenLine.setText("...")
+                        self.ui.selectedCP_nuclei.setText("...")
+                else:
+                    text += ")\n"
+
+                self.ui.selectedCP.setText(str(selected_cp + 1))
+
+                t = model.cps[selected_cp].get_property("title")
+                self.ui.selected_cp_title.setText(t)
+                f = model.cps[selected_cp].get_property("rho")
+                self.ui.FormSelectedCP_f.setText(f)
+                g = model.cps[selected_cp].get_property("grad")
+                self.ui.FormSelectedCP_g.setText(g)
+                lap = model.cps[selected_cp].get_property("lap")
+                self.ui.FormSelectedCP_lap.setText(lap)
+
+                for key in model.cps[selected_cp].properties:
+                    text += str(key) + ": " + str(model.cps[selected_cp].get_property(key)) + "\n"
+
+        self.ui.atom_and_cp_properties_text.setText(text + text_sel)
 
     def set_manual_colors_default(self):
         self.periodic_table.init_manual_colors()

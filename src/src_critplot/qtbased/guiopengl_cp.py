@@ -229,28 +229,28 @@ class GuiOpenGLCP(GuiOpenGLBase):
         cp_ind, cp_min_r = self.nearest_point(self.scale_factor, cps_visible, point)
         cp_ind = cps_ind[cp_ind]
 
-        if (cp_min_r < 1.4) and (cp_min_r <= atom_min_r):
-            if self.selected_cp == cp_ind:
-                if self.selected_cp > 0:
-                    self.main_model.cps[self.selected_cp].set_selected(False)
-                self.selected_cp = -1
-            else:
-                if self.selected_cp > 0:
-                    self.main_model.cps[self.selected_cp].set_selected(False)
-                self.selected_cp = cp_ind
-                if self.selected_atom > 0:
-                    self.main_model.atoms[self.selected_atom].set_selected(False)
-                self.selected_atom = -1
-                if self.selected_cp > 0:
-                    self.main_model.cps[self.selected_cp].set_selected(True)
-
-        if atom_min_r <= cp_min_r:
+        if cp_min_r < atom_min_r:
+            if cp_min_r < 1.4:
+                if self.selected_cp == cp_ind:
+                    if self.selected_cp > 0:
+                        self.main_model.cps[self.selected_cp].set_selected(False)
+                        self.selected_cp = -1
+                else:
+                    if self.selected_cp > 0:
+                        self.main_model.cps[self.selected_cp].set_selected(False)
+                    self.selected_cp = cp_ind
+                    if self.selected_atom > 0:
+                        self.main_model.atoms[self.selected_atom].set_selected(False)
+                        self.selected_atom = -1
+                    if self.selected_cp > 0:
+                        self.main_model.cps[self.selected_cp].set_selected(True)
+        else:
             self.update_selected_atom(atom_ind, atom_min_r)
 
         self.can_atom_search = False
         selected_atom_was_modified = old_selected != self.selected_atom
         selected_cp_was_modified = old_selected_cp != self.selected_cp
-        if selected_atom_was_modified:
+        if selected_atom_was_modified and (self.selected_atom > 0):
             if self.selected_cp > 0:
                 self.main_model.cps[self.selected_cp].set_selected(False)
                 self.selected_cp = -1
