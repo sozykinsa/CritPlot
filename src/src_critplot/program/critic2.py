@@ -47,6 +47,9 @@ def structure_from_cro_file(filename):
             str1 = str1.replace("(", "")
             str1 = str1.replace(")", "")
             data = str1.split()
+            title_number = data[0]
+            if data[0] != data[1]:
+                title_number += "(" + data[1] + ")"
             number = int(data[1]) - 1
             """
             #cp  ncp   typ        position (cryst. coords.)            end1 (lvec)      end2 (lvec)
@@ -60,20 +63,20 @@ def structure_from_cro_file(filename):
             # print(crit_info)
             if crit_info[3] == "nucleus":
                 let = crit_info[8].replace("_", "")
-                title = let + data[0]
+                title = let + title_number
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 model.add_atom(new_atom)
                 model.add_critical_point(new_atom)
 
             if crit_info[3] == "nnattr":
                 let = "nn"
-                title = let + data[0]
+                title = let + title_number
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 model.add_critical_point(new_atom)
 
             if crit_info[3] == "bond":
                 let = "xb"
-                title = let + data[0]
+                title = let + title_number
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 new_atom.set_property("atom1", int(data[6]))
                 new_atom.set_property("atom2", int(data[10]))
@@ -87,13 +90,13 @@ def structure_from_cro_file(filename):
 
             if crit_info[3] == "ring":
                 let = "xr"
-                title = let + data[0]
+                title = let + title_number
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 model.add_critical_point(new_atom)
 
             if crit_info[3] == "cage":
                 let = "xc"
-                title = let + data[0]
+                title = let + title_number
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
                 model.add_critical_point(new_atom)
             str1 = f.readline()

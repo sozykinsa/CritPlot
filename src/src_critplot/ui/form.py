@@ -534,44 +534,27 @@ class Ui_MainWindow(object):
         self.groupBox_7.setObjectName(u"groupBox_7")
         self.verticalLayout_24 = QVBoxLayout(self.groupBox_7)
         self.verticalLayout_24.setObjectName(u"verticalLayout_24")
-        self.frame_6 = QFrame(self.groupBox_7)
-        self.frame_6.setObjectName(u"frame_6")
-        self.frame_6.setFrameShape(QFrame.NoFrame)
-        self.frame_6.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_11 = QHBoxLayout(self.frame_6)
-        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
-        self.is_maximum_rho_def = QCheckBox(self.frame_6)
-        self.is_maximum_rho_def.setObjectName(u"is_maximum_rho_def")
-
-        self.horizontalLayout_11.addWidget(self.is_maximum_rho_def)
-
-        self.doubleSpinBox = QDoubleSpinBox(self.frame_6)
-        self.doubleSpinBox.setObjectName(u"doubleSpinBox")
-
-        self.horizontalLayout_11.addWidget(self.doubleSpinBox)
-
-        self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_11.addItem(self.horizontalSpacer_9)
-
-
-        self.verticalLayout_24.addWidget(self.frame_6)
-
         self.frame_9 = QFrame(self.groupBox_7)
         self.frame_9.setObjectName(u"frame_9")
         self.frame_9.setFrameShape(QFrame.NoFrame)
         self.frame_9.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_12 = QHBoxLayout(self.frame_9)
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
-        self.is_minimum_rho_def = QCheckBox(self.frame_9)
-        self.is_minimum_rho_def.setObjectName(u"is_minimum_rho_def")
+        self.horizontalLayout_12.setContentsMargins(-1, 0, -1, 0)
+        self.min_rho_for_cps = QDoubleSpinBox(self.frame_9)
+        self.min_rho_for_cps.setObjectName(u"min_rho_for_cps")
+        self.min_rho_for_cps.setDecimals(6)
+        self.min_rho_for_cps.setMinimum(0.000000000000000)
+        self.min_rho_for_cps.setMaximum(10000.000000000000000)
+        self.min_rho_for_cps.setSingleStep(0.000100000000000)
+        self.min_rho_for_cps.setValue(0.000100000000000)
 
-        self.horizontalLayout_12.addWidget(self.is_minimum_rho_def)
+        self.horizontalLayout_12.addWidget(self.min_rho_for_cps)
 
-        self.doubleSpinBox_2 = QDoubleSpinBox(self.frame_9)
-        self.doubleSpinBox_2.setObjectName(u"doubleSpinBox_2")
+        self.hide_cps_min_rho = QPushButton(self.frame_9)
+        self.hide_cps_min_rho.setObjectName(u"hide_cps_min_rho")
 
-        self.horizontalLayout_12.addWidget(self.doubleSpinBox_2)
+        self.horizontalLayout_12.addWidget(self.hide_cps_min_rho)
 
         self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -593,16 +576,48 @@ class Ui_MainWindow(object):
         self.frame_13.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_10 = QHBoxLayout(self.frame_13)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
-        self.checkBox_3 = QCheckBox(self.frame_13)
-        self.checkBox_3.setObjectName(u"checkBox_3")
+        self.horizontalLayout_10.setContentsMargins(-1, 0, -1, 0)
+        self.horizontalSpacer_13 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.horizontalLayout_10.addWidget(self.checkBox_3)
+        self.horizontalLayout_10.addItem(self.horizontalSpacer_13)
+
+        self.hide_cps_eq_atoms = QPushButton(self.frame_13)
+        self.hide_cps_eq_atoms.setObjectName(u"hide_cps_eq_atoms")
+
+        self.horizontalLayout_10.addWidget(self.hide_cps_eq_atoms)
+
+        self.horizontalSpacer_14 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_10.addItem(self.horizontalSpacer_14)
 
 
         self.verticalLayout_22.addWidget(self.frame_13)
 
 
         self.verticalLayout_25.addWidget(self.groupBox_8)
+
+        self.frame_6 = QFrame(self.tab_3)
+        self.frame_6.setObjectName(u"frame_6")
+        self.frame_6.setMinimumSize(QSize(0, 0))
+        self.frame_6.setFrameShape(QFrame.StyledPanel)
+        self.frame_6.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_11 = QHBoxLayout(self.frame_6)
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.horizontalSpacer_9 = QSpacerItem(131, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_11.addItem(self.horizontalSpacer_9)
+
+        self.cancel_cps_filters = QPushButton(self.frame_6)
+        self.cancel_cps_filters.setObjectName(u"cancel_cps_filters")
+
+        self.horizontalLayout_11.addWidget(self.cancel_cps_filters)
+
+        self.horizontalSpacer_12 = QSpacerItem(131, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_11.addItem(self.horizontalSpacer_12)
+
+
+        self.verticalLayout_25.addWidget(self.frame_6)
 
         self.verticalSpacer_3 = QSpacerItem(20, 563, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -694,15 +709,6 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_5.addWidget(self.frame_29)
-
-        self.frame_30 = QFrame(self.groupBox_2)
-        self.frame_30.setObjectName(u"frame_30")
-        self.frame_30.setFrameShape(QFrame.NoFrame)
-        self.frame_30.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_56 = QVBoxLayout(self.frame_30)
-        self.verticalLayout_56.setObjectName(u"verticalLayout_56")
-
-        self.verticalLayout_5.addWidget(self.frame_30)
 
 
         self.verticalLayout_2.addWidget(self.groupBox_2)
@@ -2664,7 +2670,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 642, 734))
+        self.page_8.setGeometry(QRect(0, 0, 248, 153))
         self.verticalLayout_21 = QVBoxLayout(self.page_8)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.frame_15 = QFrame(self.page_8)
@@ -2702,7 +2708,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_8, u"2D Figure")
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 642, 734))
+        self.page.setGeometry(QRect(0, 0, 253, 136))
         self.verticalLayout_19 = QVBoxLayout(self.page)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
         self.frame_14 = QFrame(self.page)
@@ -2850,10 +2856,10 @@ class Ui_MainWindow(object):
         self.leave_cp_in_model.setText(QCoreApplication.translate("MainWindow", u"Limit to selected", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_51), QCoreApplication.translate("MainWindow", u"CPs", None))
         self.groupBox_7.setTitle(QCoreApplication.translate("MainWindow", u"RHO", None))
-        self.is_maximum_rho_def.setText(QCoreApplication.translate("MainWindow", u"max", None))
-        self.is_minimum_rho_def.setText(QCoreApplication.translate("MainWindow", u"min", None))
+        self.hide_cps_min_rho.setText(QCoreApplication.translate("MainWindow", u"Hide cp with smaller RHO", None))
         self.groupBox_8.setTitle(QCoreApplication.translate("MainWindow", u"Nuclei", None))
-        self.checkBox_3.setText(QCoreApplication.translate("MainWindow", u"=", None))
+        self.hide_cps_eq_atoms.setText(QCoreApplication.translate("MainWindow", u"Hide cp with eq atoms", None))
+        self.cancel_cps_filters.setText(QCoreApplication.translate("MainWindow", u"\u0421ancel filters", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Filter", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Selection", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Add or Modify Atom", None))

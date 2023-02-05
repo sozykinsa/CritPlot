@@ -105,9 +105,9 @@ class GuiOpenGLCP(GuiOpenGLBase):
     def add_critical_points(self) -> None:
         gl.glNewList(self.object + self.list_for_cp, gl.GL_COMPILE)
         for cp in self.main_model.cps:
-            if (self.is_show_bcp and (cp.let == "xb")) or (self.is_show_ccp and (cp.let == "xc")) or \
+            if ((self.is_show_bcp and (cp.let == "xb")) or (self.is_show_ccp and (cp.let == "xc")) or \
                     (self.is_show_rcp and (cp.let == "xr")) or (self.is_show_nna and (cp.let == "nn")) or \
-                    (self.is_show_ncp and (cp.let == "A")):
+                    (self.is_show_ncp and (cp.let == "A"))) and cp.is_visible:
                 gl.glPushMatrix()
                 gl.glTranslatef(*(self.scale_factor * cp.xyz))
                 color = (0, 0, 0)
@@ -149,9 +149,9 @@ class GuiOpenGLCP(GuiOpenGLBase):
         gl.glNewList(self.object + self.list_for_bondpath, gl.GL_COMPILE)
 
         for cp in self.main_model.cps:
-            self.add_critical_path(cp.bonds.get("bond1opt"))
-            self.add_critical_path(cp.bonds.get("bond2opt"))
-
+            if cp.is_visible:
+                self.add_critical_path(cp.bonds.get("bond1opt"))
+                self.add_critical_path(cp.bonds.get("bond2opt"))
         gl.glEndList()
         self.is_bond_path_available = True
         self.update()

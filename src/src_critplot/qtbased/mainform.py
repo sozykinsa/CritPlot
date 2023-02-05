@@ -146,6 +146,9 @@ class MainForm(QMainWindow):
         self.ui.delete_cp_from_model.clicked.connect(self.delete_cp_from_model)
         self.ui.leave_cp_in_model.clicked.connect(self.leave_cp_in_model)
         self.ui.export_cp_to_csv.clicked.connect(self.export_cp_to_csv)
+        self.ui.hide_cps_min_rho.clicked.connect(self.hide_cps_min_rho)
+        self.ui.hide_cps_eq_atoms.clicked.connect(self.hide_cps_eq_atoms)
+        self.ui.cancel_cps_filters.clicked.connect(self.cancel_cps_filters)
 
         self.ui.FormActionsPreButDeleteAtom.clicked.connect(self.atom_delete)
         self.ui.FormActionsPreButModifyAtom.clicked.connect(self.atom_modify)
@@ -1414,8 +1417,16 @@ class MainForm(QMainWindow):
                         text_sel += "    angle " + str(round(math.degrees(angle), 3)) + " degrees\n"
                         plane = helpers.plane_for_3_points(xyz1, xyz2, xyz3)
                         text_sel += "    Plane :"
-                        text_sel += str(round(plane[0], 6)) + "x +" + str(round(plane[1], 6)) + "y +"
-                        text_sel += str(round(plane[2], 6)) + "z +" + str(round(plane[3], 6)) + "= 0\n"
+                        text_sel += str(round(plane[0], 6)) + "x "
+                        if plane[1] > 0:
+                            text_sel += "+"
+                        text_sel +=  str(round(plane[1], 6)) + "y "
+                        if plane[2] > 0:
+                            text_sel += "+"
+                        text_sel += str(round(plane[2], 6)) + "z "
+                        if plane[3] > 0:
+                            text_sel += "+"
+                        str(round(plane[3], 6)) + "= 0\n"
 
             if selected_atom >= 0:
                 model = self.models[self.active_model]
@@ -1530,6 +1541,36 @@ class MainForm(QMainWindow):
     def select_rcp_color(self):  # pragma: no cover
         rcp_color = self.change_color(self.ui.color_cage_cp, SETTINGS_color_of_ccp)
         self.ui.openGLWidget.set_color_of_rcp(rcp_color)
+
+    def hide_cps_min_rho(self):
+        if len(self.models) == 0:
+            return
+        min_rho = self.ui.min_rho_for_cps.value()
+        for cp in self.ui.openGLWidget.main_model.cps:
+            if float(cp.get_property("rho")) < min_rho:
+                cp.is_visible = False
+        self.ui.openGLWidget.add_all_elements()
+
+    def hide_cps_eq_atoms(self):
+        if len(self.models) == 0:
+            return
+        for cp in self.ui.openGLWidget.main_model.cps:
+            at1 = cp.get_property("atom1")
+            at2 = cp.get_property("atom2")
+            if (at1 is not None) and (at2 is not None):
+                if at1 == at2:
+                    atom1_translation = cp.get_property("atom1_translation")
+                    atom2_translation = cp.get_property("atom2_translation")
+                    if all(atom1_translation == atom2_translation):
+                        cp.is_visible = False
+        self.ui.openGLWidget.add_all_elements()
+
+    def cancel_cps_filters(self):
+        if len(self.models) == 0:
+            return
+        for cp in self.ui.openGLWidget.main_model.cps:
+            cp.is_visible = True
+        self.ui.openGLWidget.add_all_elements()
 
     def add_cp_to_list(self):
         new_cp = self.ui.selectedCP.text()
