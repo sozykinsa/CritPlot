@@ -35,5 +35,5 @@ def test_create_csv_file_cp(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
     models = parse_bondpaths(f_name, models[0])
     cp_list = range(len(models[0].cps))
-    text = models[0].create_csv_file_cp(cp_list)
-    assert len(text) == 1851
+    text = models[0].create_csv_file_cp(cp_list, True, False, False, False, False)
+    assert len(text) == 2092

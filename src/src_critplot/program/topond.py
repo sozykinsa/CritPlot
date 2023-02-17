@@ -281,7 +281,7 @@ def parse_cp_point(file1, let, text, title):
     text += "lap : " + data[2] + "\n"
     row = file1.readline()
     if len(row) > 1:
-        if let == "xb":  # or (let == "xr"):
+        if let in ["xb", "xr", "xc", "nn"]:
             """KINETIC ENERGY DENSITIES (G,K) :  2.4448E-03 -1.0254E-03"""
             text += "KINETIC ENERGY DENSITIES (G) : " + row.split()[5] + "\n"
             text += "KINETIC ENERGY DENSITIES (K) : " + row.split()[6] + "\n"
@@ -291,11 +291,19 @@ def parse_cp_point(file1, let, text, title):
             row = helpers.spacedel(file1.readline()) + "\n"
             """ELF(PAA)                       :  6.3365E-03"""
             text += helpers.spacedel(row) + "\n"
-            for i in range(8):
-                file1.readline()
-            row = file1.readline()
-            """ELLIPTICITY                    :  1.4410E-01"""
-            text += helpers.spacedel(row)
+            if let == "xb":
+                for i in range(8):
+                    file1.readline()
+                row = file1.readline()
+                """ELLIPTICITY                    :  1.4410E-01"""
+                text += helpers.spacedel(row)
+        else:
+            """TRAJECTORY LENGTH(ANG)         :  7.1474E-01"""
+            text += helpers.spacedel(row) + "\n"
+            row = helpers.spacedel(file1.readline()) + "\n"
+            """INTEGRATION STEPS              :      67"""
+            text += helpers.spacedel(row) + "\n"
+
     cp.set_property("text", text)
     return cp, row
 

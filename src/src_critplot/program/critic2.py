@@ -78,34 +78,27 @@ def structure_from_cro_file(filename):
                 let = "xb"
                 title = let + title_number
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
-                new_atom.set_property("atom1", int(data[6]))
-                new_atom.set_property("atom2", int(data[10]))
-                translation1 = int(data[7]) * model.lat_vector1 + int(data[8]) * model.lat_vector2 + \
-                               int(data[9]) * model.lat_vector3
-                translation2 = int(data[11]) * model.lat_vector1 + int(data[12]) * model.lat_vector2 + \
-                               int(data[13]) * model.lat_vector3
-                new_atom.set_property("atom1_translation", translation1)
-                new_atom.set_property("atom2_translation", translation2)
+                add_atoms_to_cp(data, model, new_atom)
                 model.add_critical_point(new_atom)
 
             if crit_info[3] == "ring":
                 let = "xr"
                 title = let + title_number
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                add_atoms_to_cp(data, model, new_atom)
                 model.add_critical_point(new_atom)
 
             if crit_info[3] == "cage":
                 let = "xc"
                 title = let + title_number
                 new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                add_atoms_to_cp(data, model, new_atom)
                 model.add_critical_point(new_atom)
             str1 = f.readline()
 
         f.readline()
         f.close()
         model.convert_from_direct_to_cart()
-
-        # print("start postprocessing")
 
         for cp in model.cps:
             ind1 = cp.get_property("atom1")
@@ -135,6 +128,18 @@ def structure_from_cro_file(filename):
                 cp.set_property("cp_bp_len", cp_bp_len)
         model.bond_path_points_optimize()
     return [model]
+
+
+def add_atoms_to_cp(data, model, new_atom):
+    if len(data) > 6:
+        new_atom.set_property("atom1", int(data[6]))
+        new_atom.set_property("atom2", int(data[10]))
+        translation1 = int(data[7]) * model.lat_vector1 + int(data[8]) * model.lat_vector2 + \
+                       int(data[9]) * model.lat_vector3
+        translation2 = int(data[11]) * model.lat_vector1 + int(data[12]) * model.lat_vector2 + \
+                       int(data[13]) * model.lat_vector3
+        new_atom.set_property("atom1_translation", translation1)
+        new_atom.set_property("atom2_translation", translation2)
 
 
 def get_critical_points_info(filename: str):

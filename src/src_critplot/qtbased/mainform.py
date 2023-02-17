@@ -1154,8 +1154,7 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_structure_parameters(atoms_color, view_atoms, view_atom_numbers, view_box, box_color,
                                                       view_bonds, bonds_color, bond_width, color_of_bonds_by_atoms,
                                                       view_axes, axes_color)
-        is_show_bcp_text = self.ui.show_bcp_text.isChecked()
-        self.ui.openGLWidget.set_cp_parameters(is_show_bcp_text)
+        self.ui.openGLWidget.set_cp_parameters(self.ui.show_bcp_text.isChecked())
         self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
         self.ui.AtomsInSelectedFragment.clear()
 
@@ -1655,7 +1654,9 @@ class MainForm(QMainWindow):
                     cp_list.append(ind)
             else:
                 cp_list = range(1, len(model.cps) + 1)
-            text = model.create_csv_file_cp(cp_list)
+            text = model.create_csv_file_cp(cp_list, self.ui.show_bcp.isChecked(), self.ui.show_ccp.isChecked(),
+                                            self.ui.show_rcp.isChecked(), self.ui.show_ncp.isChecked(),
+                                            self.ui.show_nnatr.isChecked())
             helpers.write_text_to_file(f_name, text)
 
     def create_cri_file(self):  # pragma: no cover

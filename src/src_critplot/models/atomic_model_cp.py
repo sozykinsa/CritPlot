@@ -157,27 +157,86 @@ class AtomicModelCP(AtomicModel):
         ind2 = cp.get_property("atom2")
         return ind1, ind2
 
-    def create_csv_file_cp(self, cp_list, delimiter: str = ";"):
-        title = ""
+    def create_csv_file_cp(self, cp_list, show_bcp, show_ccp, show_rcp, show_ncp, show_nnatr, delimiter: str = ";"):
+        text = ""
+
+        if show_bcp:
+            cp_type = "xb"
+            data, title = self.csv_for_cp_type(cp_list, cp_type, delimiter)
+            text += title + "\n" + data + "\n"
+
+        if show_ccp:
+            cp_type = "xc"
+            data, title = self.csv_for_cp_type(cp_list, cp_type, delimiter)
+            text += title + "\n" + data + "\n"
+
+        if show_rcp:
+            cp_type = "xr"
+            data, title = self.csv_for_cp_type(cp_list, cp_type, delimiter)
+            text += title + "\n" + data + "\n"
+
+        if show_nnatr:
+            cp_type = "nn"
+            data, title = self.csv_for_cp_type(cp_list, cp_type, delimiter)
+            text += title + "\n" + data + "\n"
+
+        if show_ncp:
+            cp_type = "nucleus"
+            data, title = self.csv_for_cp_type(cp_list, cp_type, delimiter)
+            text += title + "\n" + data + "\n"
+        return text
+
+    def csv_for_cp_type(self, cp_list, cp_type, delimiter):
         data = ""
+        title = ""
+        # print(cp_type)
         for ind in cp_list:
             cp = self.cps[ind - 1]
-            if cp.let == "xb":
+            if (cp.let == cp_type) or (cp_type == "nucleus") and (cp.let not in ["xb", "xc", "xr", "nn"]):
                 title = "CP" + delimiter
                 data += str(ind) + delimiter
+                prop_list = ["rho", "grad", "lap"]
+                for prop in prop_list:
+                    title += prop + delimiter
+                    data += cp.get_property(prop) + delimiter
+
                 title += "atoms" + delimiter + "dist" + delimiter
                 atom_to_atom = cp.get_property("atom_to_atom")
-                data += atom_to_atom + delimiter
-                cp_bp_len = cp.get_property("cp_bp_len")
-                dist_line = round(cp_bp_len, 4)
-                data += '" ' + str(dist_line) + ' "' + delimiter
+                if atom_to_atom is None:
+                    data += '" ' + "-" + ' "' + delimiter + '" ' + "-" + ' "' + delimiter
+                else:
+                    data += atom_to_atom + delimiter
+                    cp_bp_len = cp.get_property("cp_bp_len")
+                    dist_line = round(cp_bp_len, 4)
+                    data += '" ' + str(dist_line) + ' "' + delimiter
                 data_list = cp.get_property("text")
                 if data_list:
-                    data, title = self.text_field_to_csv(data, data_list, delimiter, title)
-        return title + "\n" + data
+                    data = self.text_field_to_csv(data, data_list, delimiter, title)
+                    title = self.text_field_to_csv_title(data, data_list, delimiter, title)
+        return data, title
 
     @staticmethod
     def text_field_to_csv(data, data_list, delimiter, title):
+        data_list = data_list.split("\n")
+        i = 0
+        while i < len(data_list):
+            if (data_list[i].find("Hessian") < 0) and (len(data_list[i]) > 0):
+                #col_title = helpers.spacedel(data_list[i].split(":")[0])
+                col_data = data_list[i].split(":")[1].split()
+                for k in range(len(col_data)):
+                    #title += '"' + col_title
+                    #if len(col_data) > 1:
+                    #    title += "_" + str(k + 1)
+                    #title += '"' + delimiter
+                    data += '"' + col_data[k] + '"' + delimiter
+                i += 1
+            else:
+                i += 4
+        data += '\n'
+        return data #, title
+
+    @staticmethod
+    def text_field_to_csv_title(data, data_list, delimiter, title):
         data_list = data_list.split("\n")
         i = 0
         while i < len(data_list):
@@ -189,9 +248,7 @@ class AtomicModelCP(AtomicModel):
                     if len(col_data) > 1:
                         title += "_" + str(k + 1)
                     title += '"' + delimiter
-                    data += '"' + col_data[k] + '"' + delimiter
                 i += 1
             else:
                 i += 4
-        data += '\n'
-        return data, title
+        return title
