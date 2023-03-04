@@ -25,7 +25,8 @@ class AtomicModelCP(AtomicModel):
                 n += 1
         return n
 
-    def bond_path_points_optimize(self):
+    def bond_path_points_optimize(self) -> None:
+        """Remove redundant points from all bond paths."""
         for cp in self.cps:
             if cp.let == "xb":
                 bond1 = cp.bonds.get("bond1")
@@ -35,7 +36,11 @@ class AtomicModelCP(AtomicModel):
                     self.critical_path_simplifier("bond2", cp)
 
     @staticmethod
-    def critical_path_simplifier(b, cp):
+    def critical_path_simplifier(b, cp) -> None:
+        """Remove redundant points on bond path (they lie on the same straight line).
+        b: name of bond path (bond1 or bond2)
+        cp: critical point
+        """
         bond = deepcopy(cp.bonds.get(b))
         if bond is None:
             return
@@ -212,7 +217,7 @@ class AtomicModelCP(AtomicModel):
                 data_list = cp.get_property("text")
                 if data_list:
                     data = self.text_field_to_csv(data, data_list, delimiter, title)
-                    title = self.text_field_to_csv_title(data, data_list, delimiter, title)
+                    title = self.text_field_to_csv_title(data_list, delimiter, title)
         return data, title
 
     @staticmethod
@@ -221,22 +226,17 @@ class AtomicModelCP(AtomicModel):
         i = 0
         while i < len(data_list):
             if (data_list[i].find("Hessian") < 0) and (len(data_list[i]) > 0):
-                #col_title = helpers.spacedel(data_list[i].split(":")[0])
                 col_data = data_list[i].split(":")[1].split()
                 for k in range(len(col_data)):
-                    #title += '"' + col_title
-                    #if len(col_data) > 1:
-                    #    title += "_" + str(k + 1)
-                    #title += '"' + delimiter
                     data += '"' + col_data[k] + '"' + delimiter
                 i += 1
             else:
                 i += 4
         data += '\n'
-        return data #, title
+        return data
 
     @staticmethod
-    def text_field_to_csv_title(data, data_list, delimiter, title):
+    def text_field_to_csv_title(data_list, delimiter, title):
         data_list = data_list.split("\n")
         i = 0
         while i < len(data_list):

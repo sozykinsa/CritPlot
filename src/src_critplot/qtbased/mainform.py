@@ -142,6 +142,7 @@ class MainForm(QMainWindow):
         # critical points
         self.ui.FormCreateCriXYZFile.clicked.connect(self.create_critic2_xyz_file)
         self.ui.delete_cp_from_list.clicked.connect(self.delete_cp_from_list)
+        self.ui.clear_cp_list.clicked.connect(self.clear_cp_list)
         self.ui.add_cp_to_list.clicked.connect(self.add_cp_to_list)
         self.ui.delete_cp_from_model.clicked.connect(self.delete_cp_from_model)
         self.ui.leave_cp_in_model.clicked.connect(self.leave_cp_in_model)
@@ -1586,6 +1587,9 @@ class MainForm(QMainWindow):
     def delete_cp_from_list(self):  # pragma: no cover
         itemrow = self.ui.FormCPlist.currentRow()
         self.ui.FormCPlist.takeItem(itemrow)
+
+    def clear_cp_list(self):  # pragma: no cover
+        self.ui.FormCPlist.clear()
 
     def delete_cp_from_model(self):
         model = self.models[self.active_model]

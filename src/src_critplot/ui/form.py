@@ -458,7 +458,7 @@ class Ui_MainWindow(object):
 
         self.frame_160 = QFrame(self.groupBox_6)
         self.frame_160.setObjectName(u"frame_160")
-        self.frame_160.setFrameShape(QFrame.NoFrame)
+        self.frame_160.setFrameShape(QFrame.StyledPanel)
         self.frame_160.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_178 = QHBoxLayout(self.frame_160)
         self.horizontalLayout_178.setObjectName(u"horizontalLayout_178")
@@ -504,6 +504,11 @@ class Ui_MainWindow(object):
         self.delete_cp_from_list.setObjectName(u"delete_cp_from_list")
 
         self.verticalLayout_11.addWidget(self.delete_cp_from_list)
+
+        self.clear_cp_list = QPushButton(self.frame_16)
+        self.clear_cp_list.setObjectName(u"clear_cp_list")
+
+        self.verticalLayout_11.addWidget(self.clear_cp_list)
 
         self.delete_cp_from_model = QPushButton(self.frame_16)
         self.delete_cp_from_model.setObjectName(u"delete_cp_from_model")
@@ -568,30 +573,20 @@ class Ui_MainWindow(object):
 
         self.groupBox_8 = QGroupBox(self.tab_3)
         self.groupBox_8.setObjectName(u"groupBox_8")
-        self.verticalLayout_22 = QVBoxLayout(self.groupBox_8)
-        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
-        self.frame_13 = QFrame(self.groupBox_8)
-        self.frame_13.setObjectName(u"frame_13")
-        self.frame_13.setFrameShape(QFrame.StyledPanel)
-        self.frame_13.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_10 = QHBoxLayout(self.frame_13)
+        self.horizontalLayout_10 = QHBoxLayout(self.groupBox_8)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
-        self.horizontalLayout_10.setContentsMargins(-1, 0, -1, 0)
-        self.horizontalSpacer_13 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_10.addItem(self.horizontalSpacer_13)
-
-        self.hide_cps_eq_atoms = QPushButton(self.frame_13)
-        self.hide_cps_eq_atoms.setObjectName(u"hide_cps_eq_atoms")
-
-        self.horizontalLayout_10.addWidget(self.hide_cps_eq_atoms)
-
         self.horizontalSpacer_14 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_10.addItem(self.horizontalSpacer_14)
 
+        self.hide_cps_eq_atoms = QPushButton(self.groupBox_8)
+        self.hide_cps_eq_atoms.setObjectName(u"hide_cps_eq_atoms")
 
-        self.verticalLayout_22.addWidget(self.frame_13)
+        self.horizontalLayout_10.addWidget(self.hide_cps_eq_atoms)
+
+        self.horizontalSpacer_13 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_10.addItem(self.horizontalSpacer_13)
 
 
         self.verticalLayout_25.addWidget(self.groupBox_8)
@@ -860,14 +855,23 @@ class Ui_MainWindow(object):
         self.groupBox_49.setMinimumSize(QSize(0, 0))
         self.horizontalLayout_50 = QHBoxLayout(self.groupBox_49)
         self.horizontalLayout_50.setObjectName(u"horizontalLayout_50")
-        self.horizontalSpacer_117 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_119 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.horizontalLayout_50.addItem(self.horizontalSpacer_117)
+        self.horizontalLayout_50.addItem(self.horizontalSpacer_119)
 
         self.FormModifyGoPositive = QPushButton(self.groupBox_49)
         self.FormModifyGoPositive.setObjectName(u"FormModifyGoPositive")
 
         self.horizontalLayout_50.addWidget(self.FormModifyGoPositive)
+
+        self.horizontalSpacer_117 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_50.addItem(self.horizontalSpacer_117)
+
+        self.FormModifyGoToCell = QPushButton(self.groupBox_49)
+        self.FormModifyGoToCell.setObjectName(u"FormModifyGoToCell")
+
+        self.horizontalLayout_50.addWidget(self.FormModifyGoToCell)
 
         self.horizontalSpacer_118 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -875,27 +879,6 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_7.addWidget(self.groupBox_49)
-
-        self.groupBox_50 = QGroupBox(self.groupBox_4)
-        self.groupBox_50.setObjectName(u"groupBox_50")
-        self.groupBox_50.setMinimumSize(QSize(0, 0))
-        self.horizontalLayout_166 = QHBoxLayout(self.groupBox_50)
-        self.horizontalLayout_166.setObjectName(u"horizontalLayout_166")
-        self.horizontalSpacer_119 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_166.addItem(self.horizontalSpacer_119)
-
-        self.FormModifyGoToCell = QPushButton(self.groupBox_50)
-        self.FormModifyGoToCell.setObjectName(u"FormModifyGoToCell")
-
-        self.horizontalLayout_166.addWidget(self.FormModifyGoToCell)
-
-        self.horizontalSpacer_120 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_166.addItem(self.horizontalSpacer_120)
-
-
-        self.verticalLayout_7.addWidget(self.groupBox_50)
 
 
         self.verticalLayout_2.addWidget(self.groupBox_4)
@@ -2852,6 +2835,7 @@ class Ui_MainWindow(object):
         self.groupBox_5.setTitle(QCoreApplication.translate("MainWindow", u"List of CP", None))
         self.add_cp_to_list.setText(QCoreApplication.translate("MainWindow", u"Add to List", None))
         self.delete_cp_from_list.setText(QCoreApplication.translate("MainWindow", u"Delete selected from List", None))
+        self.clear_cp_list.setText(QCoreApplication.translate("MainWindow", u"Clear List", None))
         self.delete_cp_from_model.setText(QCoreApplication.translate("MainWindow", u"Exclude selected", None))
         self.leave_cp_in_model.setText(QCoreApplication.translate("MainWindow", u"Limit to selected", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_51), QCoreApplication.translate("MainWindow", u"CPs", None))
@@ -2873,10 +2857,9 @@ class Ui_MainWindow(object):
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Cell", None))
         self.FormModifyCellButton.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Transforms", None))
-        self.groupBox_49.setTitle(QCoreApplication.translate("MainWindow", u"Go to positive!", None))
-        self.FormModifyGoPositive.setText(QCoreApplication.translate("MainWindow", u"Go", None))
-        self.groupBox_50.setTitle(QCoreApplication.translate("MainWindow", u"Go to cell", None))
-        self.FormModifyGoToCell.setText(QCoreApplication.translate("MainWindow", u"Go", None))
+        self.groupBox_49.setTitle(QCoreApplication.translate("MainWindow", u"Shift", None))
+        self.FormModifyGoPositive.setText(QCoreApplication.translate("MainWindow", u"Go to positive!", None))
+        self.FormModifyGoToCell.setText(QCoreApplication.translate("MainWindow", u"Go to cell", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabActions), QCoreApplication.translate("MainWindow", u"Modify", None))
         self.FormActionsPostButGetBonds.setText(QCoreApplication.translate("MainWindow", u"Get bonds", None))
         self.FormActionsPostLabelMeanBond.setText("")
