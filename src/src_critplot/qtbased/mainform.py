@@ -160,6 +160,10 @@ class MainForm(QMainWindow):
 
         self.ui.FormModifyGoPositive.clicked.connect(self.model_go_to_positive)
         self.ui.FormModifyGoToCell.clicked.connect(self.model_go_to_cell)
+        self.ui.modify_center_to_zero.clicked.connect(self.model_center_to_zero)
+        self.ui.x_circular_shift.clicked.connect(self.model_x_circular_shift)
+        self.ui.y_circular_shift.clicked.connect(self.model_y_circular_shift)
+        self.ui.z_circular_shift.clicked.connect(self.model_z_circular_shift)
 
         model = QStandardItemModel()
         model.appendRow(QStandardItem("select"))
@@ -1114,6 +1118,33 @@ class MainForm(QMainWindow):
         else:
             self.ui.openGLWidget.show_cp_property()
 
+    def model_x_circular_shift(self):
+        if self.ui.openGLWidget.main_model.n_atoms() == 0:
+            return
+        model = self.models[self.active_model]
+        step = self.ui.x_circular_shift_step.value()
+        model.move(-step, 0, 0)
+        model.go_to_positive_coordinates_translate()
+        self.add_model_and_show(model)
+
+    def model_y_circular_shift(self):
+        if self.ui.openGLWidget.main_model.n_atoms() == 0:
+            return
+        model = self.models[self.active_model]
+        step = self.ui.y_circular_shift_step.value()
+        model.move(0, -step, 0)
+        model.go_to_positive_coordinates_translate()
+        self.add_model_and_show(model)
+
+    def model_z_circular_shift(self):
+        if self.ui.openGLWidget.main_model.n_atoms() == 0:
+            return
+        model = self.models[self.active_model]
+        step = self.ui.z_circular_shift_step.value()
+        model.move(0, 0, -step)
+        model.go_to_positive_coordinates_translate()
+        self.add_model_and_show(model)
+
     def model_go_to_positive(self):
         if self.ui.openGLWidget.main_model.n_atoms() == 0:
             return
@@ -1126,6 +1157,13 @@ class MainForm(QMainWindow):
             return
         model = self.ui.openGLWidget.main_model
         model.move_atoms_to_cell()
+        self.add_model_and_show(model)
+
+    def model_center_to_zero(self):
+        if self.ui.openGLWidget.main_model.n_atoms() == 0:
+            return
+        model = self.ui.openGLWidget.main_model
+        model.move_atoms_to_zero()
         self.add_model_and_show(model)
 
     def add_model_and_show(self, model):  # pragma: no cover

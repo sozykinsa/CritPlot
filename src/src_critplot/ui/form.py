@@ -853,29 +853,109 @@ class Ui_MainWindow(object):
         self.groupBox_49 = QGroupBox(self.groupBox_4)
         self.groupBox_49.setObjectName(u"groupBox_49")
         self.groupBox_49.setMinimumSize(QSize(0, 0))
-        self.horizontalLayout_50 = QHBoxLayout(self.groupBox_49)
+        self.groupBox_49.setSizeIncrement(QSize(0, 0))
+        self.verticalLayout_70 = QVBoxLayout(self.groupBox_49)
+        self.verticalLayout_70.setObjectName(u"verticalLayout_70")
+        self.frame_116 = QFrame(self.groupBox_49)
+        self.frame_116.setObjectName(u"frame_116")
+        self.frame_116.setMinimumSize(QSize(0, 0))
+        self.frame_116.setFrameShape(QFrame.NoFrame)
+        self.frame_116.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_50 = QHBoxLayout(self.frame_116)
         self.horizontalLayout_50.setObjectName(u"horizontalLayout_50")
-        self.horizontalSpacer_119 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_50.addItem(self.horizontalSpacer_119)
-
-        self.FormModifyGoPositive = QPushButton(self.groupBox_49)
+        self.horizontalLayout_50.setContentsMargins(0, 0, 0, 0)
+        self.FormModifyGoPositive = QPushButton(self.frame_116)
         self.FormModifyGoPositive.setObjectName(u"FormModifyGoPositive")
 
         self.horizontalLayout_50.addWidget(self.FormModifyGoPositive)
 
-        self.horizontalSpacer_117 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_50.addItem(self.horizontalSpacer_117)
-
-        self.FormModifyGoToCell = QPushButton(self.groupBox_49)
+        self.FormModifyGoToCell = QPushButton(self.frame_116)
         self.FormModifyGoToCell.setObjectName(u"FormModifyGoToCell")
 
         self.horizontalLayout_50.addWidget(self.FormModifyGoToCell)
 
-        self.horizontalSpacer_118 = QSpacerItem(106, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.modify_center_to_zero = QPushButton(self.frame_116)
+        self.modify_center_to_zero.setObjectName(u"modify_center_to_zero")
 
-        self.horizontalLayout_50.addItem(self.horizontalSpacer_118)
+        self.horizontalLayout_50.addWidget(self.modify_center_to_zero)
+
+
+        self.verticalLayout_70.addWidget(self.frame_116)
+
+        self.frame_117 = QFrame(self.groupBox_49)
+        self.frame_117.setObjectName(u"frame_117")
+        self.frame_117.setMinimumSize(QSize(0, 0))
+        self.frame_117.setFrameShape(QFrame.NoFrame)
+        self.frame_117.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_117 = QHBoxLayout(self.frame_117)
+        self.horizontalLayout_117.setObjectName(u"horizontalLayout_117")
+        self.horizontalLayout_117.setContentsMargins(0, 0, 0, 0)
+        self.x_circular_shift_step = QDoubleSpinBox(self.frame_117)
+        self.x_circular_shift_step.setObjectName(u"x_circular_shift_step")
+
+        self.horizontalLayout_117.addWidget(self.x_circular_shift_step)
+
+        self.x_circular_shift = QPushButton(self.frame_117)
+        self.x_circular_shift.setObjectName(u"x_circular_shift")
+
+        self.horizontalLayout_117.addWidget(self.x_circular_shift)
+
+        self.horizontalSpacer_100 = QSpacerItem(157, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_117.addItem(self.horizontalSpacer_100)
+
+
+        self.verticalLayout_70.addWidget(self.frame_117)
+
+        self.frame_118 = QFrame(self.groupBox_49)
+        self.frame_118.setObjectName(u"frame_118")
+        self.frame_118.setMinimumSize(QSize(0, 0))
+        self.frame_118.setFrameShape(QFrame.NoFrame)
+        self.frame_118.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_165 = QHBoxLayout(self.frame_118)
+        self.horizontalLayout_165.setObjectName(u"horizontalLayout_165")
+        self.horizontalLayout_165.setContentsMargins(0, 0, 0, 0)
+        self.y_circular_shift_step = QDoubleSpinBox(self.frame_118)
+        self.y_circular_shift_step.setObjectName(u"y_circular_shift_step")
+
+        self.horizontalLayout_165.addWidget(self.y_circular_shift_step)
+
+        self.y_circular_shift = QPushButton(self.frame_118)
+        self.y_circular_shift.setObjectName(u"y_circular_shift")
+
+        self.horizontalLayout_165.addWidget(self.y_circular_shift)
+
+        self.horizontalSpacer_117 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_165.addItem(self.horizontalSpacer_117)
+
+
+        self.verticalLayout_70.addWidget(self.frame_118)
+
+        self.frame_170 = QFrame(self.groupBox_49)
+        self.frame_170.setObjectName(u"frame_170")
+        self.frame_170.setMinimumSize(QSize(0, 0))
+        self.frame_170.setFrameShape(QFrame.NoFrame)
+        self.frame_170.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_166 = QHBoxLayout(self.frame_170)
+        self.horizontalLayout_166.setObjectName(u"horizontalLayout_166")
+        self.horizontalLayout_166.setContentsMargins(0, 0, 0, 0)
+        self.z_circular_shift_step = QDoubleSpinBox(self.frame_170)
+        self.z_circular_shift_step.setObjectName(u"z_circular_shift_step")
+
+        self.horizontalLayout_166.addWidget(self.z_circular_shift_step)
+
+        self.z_circular_shift = QPushButton(self.frame_170)
+        self.z_circular_shift.setObjectName(u"z_circular_shift")
+
+        self.horizontalLayout_166.addWidget(self.z_circular_shift)
+
+        self.horizontalSpacer_118 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_166.addItem(self.horizontalSpacer_118)
+
+
+        self.verticalLayout_70.addWidget(self.frame_170)
 
 
         self.verticalLayout_7.addWidget(self.groupBox_49)
@@ -2653,7 +2733,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 248, 153))
+        self.page_8.setGeometry(QRect(0, 0, 642, 734))
         self.verticalLayout_21 = QVBoxLayout(self.page_8)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.frame_15 = QFrame(self.page_8)
@@ -2691,7 +2771,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_8, u"2D Figure")
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 253, 136))
+        self.page.setGeometry(QRect(0, 0, 642, 734))
         self.verticalLayout_19 = QVBoxLayout(self.page)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
         self.frame_14 = QFrame(self.page)
@@ -2836,8 +2916,8 @@ class Ui_MainWindow(object):
         self.add_cp_to_list.setText(QCoreApplication.translate("MainWindow", u"Add to List", None))
         self.delete_cp_from_list.setText(QCoreApplication.translate("MainWindow", u"Delete selected from List", None))
         self.clear_cp_list.setText(QCoreApplication.translate("MainWindow", u"Clear List", None))
-        self.delete_cp_from_model.setText(QCoreApplication.translate("MainWindow", u"Exclude selected", None))
-        self.leave_cp_in_model.setText(QCoreApplication.translate("MainWindow", u"Limit to selected", None))
+        self.delete_cp_from_model.setText(QCoreApplication.translate("MainWindow", u"Exclude CPs from list", None))
+        self.leave_cp_in_model.setText(QCoreApplication.translate("MainWindow", u"Limit to CPs from list", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_51), QCoreApplication.translate("MainWindow", u"CPs", None))
         self.groupBox_7.setTitle(QCoreApplication.translate("MainWindow", u"RHO", None))
         self.hide_cps_min_rho.setText(QCoreApplication.translate("MainWindow", u"Hide cp with smaller RHO", None))
@@ -2860,6 +2940,10 @@ class Ui_MainWindow(object):
         self.groupBox_49.setTitle(QCoreApplication.translate("MainWindow", u"Shift", None))
         self.FormModifyGoPositive.setText(QCoreApplication.translate("MainWindow", u"Go to positive!", None))
         self.FormModifyGoToCell.setText(QCoreApplication.translate("MainWindow", u"Go to cell", None))
+        self.modify_center_to_zero.setText(QCoreApplication.translate("MainWindow", u"Center to zero", None))
+        self.x_circular_shift.setText(QCoreApplication.translate("MainWindow", u"x-circular shift", None))
+        self.y_circular_shift.setText(QCoreApplication.translate("MainWindow", u"y-circular shift", None))
+        self.z_circular_shift.setText(QCoreApplication.translate("MainWindow", u"z-circular shift", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabActions), QCoreApplication.translate("MainWindow", u"Modify", None))
         self.FormActionsPostButGetBonds.setText(QCoreApplication.translate("MainWindow", u"Get bonds", None))
         self.FormActionsPostLabelMeanBond.setText("")
