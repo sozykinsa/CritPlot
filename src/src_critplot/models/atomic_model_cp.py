@@ -55,11 +55,9 @@ class AtomicModelCP(AtomicModel):
                 i -= 1
         cp.bonds[b + "opt"] = bond
 
-    def move(self, l_x, l_y, l_z):
+    def move(self, dl: np.ndarray):
         """Move model by the vector."""
-        super().move(l_x, l_y, l_z)
-        dl = np.array([l_x, l_y, l_z])
-
+        super().move(dl)
         for cp in self.cps:
             cp.xyz += dl
             self.move_bond_path(dl, cp.bonds.get("bond1"))
@@ -118,21 +116,19 @@ class AtomicModelCP(AtomicModel):
                 self.move_object_to_cell(bond2opt, a_inv)
 
     def go_to_positive_coordinates(self):
-        xm = self.minX()
-        ym = self.minY()
-        zm = self.minZ()
-        self.go_to_positive_array(self.atoms, xm, ym, zm)
-        self.go_to_positive_array(self.cps, xm, ym, zm)
+        dr = np.array([self.minX(), self.minY(), self.minZ()])
+        self.go_to_positive_array(self.atoms, dr)
+        self.go_to_positive_array(self.cps, dr)
         for cp in self.cps:
             bond1 = cp.bonds.get("bond1")
             bond2 = cp.bonds.get("bond2")
             if bond1 is not None and bond2 is not None:
                 bond1opt = cp.bonds.get("bond1opt")
                 bond2opt = cp.bonds.get("bond2opt")
-                self.go_to_positive_array(bond1, xm, ym, zm)
-                self.go_to_positive_array(bond2, xm, ym, zm)
-                self.go_to_positive_array(bond1opt, xm, ym, zm)
-                self.go_to_positive_array(bond2opt, xm, ym, zm)
+                self.go_to_positive_array(bond1, dr)
+                self.go_to_positive_array(bond2, dr)
+                self.go_to_positive_array(bond1opt, dr)
+                self.go_to_positive_array(bond2opt, dr)
 
     def convert_from_direct_to_cart(self):
         super().convert_from_direct_to_cart()

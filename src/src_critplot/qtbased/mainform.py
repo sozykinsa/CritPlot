@@ -1123,7 +1123,7 @@ class MainForm(QMainWindow):
             return
         model = self.models[self.active_model]
         step = self.ui.x_circular_shift_step.value()
-        model.move(-step, 0, 0)
+        model.move(np.array([-step, 0, 0]))
         model.go_to_positive_coordinates_translate()
         self.add_model_and_show(model)
 
@@ -1132,7 +1132,7 @@ class MainForm(QMainWindow):
             return
         model = self.models[self.active_model]
         step = self.ui.y_circular_shift_step.value()
-        model.move(0, -step, 0)
+        model.move(np.array([0, -step, 0]))
         model.go_to_positive_coordinates_translate()
         self.add_model_and_show(model)
 
@@ -1141,7 +1141,7 @@ class MainForm(QMainWindow):
             return
         model = self.models[self.active_model]
         step = self.ui.z_circular_shift_step.value()
-        model.move(0, 0, -step)
+        model.move(np.array([0, 0, -step]))
         model.go_to_positive_coordinates_translate()
         self.add_model_and_show(model)
 

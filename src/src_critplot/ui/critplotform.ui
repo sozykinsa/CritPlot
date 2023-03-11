@@ -1623,7 +1623,11 @@
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QDoubleSpinBox" name="x_circular_shift_step"/>
+                  <widget class="QDoubleSpinBox" name="x_circular_shift_step">
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                  </widget>
                  </item>
                  <item>
                   <widget class="QPushButton" name="x_circular_shift">
@@ -1676,7 +1680,11 @@
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QDoubleSpinBox" name="y_circular_shift_step"/>
+                  <widget class="QDoubleSpinBox" name="y_circular_shift_step">
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                  </widget>
                  </item>
                  <item>
                   <widget class="QPushButton" name="y_circular_shift">
@@ -1729,7 +1737,11 @@
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QDoubleSpinBox" name="z_circular_shift_step"/>
+                  <widget class="QDoubleSpinBox" name="z_circular_shift_step">
+                   <property name="minimum">
+                    <double>-99.989999999999995</double>
+                   </property>
+                  </widget>
                  </item>
                  <item>
                   <widget class="QPushButton" name="z_circular_shift">
@@ -4983,8 +4995,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>642</width>
-         <height>734</height>
+         <width>248</width>
+         <height>153</height>
         </rect>
        </property>
        <attribute name="label">
@@ -5055,8 +5067,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>642</width>
-         <height>734</height>
+         <width>253</width>
+         <height>136</height>
         </rect>
        </property>
        <attribute name="label">

@@ -744,7 +744,7 @@ class GuiOpenGLBase(QOpenGLWidget):
 
     def get_model(self):
         model = deepcopy(self.main_model)
-        model.move(*(-self.coord0))
+        model.move(-self.coord0)
         model.translated_atoms_remove()
         return model
 
@@ -855,7 +855,7 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.selected_atom = -1
         self.main_model = deepcopy(structure)
         self.coord0 = -self.main_model.get_center_of_mass()
-        self.main_model.move(*self.coord0)
+        self.main_model.move(self.coord0)
         self.active = False
         self.auto_zoom()
         self.main_model.find_bonds_fast()

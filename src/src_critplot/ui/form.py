@@ -892,6 +892,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_117.setContentsMargins(0, 0, 0, 0)
         self.x_circular_shift_step = QDoubleSpinBox(self.frame_117)
         self.x_circular_shift_step.setObjectName(u"x_circular_shift_step")
+        self.x_circular_shift_step.setMinimum(-99.989999999999995)
 
         self.horizontalLayout_117.addWidget(self.x_circular_shift_step)
 
@@ -917,6 +918,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_165.setContentsMargins(0, 0, 0, 0)
         self.y_circular_shift_step = QDoubleSpinBox(self.frame_118)
         self.y_circular_shift_step.setObjectName(u"y_circular_shift_step")
+        self.y_circular_shift_step.setMinimum(-99.989999999999995)
 
         self.horizontalLayout_165.addWidget(self.y_circular_shift_step)
 
@@ -942,6 +944,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_166.setContentsMargins(0, 0, 0, 0)
         self.z_circular_shift_step = QDoubleSpinBox(self.frame_170)
         self.z_circular_shift_step.setObjectName(u"z_circular_shift_step")
+        self.z_circular_shift_step.setMinimum(-99.989999999999995)
 
         self.horizontalLayout_166.addWidget(self.z_circular_shift_step)
 
@@ -2733,7 +2736,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 642, 734))
+        self.page_8.setGeometry(QRect(0, 0, 248, 153))
         self.verticalLayout_21 = QVBoxLayout(self.page_8)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.frame_15 = QFrame(self.page_8)
@@ -2771,7 +2774,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_8, u"2D Figure")
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 642, 734))
+        self.page.setGeometry(QRect(0, 0, 253, 136))
         self.verticalLayout_19 = QVBoxLayout(self.page)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
         self.frame_14 = QFrame(self.page)

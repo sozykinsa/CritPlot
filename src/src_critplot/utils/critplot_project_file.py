@@ -30,8 +30,8 @@ class CritPlotProjectFile(GUI4dftProjectFile):
             row = f.readline()
             while row:
                 if row.find("%critical points") >= 0:
-                    row = f.readline().split()
                     while row.find("%critical points") < 0:
+                        row = f.readline().split()
                         if row[0] == "xb":
                             let = "xb"
                             title = let + row[0]
