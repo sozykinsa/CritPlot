@@ -18,15 +18,18 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.list_for_cp: int = 8
         self.list_for_bondpath: int = 9
 
+        self.selected_cp = -1
         self.is_cp_available: bool = False
         self.is_bond_path_available: bool = False
+        self.width_of_bp: int = 3
+
         self.is_show_bcp: bool = True
         self.is_show_ccp: bool = True
         self.is_show_rcp: bool = True
         self.is_show_ncp: bool = True
         self.is_show_nna: bool = True
         self.is_show_bond_path: bool = True
-        self.selected_cp = -1
+
         self.is_bcp_property_visible: bool = False
         self.bcp_property: str = ""
         self.NLists = 10
@@ -35,6 +38,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.color_of_ccp = (1, 1, 1)
         self.color_of_rcp = (1, 1, 0)
         self.color_of_nna = (1, 0, 1)
+        self.color_of_bp = (0, 1, 0)
 
         self.selected_cp_callback: Callable = None
         self.main_model = AtomicModelCP()
@@ -55,6 +59,11 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_show_ncp = show_ncp
         self.is_show_nna = show_nnatr
         self.add_critical_points()
+
+    def set_width_of_bp(self, width_of_bp):
+        self.width_of_bp = width_of_bp
+        self.add_bond_path()
+        self.update()
 
     def set_property_bond_path(self, bond_path) -> None:
         self.is_show_bond_path = bond_path
@@ -130,6 +139,12 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_cp_available = True
         self.update()
 
+    def set_cp_related_colors(self, color_of_bcp, color_of_rcp, color_of_ccp, color_of_bp) -> None:
+        self.color_of_bcp = color_of_bcp
+        self.color_of_rcp = color_of_rcp
+        self.color_of_ccp = color_of_ccp
+        self.color_of_bp = color_of_bp
+
     def set_color_of_bcp(self, color) -> None:
         self.color_of_bcp = color
         self.add_critical_points()
@@ -143,6 +158,11 @@ class GuiOpenGLCP(GuiOpenGLBase):
     def set_color_of_ccp(self, color) -> None:
         self.color_of_ccp = color
         self.add_critical_points()
+        self.update()
+
+    def set_color_of_bp(self, color) -> None:
+        self.color_of_bp = color
+        self.add_bond_path()
         self.update()
 
     def add_bond_path(self) -> None:
@@ -163,11 +183,11 @@ class GuiOpenGLCP(GuiOpenGLBase):
         if np.linalg.norm(bond[0].xyz - bond[-1].xyz) > 4.0:
             return
 
-        gl.glColor3f(0, 1, 0)
+        gl.glColor3f(*self.color_of_bp)
         for i in range(1, len(bond)):
             self.add_bond(self.scale_factor * bond[i - 1].xyz,
                           self.scale_factor * bond[i].xyz,
-                          self.scale_factor * 0.03)
+                          self.scale_factor * 0.01 * self.width_of_bp)
 
     def paintGL(self) -> None:
         self.makeCurrent()

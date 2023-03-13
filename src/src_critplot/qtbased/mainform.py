@@ -127,6 +127,7 @@ class MainForm(QMainWindow):
         self.ui.color_bond_cp_button.clicked.connect(self.select_bcp_color)
         self.ui.color_ring_cp_button.clicked.connect(self.select_rcp_color)
         self.ui.color_cage_cp_button.clicked.connect(self.select_ccp_color)
+        self.ui.color_bond_path_button.clicked.connect(self.select_bp_color)
         self.ui.ColorAxesDialogButton.clicked.connect(self.select_axes_color)
         self.ui.manual_colors_default.clicked.connect(self.set_manual_colors_default)
 
@@ -866,6 +867,9 @@ class MainForm(QMainWindow):
         state_form_settings_view_spin_bond_width = int(settings.value(SETTINGS_FormSettingsViewSpinBondWidth, '20'))
         self.ui.FormSettingsViewSpinBondWidth.setValue(state_form_settings_view_spin_bond_width)
         self.ui.FormSettingsViewSpinBondWidth.valueChanged.connect(self.save_state_view_spin_bond_width)
+        state_form_settings_bond_path_width = int(settings.value(SETTINGS_bond_path_width, '3'))
+        self.ui.bond_path_width.setValue(state_form_settings_bond_path_width)
+        self.ui.bond_path_width.valueChanged.connect(self.save_state_view_spin_bond_path_width)
 
         state_color_scheme = str(settings.value(SETTINGS_Color_Of_Atoms_Scheme, ''))
         self.ui.manual_colors_default.setEnabled(False)
@@ -919,9 +923,17 @@ class MainForm(QMainWindow):
         self.state_Color_Of_Axes = str(settings.value(SETTINGS_Color_Of_Axes, '0 255 0'))
         self.color_to_ui(self.ui.ColorAxes, self.state_Color_Of_Axes)
 
-        #self.coord_type = str(settings.value(SETTINGS_FormSettingsPreferredCoordinates, 'Cartesian'))
-        #self.units_type = str(settings.value(SETTINGS_FormSettingsPreferredUnits, 'Ang'))
-        #self.lattice_type = str(settings.value(SETTINGS_FormSettingsPreferredLattice, 'LatticeParameters'))
+        self.state_color_of_bcp = str(settings.value(SETTINGS_color_of_bcp, '255 0 0'))
+        self.color_to_ui(self.ui.color_bond_cp, self.state_color_of_bcp)
+
+        self.state_color_of_rcp = str(settings.value(SETTINGS_color_of_rcp, '255 255 0'))
+        self.color_to_ui(self.ui.color_ring_cp, self.state_color_of_rcp)
+
+        self.state_color_of_ccp = str(settings.value(SETTINGS_color_of_ccp, '255 255 255'))
+        self.color_to_ui(self.ui.color_cage_cp, self.state_color_of_ccp)
+
+        self.state_color_of_bp = str(settings.value(SETTINGS_color_of_bp, '0 255 0'))
+        self.color_to_ui(self.ui.color_bond_path, self.state_color_of_bp)
 
         self.action_on_start = str(settings.value(SETTINGS_FormSettingsActionOnStart, 'Nothing'))
 
@@ -1189,6 +1201,11 @@ class MainForm(QMainWindow):
         view_axes = self.ui.FormSettingsViewCheckShowAxes.isChecked()
         box_color = self.get_color_from_setting(self.state_Color_Of_Box)
         atoms_color = self.colors_of_atoms()
+        color_of_bcp = self.get_color_from_setting(self.state_color_of_bcp)
+        color_of_rcp = self.get_color_from_setting(self.state_color_of_rcp)
+        color_of_ccp = self.get_color_from_setting(self.state_color_of_ccp)
+        color_of_bp = self.get_color_from_setting(self.state_color_of_bp)
+        self.ui.openGLWidget.set_cp_related_colors(color_of_bcp, color_of_rcp, color_of_ccp, color_of_bp)
         self.show_cps()
         self.ui.openGLWidget.set_structure_parameters(atoms_color, view_atoms, view_atom_numbers, view_box, box_color,
                                                       view_bonds, bonds_color, bond_width, color_of_bonds_by_atoms,
@@ -1340,6 +1357,10 @@ class MainForm(QMainWindow):
     def save_state_view_spin_bond_width(self):  # pragma: no cover
         self.save_property(SETTINGS_FormSettingsViewSpinBondWidth, self.ui.FormSettingsViewSpinBondWidth.text())
         self.ui.openGLWidget.set_bond_width(self.ui.FormSettingsViewSpinBondWidth.value() * 0.005)
+
+    def save_state_view_spin_bond_path_width(self):  # pragma: no cover
+        self.save_property(SETTINGS_bond_path_width, self.ui.bond_path_width.text())
+        self.ui.openGLWidget.set_width_of_bp(self.ui.bond_path_width.value())
 
     def save_state_colors_fixed_max(self):  # pragma: no cover
         self.save_property(SETTINGS_FormSettingsColorsFixedMax, self.ui.FormSettingsColorsFixedMax.text())
@@ -1580,6 +1601,10 @@ class MainForm(QMainWindow):
         rcp_color = self.change_color(self.ui.color_cage_cp, SETTINGS_color_of_ccp)
         self.ui.openGLWidget.set_color_of_rcp(rcp_color)
 
+    def select_bp_color(self):  # pragma: no cover
+        bp_color = self.change_color(self.ui.color_bond_path, SETTINGS_color_of_bp)
+        self.ui.openGLWidget.set_color_of_bp(bp_color)
+
     def hide_cps_min_rho(self):
         if len(self.models) == 0:
             return
@@ -1782,6 +1807,7 @@ SETTINGS_FormSettingsViewCheckShowBox = 'view/CheckShowBox'
 SETTINGS_FormSettingsViewCheckShowAxes = 'view/CheckShowAxes'
 SETTINGS_FormSettingsViewCheckShowBonds = 'view/CheckShowBonds'
 SETTINGS_FormSettingsViewSpinBondWidth = 'view/SpinBondWidth'
+SETTINGS_bond_path_width = 'view/bond_path_width'
 SETTINGS_FormSettingsViewSpinContourWidth = 'view/SpinContourWidth'
 SETTINGS_GlCullFace = 'view/GlCullFace'
 SETTINGS_FormSettingsActionOnStart = 'action/OnStart'
@@ -1803,4 +1829,5 @@ SETTINGS_Color_Of_Axes = 'colors/axes'
 SETTINGS_color_of_bcp = 'colors/bcp'
 SETTINGS_color_of_rcp = 'colors/rcp'
 SETTINGS_color_of_ccp = 'colors/ccp'
+SETTINGS_color_of_bp = 'colors/bp'
 SETTINGS_perspective_angle = 'perspectiveangle'
