@@ -597,6 +597,7 @@ class Ui_MainWindow(object):
         self.frame_29.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_17 = QHBoxLayout(self.frame_29)
         self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.horizontalLayout_17.setContentsMargins(-1, 0, -1, 0)
         self.FormActionsPreButDeleteAtom = QPushButton(self.frame_29)
         self.FormActionsPreButDeleteAtom.setObjectName(u"FormActionsPreButDeleteAtom")
 
@@ -617,6 +618,27 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_2.addWidget(self.groupBox_2)
+
+        self.groupBox_12 = QGroupBox(self.FormTabActions)
+        self.groupBox_12.setObjectName(u"groupBox_12")
+        self.groupBox_12.setMinimumSize(QSize(0, 0))
+        self.horizontalLayout_13 = QHBoxLayout(self.groupBox_12)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.horizontalSpacer_15 = QSpacerItem(131, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_15)
+
+        self.additional_atoms_delete = QPushButton(self.groupBox_12)
+        self.additional_atoms_delete.setObjectName(u"additional_atoms_delete")
+
+        self.horizontalLayout_13.addWidget(self.additional_atoms_delete)
+
+        self.horizontalSpacer_16 = QSpacerItem(131, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_16)
+
+
+        self.verticalLayout_2.addWidget(self.groupBox_12)
 
         self.groupBox_3 = QGroupBox(self.FormTabActions)
         self.groupBox_3.setObjectName(u"groupBox_3")
@@ -1745,7 +1767,7 @@ class Ui_MainWindow(object):
         self.frame_106.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_110 = QHBoxLayout(self.frame_106)
         self.horizontalLayout_110.setObjectName(u"horizontalLayout_110")
-        self.horizontalLayout_110.setContentsMargins(0, -1, 0, -1)
+        self.horizontalLayout_110.setContentsMargins(0, 0, 0, 0)
         self.label_2 = QLabel(self.frame_106)
         self.label_2.setObjectName(u"label_2")
 
@@ -1773,6 +1795,7 @@ class Ui_MainWindow(object):
         self.FormBondLenSpinBox = QDoubleSpinBox(self.frame_106)
         self.FormBondLenSpinBox.setObjectName(u"FormBondLenSpinBox")
         self.FormBondLenSpinBox.setReadOnly(False)
+        self.FormBondLenSpinBox.setSingleStep(0.100000000000000)
 
         self.horizontalLayout_110.addWidget(self.FormBondLenSpinBox)
 
@@ -1896,7 +1919,7 @@ class Ui_MainWindow(object):
         self.frame_160.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_178 = QHBoxLayout(self.frame_160)
         self.horizontalLayout_178.setObjectName(u"horizontalLayout_178")
-        self.horizontalLayout_178.setContentsMargins(0, -1, 0, -1)
+        self.horizontalLayout_178.setContentsMargins(0, 0, 0, 0)
         self.show_bcp_text = QCheckBox(self.frame_160)
         self.show_bcp_text.setObjectName(u"show_bcp_text")
 
@@ -2690,11 +2713,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.frame_108)
 
-        self.is_add_atoms_for_bp = QCheckBox(self.FormTabSettings)
-        self.is_add_atoms_for_bp.setObjectName(u"is_add_atoms_for_bp")
-
-        self.verticalLayout_3.addWidget(self.is_add_atoms_for_bp)
-
         self.frame_85 = QFrame(self.FormTabSettings)
         self.frame_85.setObjectName(u"frame_85")
         self.frame_85.setFrameShape(QFrame.NoFrame)
@@ -2939,6 +2957,8 @@ class Ui_MainWindow(object):
         self.FormActionsPreButDeleteAtom.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
         self.FormActionsPreButModifyAtom.setText(QCoreApplication.translate("MainWindow", u"Modify", None))
         self.FormActionsPreButAddAtom.setText(QCoreApplication.translate("MainWindow", u"Add", None))
+        self.groupBox_12.setTitle(QCoreApplication.translate("MainWindow", u"Additional atoms", None))
+        self.additional_atoms_delete.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Cell", None))
         self.FormModifyCellButton.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Transforms", None))
@@ -3088,7 +3108,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_29), QCoreApplication.translate("MainWindow", u"View", None))
         self.FormSettingsViewCheckAtomSelection.setText(QCoreApplication.translate("MainWindow", u"Allow atom selection", None))
         self.FormSettingsViewCheckModelMove.setText(QCoreApplication.translate("MainWindow", u"Allow model move", None))
-        self.is_add_atoms_for_bp.setText(QCoreApplication.translate("MainWindow", u"Add atoms for bond paths", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabSettings), QCoreApplication.translate("MainWindow", u"Settings", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_7), QCoreApplication.translate("MainWindow", u"3D View", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Show critical points ", None))

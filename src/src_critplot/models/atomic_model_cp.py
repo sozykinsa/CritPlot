@@ -82,19 +82,23 @@ class AtomicModelCP(AtomicModel):
     def bond_path_opt_update(self):
         for i in range(len(self.cps)):
             if self.cps[i].let == "xb":
-                self.cps[i].bonds.pop("bond1")
-                self.cps[i].bonds.pop("bond2")
-                self.cps[i].bonds.pop("bond1opt")
-                self.cps[i].bonds.pop("bond2opt")
+                if "bond1" not in self.cps[i].bonds:
+                    print("strange bcp: ", self.cps[i])
+                else:
+                    self.cps[i].bonds.pop("bond1")
+                    self.cps[i].bonds.pop("bond2")
+                    self.cps[i].bonds.pop("bond1opt")
+                    self.cps[i].bonds.pop("bond2opt")
 
-                ind1 = self.cps[i].get_property("atom1")
-                ind2 = self.cps[i].get_property("atom2")
-                p1 = CriticalPoint([*self.atoms[ind1 - 1].xyz, "xz", 1])
-                p2 = CriticalPoint([*self.cps[i].xyz, "xz", 1])
-                p3 = CriticalPoint([*self.atoms[ind2 - 1].xyz, "xz", 1])
+                    ind1 = self.cps[i].get_property("atom1")
+                    ind2 = self.cps[i].get_property("atom2")
+                    if (ind1 < len(self.atoms)) and (ind2 < len(self.atoms)):
+                        p1 = CriticalPoint([*self.atoms[ind1 - 1].xyz, "xz", 1])
+                        p2 = CriticalPoint([*self.cps[i].xyz, "xz", 1])
+                        p3 = CriticalPoint([*self.atoms[ind2 - 1].xyz, "xz", 1])
 
-                self.add_bond_path_point([p2, p1])
-                self.add_bond_path_point([p2, p3])
+                        self.add_bond_path_point([p2, p1])
+                        self.add_bond_path_point([p2, p3])
         self.bond_path_points_optimize()
 
     def n_bcp(self):

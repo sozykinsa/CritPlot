@@ -130,6 +130,7 @@ class MainForm(QMainWindow):
         self.ui.color_bond_path_button.clicked.connect(self.select_bp_color)
         self.ui.ColorAxesDialogButton.clicked.connect(self.select_axes_color)
         self.ui.manual_colors_default.clicked.connect(self.set_manual_colors_default)
+        self.ui.FormBondLenSpinBox.valueChanged.connect(self.bond_len_correct)
 
         self.ui.FormModifyCellButton.clicked.connect(self.edit_cell)
         self.ui.FormActionsPostButGetBonds.clicked.connect(self.get_bonds)
@@ -162,6 +163,7 @@ class MainForm(QMainWindow):
         self.ui.FormModifyGoPositive.clicked.connect(self.model_go_to_positive)
         self.ui.FormModifyGoToCell.clicked.connect(self.model_go_to_cell)
         self.ui.modify_center_to_zero.clicked.connect(self.model_center_to_zero)
+        self.ui.additional_atoms_delete.clicked.connect(self.model_additional_atoms_delete)
         self.ui.x_circular_shift.clicked.connect(self.model_x_circular_shift)
         self.ui.y_circular_shift.clicked.connect(self.model_y_circular_shift)
         self.ui.z_circular_shift.clicked.connect(self.model_z_circular_shift)
@@ -1135,6 +1137,8 @@ class MainForm(QMainWindow):
             return
         model = self.models[self.active_model]
         step = self.ui.x_circular_shift_step.value()
+        if step < 0:
+            step = np.linalg.norm(model.lat_vector1) + step
         model.move(np.array([-step, 0, 0]))
         model.go_to_positive_coordinates_translate()
         self.add_model_and_show(model)
@@ -1144,6 +1148,8 @@ class MainForm(QMainWindow):
             return
         model = self.models[self.active_model]
         step = self.ui.y_circular_shift_step.value()
+        if step < 0:
+            step = np.linalg.norm(model.lat_vector2) + step
         model.move(np.array([0, -step, 0]))
         model.go_to_positive_coordinates_translate()
         self.add_model_and_show(model)
@@ -1153,6 +1159,8 @@ class MainForm(QMainWindow):
             return
         model = self.models[self.active_model]
         step = self.ui.z_circular_shift_step.value()
+        if step < 0:
+            step = np.linalg.norm(model.lat_vector3) + step
         model.move(np.array([0, 0, -step]))
         model.go_to_positive_coordinates_translate()
         self.add_model_and_show(model)
@@ -1162,6 +1170,14 @@ class MainForm(QMainWindow):
             return
         model = self.ui.openGLWidget.main_model
         model.go_to_positive_coordinates_translate()
+        self.add_model_and_show(model)
+
+    def model_additional_atoms_delete(self):
+        if self.ui.openGLWidget.main_model.n_atoms() == 0:
+            return
+        model = self.ui.openGLWidget.main_model
+        model.translated_atoms_remove()
+        model.find_bonds_fast()
         self.add_model_and_show(model)
 
     def model_go_to_cell(self):
@@ -1791,6 +1807,19 @@ class MainForm(QMainWindow):
         self.save_property(var_property,
                            str(color.getRgb()[0]) + " " + str(color.getRgb()[1]) + " " + str(color.getRgb()[2]))
         return new_color
+
+    def bond_len_correct(self, d):
+        let1 = self.ui.FormAtomsList1.currentText()
+        let2 = self.ui.FormAtomsList2.currentText()
+        ch1 = self.periodic_table.get_charge_by_letter(let1)
+        ch2 = self.periodic_table.get_charge_by_letter(let2)
+        self.periodic_table.Bonds[ch1][ch2] = d
+        self.periodic_table.Bonds[ch2][ch1] = d
+        self.ui.openGLWidget.main_model.set_mendeley(self.periodic_table)
+        self.ui.openGLWidget.main_model.find_bonds_fast()
+        self.ui.openGLWidget.add_all_elements()
+        self.ui.openGLWidget.update()
+        print(let1, "-", let2, ": ", d)
 
 
 SETTINGS_Folder_CP = 'home'
