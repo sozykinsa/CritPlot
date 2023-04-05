@@ -9,7 +9,7 @@ def test_critical_points(tests_path):
     assert len(models[0].cps) == 11
     assert models[0].cps[5].get_property("cp_bp_len") == 3.5165430594833227
     f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
-    models = atomic_data_from_output(f_name)
+    models = atomic_data_from_output(f_name, True)
     assert len(models[0].cps) == 7
     assert models[0].cps[3].get_property("cp_bp_len") == 4.275076459477063
 

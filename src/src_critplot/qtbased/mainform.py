@@ -847,6 +847,10 @@ class MainForm(QMainWindow):
         self.ui.OpenGL_GL_CULL_FACE.setChecked(state_gl_cull_face)
         self.ui.OpenGL_GL_CULL_FACE.clicked.connect(self.save_state_gl_cull_face)
 
+        state_add_translated = settings.value(SETTINGS_IS_ADD_TRANSLATED_ATOMS, True, type=bool)
+        self.ui.is_add_translated_atoms.setChecked(state_add_translated)
+        self.ui.is_add_translated_atoms.clicked.connect(self.save_state_add_translated)
+
         self.work_dir = str(settings.value(SETTINGS_Folder_CP, "/home"))
         self.ColorType = str(settings.value(SETTINGS_FormSettingsColorsScale, 'rainbow'))
         self.ui.FormSettingsColorsScale.currentIndexChanged.connect(self.save_state_colors_scale)
@@ -1010,8 +1014,9 @@ class MainForm(QMainWindow):
         if os.path.exists(file_name):
             self.filename = file_name
             self.work_dir = os.path.dirname(file_name)
+            is_add_translations = self.ui.is_add_translated_atoms.isChecked()
             try:
-                self.models, is_critic_open = ImporterExporter.import_from_file(file_name)
+                self.models, is_critic_open = ImporterExporter.import_from_file(file_name, is_add_translations)
                 if is_critic_open:
                     self.ui.add_xyz_critic_data.setEnabled(True)
             except Exception as e:
@@ -1343,6 +1348,11 @@ class MainForm(QMainWindow):
         self.save_property(SETTINGS_FormSettingsViewCheckShowAtomNumber,
                            self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
         self.ui.openGLWidget.set_atoms_numbered(self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
+
+    def save_state_add_translated(self):  # pragma: no cover
+        self.save_property(SETTINGS_IS_ADD_TRANSLATED_ATOMS,
+                           self.ui.is_add_translated_atoms.isChecked())
+        # self.ui.openGLWidget.set_atoms_numbered(self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
 
     def save_state_action_on_start(self):  # pragma: no cover
         self.save_property(SETTINGS_FormSettingsActionOnStart, self.action_on_start)
@@ -1843,6 +1853,7 @@ SETTINGS_FormSettingsActionOnStart = 'action/OnStart'
 SETTINGS_PropertyFontSize = 'property/fontsize'
 SETTINGS_PropertyShiftX = 'property/shiftx'
 SETTINGS_PropertyShiftY = 'property/shifty'
+SETTINGS_IS_ADD_TRANSLATED_ATOMS = 'atoms/addtranslated'
 
 SETTINGS_FormSettingsPreferredCoordinatesStyle = 'model/FormSettingsPreferredCoordinatesStyle'
 SETTINGS_FormSettingsPreferredCoordinates = 'model/FormSettingsPreferredCoordinates'

@@ -18,6 +18,6 @@ def test_get_cell(tests_path):
 
 def test_atomic_data_from_output(tests_path):
     f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
-    models = atomic_data_from_output(f_name)
+    models = atomic_data_from_output(f_name, True)
     pos = models[0].get_positions()
     assert len(pos) == 9

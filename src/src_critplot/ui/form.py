@@ -2733,6 +2733,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.frame_80)
 
+        self.is_add_translated_atoms = QCheckBox(self.FormTabSettings)
+        self.is_add_translated_atoms.setObjectName(u"is_add_translated_atoms")
+
+        self.verticalLayout_3.addWidget(self.is_add_translated_atoms)
+
         self.verticalSpacer_18 = QSpacerItem(20, 568, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer_18)
@@ -3108,6 +3113,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_29), QCoreApplication.translate("MainWindow", u"View", None))
         self.FormSettingsViewCheckAtomSelection.setText(QCoreApplication.translate("MainWindow", u"Allow atom selection", None))
         self.FormSettingsViewCheckModelMove.setText(QCoreApplication.translate("MainWindow", u"Allow model move", None))
+        self.is_add_translated_atoms.setText(QCoreApplication.translate("MainWindow", u"Add translated atoms", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabSettings), QCoreApplication.translate("MainWindow", u"Settings", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_7), QCoreApplication.translate("MainWindow", u"3D View", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Show critical points ", None))
