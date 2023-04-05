@@ -85,6 +85,17 @@ jobs:
         sudo apt-get install libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
         sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
         xvfb-run python -m pytest tests --cov=src/src_critplot --cov-report=xml --cov-report=term-missing --ignore=src/core_gui_atomistic --ignore=tests/critplot/opengl
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+          token: ${{ secrets.CODECOV }}
+          files: coverage.xml
+          flags: unittests
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          name: codecov-umbrella
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
 
   test-windows:
 
