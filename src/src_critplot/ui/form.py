@@ -2738,6 +2738,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.is_add_translated_atoms)
 
+        self.is_show_props_for_cp_list = QCheckBox(self.FormTabSettings)
+        self.is_show_props_for_cp_list.setObjectName(u"is_show_props_for_cp_list")
+
+        self.verticalLayout_3.addWidget(self.is_show_props_for_cp_list)
+
         self.verticalSpacer_18 = QSpacerItem(20, 568, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer_18)
@@ -3114,6 +3119,7 @@ class Ui_MainWindow(object):
         self.FormSettingsViewCheckAtomSelection.setText(QCoreApplication.translate("MainWindow", u"Allow atom selection", None))
         self.FormSettingsViewCheckModelMove.setText(QCoreApplication.translate("MainWindow", u"Allow model move", None))
         self.is_add_translated_atoms.setText(QCoreApplication.translate("MainWindow", u"Add translated atoms", None))
+        self.is_show_props_for_cp_list.setText(QCoreApplication.translate("MainWindow", u"Show properties only for CPs from list", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabSettings), QCoreApplication.translate("MainWindow", u"Settings", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_7), QCoreApplication.translate("MainWindow", u"3D View", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Show critical points ", None))

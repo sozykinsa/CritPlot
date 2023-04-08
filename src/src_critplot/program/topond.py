@@ -222,16 +222,17 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
                         for j in range(4):
                             file1.readline()
                 row = ""
-        if is_add_translations:
-            for cp in model.cps:
-                ind1 = cp.get_property("atom1")
-                ind2 = cp.get_property("atom2")
-                if (ind1 is not None) and (ind2 is not None):
-                    trans1 = np.array(cp.get_property("atom1_translation"))
-                    trans2 = np.array(cp.get_property("atom2_translation"))
-                    p1 = CriticalPoint([*model.atoms[ind1 - 1].xyz + trans1, "xz", 1])
-                    p2 = CriticalPoint([*cp.xyz, "xz", 1])
-                    p3 = CriticalPoint([*model.atoms[ind2 - 1].xyz + trans2, "xz", 1])
+
+        for cp in model.cps:
+            ind1 = cp.get_property("atom1")
+            ind2 = cp.get_property("atom2")
+            if (ind1 is not None) and (ind2 is not None):
+                trans1 = np.array(cp.get_property("atom1_translation"))
+                trans2 = np.array(cp.get_property("atom2_translation"))
+                p1 = CriticalPoint([*model.atoms[ind1 - 1].xyz + trans1, "xz", 1])
+                p2 = CriticalPoint([*cp.xyz, "xz", 1])
+                p3 = CriticalPoint([*model.atoms[ind2 - 1].xyz + trans2, "xz", 1])
+                if is_add_translations:
                     if np.linalg.norm(trans1) > 0:
                         atom = copy.deepcopy(model.atoms[ind1 - 1])
                         atom.xyz += trans1
@@ -242,13 +243,13 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
                         atom.xyz += trans2
                         atom.tag = "translated"
                         model.add_atom(atom, min_dist=-0.01)
-                    model.add_bond_path_point([p2, p1])
-                    model.add_bond_path_point([p2, p3])
-                    atom_to_atom = model.atoms[ind1 - 1].let + str(ind1) + "-" + model.atoms[ind2 - 1].let + str(ind2)
-                    cp.set_property("atom_to_atom", atom_to_atom)
-                    cp_bp_len = model.point_point_distance(cp.xyz, model.atoms[ind1 - 1].xyz) + \
-                                model.point_point_distance(model.atoms[ind2 - 1].xyz, cp.xyz)
-                    cp.set_property("cp_bp_len", cp_bp_len)
+                model.add_bond_path_point([p2, p1])
+                model.add_bond_path_point([p2, p3])
+                atom_to_atom = model.atoms[ind1 - 1].let + str(ind1) + "-" + model.atoms[ind2 - 1].let + str(ind2)
+                cp.set_property("atom_to_atom", atom_to_atom)
+                cp_bp_len = model.point_point_distance(cp.xyz, model.atoms[ind1 - 1].xyz) + \
+                            model.point_point_distance(model.atoms[ind2 - 1].xyz, cp.xyz)
+                cp.set_property("cp_bp_len", cp_bp_len)
         model.bond_path_points_optimize()
 
 

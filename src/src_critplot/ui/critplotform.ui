@@ -5036,6 +5036,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="is_show_props_for_cp_list">
+          <property name="text">
+           <string>Show properties only for CPs from list</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer_18">
           <property name="orientation">
            <enum>Qt::Vertical</enum>

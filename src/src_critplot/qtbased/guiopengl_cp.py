@@ -17,6 +17,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         # opengl lists
         self.list_for_cp: int = 8
         self.list_for_bondpath: int = 9
+        self.NLists = 10
 
         self.selected_cp = -1
         self.is_cp_available: bool = False
@@ -31,8 +32,8 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_show_bond_path: bool = True
 
         self.is_bcp_property_visible: bool = False
+        self.is_bcp_property_for_all: bool = False
         self.bcp_property: str = ""
-        self.NLists = 10
 
         self.color_of_bcp = (1, 0, 0)
         self.color_of_ccp = (1, 1, 1)
@@ -63,6 +64,10 @@ class GuiOpenGLCP(GuiOpenGLBase):
     def set_width_of_bp(self, width_of_bp):
         self.width_of_bp = width_of_bp
         self.add_bond_path()
+        self.update()
+
+    def set_is_bcp_property_for_all(self, value):
+        self.is_bcp_property_for_all = not value
         self.update()
 
     def set_property_bond_path(self, bond_path) -> None:
@@ -223,20 +228,23 @@ class GuiOpenGLCP(GuiOpenGLBase):
                 if self.is_atomic_numbers_visible:
                     for i in range(0, len(self.main_model.atoms)):
                         at = self.main_model.atoms[i]
-                        text_to_render.append([self.scale_factor * at.x, self.scale_factor * at.y,
-                                               self.scale_factor * at.z, at.let + str(i + 1)])
+                        text_to_render.append([*(self.scale_factor * at.xyz), at.let + str(i + 1)])
 
                 if self.is_bcp_property_visible:
-                    for i in range(0, len(self.main_model.cps)):
-                        at = self.main_model.cps[i]
-                        text_to_render.append([self.scale_factor * at.x, self.scale_factor * at.y,
-                                               self.scale_factor * at.z, at.visible_property])
+                    if self.is_bcp_property_for_all:
+                        for i in range(0, len(self.main_model.cps)):
+                            at = self.main_model.cps[i]
+                            text_to_render.append([*(self.scale_factor * at.xyz), at.visible_property])
+                    else:
+                        for i in range(0, len(self.main_model.cps)):
+                            at = self.main_model.cps[i]
+                            if at.active:
+                                text_to_render.append([*(self.scale_factor * at.xyz), at.visible_property])
 
                 if self.is_atomic_numbers_visible or self.is_bcp_property_visible:
                     self.render_text(text_to_render)
         except Exception as exc:
             print(exc)
-            pass
 
     def get_atom_on_screen(self) -> None:
         point = self.get_point_in_3d(self.x_scene, self.y_scene)

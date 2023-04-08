@@ -1,3 +1,7 @@
+<a href="https://codecov.io/gh/sozykinsa/CritPlot" >
+<img src="https://codecov.io/gh/sozykinsa/CritPlot/branch/main/graph/badge.svg?token=MS7qX21EMW"/>
+</a>
+
 # CritPlot
 
 CritPlot (critical properties plot) - graphical user interface for Critic2 and TOPOND programms. It is a cross-platform program. 

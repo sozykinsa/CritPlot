@@ -64,6 +64,9 @@ class MainForm(QMainWindow):
 
         self.action_on_start: str = None
 
+        self.color_type: str = 'rainbow'
+        self.color_type_scale: str = 'Log'
+
     def start_program(self):  # pragma: no cover
         if self.action_on_start == 'Open':
             self.action_on_start = 'Nothing'
@@ -196,29 +199,6 @@ class MainForm(QMainWindow):
         self.ui.FormModelTableProperties.horizontalHeader().setStyleSheet(self.table_header_stylesheet)
         self.ui.FormModelTableProperties.verticalHeader().setStyleSheet(self.table_header_stylesheet)
 
-        #form_settings_preferred_coordinates_type = QStandardItemModel()
-        #form_settings_preferred_coordinates_type.appendRow(QStandardItem("Cartesian"))
-        #form_settings_preferred_coordinates_type.appendRow(QStandardItem("Fractional"))
-        #form_settings_preferred_coordinates_type.appendRow(QStandardItem("Zmatrix Cartesian"))
-        #self.ui.FormSettingsPreferredCoordinates.setModel(form_settings_preferred_coordinates_type)
-        #self.ui.FormSettingsPreferredCoordinates.setCurrentText(self.coord_type)
-        #self.ui.FormSettingsPreferredCoordinates.currentIndexChanged.connect(
-        #    self.save_state_preferred_coordinates)
-
-        #form_settings_preferred_units_type = QStandardItemModel()
-        #form_settings_preferred_units_type.appendRow(QStandardItem("Bohr"))
-        #form_settings_preferred_units_type.appendRow(QStandardItem("Ang"))
-        #self.ui.FormSettingsPreferredUnits.setModel(form_settings_preferred_units_type)
-        #self.ui.FormSettingsPreferredUnits.setCurrentText(self.units_type)
-        #self.ui.FormSettingsPreferredUnits.currentIndexChanged.connect(self.save_state_preferred_units)
-
-        #form_settings_preferred_lattice_type = QStandardItemModel()
-        #form_settings_preferred_lattice_type.appendRow(QStandardItem("LatticeParameters"))
-        #form_settings_preferred_lattice_type.appendRow(QStandardItem("LatticeVectors"))
-        #self.ui.FormSettingsPreferredLattice.setModel(form_settings_preferred_lattice_type)
-        #self.ui.FormSettingsPreferredLattice.setCurrentText(self.lattice_type)
-        #self.ui.FormSettingsPreferredLattice.currentIndexChanged.connect(self.save_state_preferred_lattice)
-
         self.ui.FormActionsPostComboBonds.currentIndexChanged.connect(self.fill_bonds)
 
         color_type = QStandardItemModel()
@@ -230,7 +210,7 @@ class MainForm(QMainWindow):
             color_type.appendRow(QStandardItem(t))
 
         self.ui.FormSettingsColorsScale.setModel(color_type)
-        self.ui.FormSettingsColorsScale.setCurrentText(self.ColorType)
+        self.ui.FormSettingsColorsScale.setCurrentText(self.color_type)
 
         color_type_scale = QStandardItemModel()
         color_type_scale.appendRow(QStandardItem("Linear"))
@@ -529,11 +509,11 @@ class MainForm(QMainWindow):
         file_name = result[0]
         mask = result[1]
         if file_name is not None:
-            extention = mask.split("(*.")[1].split(")")[0]
-            if not file_name.lower().endswith(extention.lower()):
-                file_name += "." + extention.lower()
-        if extention.lower() in ['png', 'jpg', 'bmp']:
-            file_name = file_name.replace(extention.upper(), extention.lower())
+            extension = mask.split("(*.")[1].split(")")[0]
+            if not file_name.lower().endswith(extension.lower()):
+                file_name += "." + extension.lower()
+        if extension.lower() in ['png', 'jpg', 'bmp']:
+            file_name = file_name.replace(extension.upper(), extension.lower())
         return file_name
 
     def get_file_name_from_open_dialog(self, file_mask):  # pragma: no cover
@@ -851,8 +831,12 @@ class MainForm(QMainWindow):
         self.ui.is_add_translated_atoms.setChecked(state_add_translated)
         self.ui.is_add_translated_atoms.clicked.connect(self.save_state_add_translated)
 
+        state_show_props_for_list = settings.value(SETTINGS_IS_SHOW_ONLY_CP_PROPS_FOR_LIST, False, type=bool)
+        self.ui.is_show_props_for_cp_list.setChecked(state_show_props_for_list)
+        self.ui.is_show_props_for_cp_list.clicked.connect(self.save_state_show_props_for_cp_list)
+
         self.work_dir = str(settings.value(SETTINGS_Folder_CP, "/home"))
-        self.ColorType = str(settings.value(SETTINGS_FormSettingsColorsScale, 'rainbow'))
+        self.color_type = str(settings.value(SETTINGS_FormSettingsColorsScale, 'rainbow'))
         self.ui.FormSettingsColorsScale.currentIndexChanged.connect(self.save_state_colors_scale)
         self.ui.FormSettingsColorsScale.currentTextChanged.connect(self.state_changed_form_settings_colors_scale)
         self.color_type_scale = str(settings.value(SETTINGS_FormSettingsColorsScaleType, 'Log'))
@@ -1127,6 +1111,7 @@ class MainForm(QMainWindow):
         self.show_cp_property()
 
     def show_cp_property(self):  # pragma: no cover
+        self.ui.openGLWidget.set_is_bcp_property_for_all(self.ui.is_show_props_for_cp_list.isChecked())
         if self.ui.show_bcp_text.isChecked():
             prop = self.ui.PropertyForBCPtext.currentText()
             self.ui.openGLWidget.show_cp_property(prop)
@@ -1352,7 +1337,11 @@ class MainForm(QMainWindow):
     def save_state_add_translated(self):  # pragma: no cover
         self.save_property(SETTINGS_IS_ADD_TRANSLATED_ATOMS,
                            self.ui.is_add_translated_atoms.isChecked())
-        # self.ui.openGLWidget.set_atoms_numbered(self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
+
+    def save_state_show_props_for_cp_list(self):  # pragma: no cover
+        self.save_property(SETTINGS_IS_SHOW_ONLY_CP_PROPS_FOR_LIST,
+                           self.ui.is_show_props_for_cp_list.isChecked())
+        self.ui.openGLWidget.set_is_bcp_property_for_all(self.ui.is_show_props_for_cp_list.isChecked())
 
     def save_state_action_on_start(self):  # pragma: no cover
         self.save_property(SETTINGS_FormSettingsActionOnStart, self.action_on_start)
@@ -1661,6 +1650,12 @@ class MainForm(QMainWindow):
             cp.is_visible = True
         self.ui.openGLWidget.add_all_elements()
 
+    def cp_activate(self, cp):
+        self.ui.openGLWidget.main_model.cps[int(cp) - 1].active = True
+
+    def cp_deactivate(self, cp):
+        self.ui.openGLWidget.main_model.cps[int(cp) - 1].active = False
+
     def add_cp_to_list(self):
         new_cp = self.ui.selectedCP.text()
         if new_cp == "...":
@@ -1672,12 +1667,18 @@ class MainForm(QMainWindow):
                 fl = False
         if fl:
             QListWidgetItem(new_cp, self.ui.FormCPlist)
+            self.cp_activate(new_cp)
+            self.ui.openGLWidget.update()
 
     def delete_cp_from_list(self):  # pragma: no cover
-        itemrow = self.ui.FormCPlist.currentRow()
-        self.ui.FormCPlist.takeItem(itemrow)
+        item_row = self.ui.FormCPlist.currentRow()
+        self.cp_deactivate(self.ui.FormCPlist.item(item_row).text())
+        self.ui.FormCPlist.takeItem(item_row)
+        self.ui.openGLWidget.update()
 
     def clear_cp_list(self):  # pragma: no cover
+        for i in range(0, self.ui.FormCPlist.count()):
+            self.cp_deactivate(self.ui.FormCPlist.item(i).text())
         self.ui.FormCPlist.clear()
 
     def delete_cp_from_model(self):
@@ -1685,7 +1686,7 @@ class MainForm(QMainWindow):
         bcp_selected = self.selected_cp()
         self.remove_cp_from_model(model, bcp_selected)
         self.plot_model(self.active_model)
-        self.ui.FormCPlist.clear()
+        self.clear_cp_list()
 
     def leave_cp_in_model(self):
         model = self.models[self.active_model]
@@ -1700,7 +1701,7 @@ class MainForm(QMainWindow):
                 new_cps.append(cp)
         model.cps = new_cps
         self.ui.openGLWidget.selected_cp = -1
-        self.ui.FormCPlist.clear()
+        self.clear_cp_list()
         self.plot_model(self.active_model)
 
     @staticmethod
@@ -1854,6 +1855,7 @@ SETTINGS_PropertyFontSize = 'property/fontsize'
 SETTINGS_PropertyShiftX = 'property/shiftx'
 SETTINGS_PropertyShiftY = 'property/shifty'
 SETTINGS_IS_ADD_TRANSLATED_ATOMS = 'atoms/addtranslated'
+SETTINGS_IS_SHOW_ONLY_CP_PROPS_FOR_LIST = 'cps/showPropsStyle'
 
 SETTINGS_FormSettingsPreferredCoordinatesStyle = 'model/FormSettingsPreferredCoordinatesStyle'
 SETTINGS_FormSettingsPreferredCoordinates = 'model/FormSettingsPreferredCoordinates'
