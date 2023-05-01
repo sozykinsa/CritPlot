@@ -44,10 +44,6 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.selected_cp_callback: Callable = None
         self.main_model = AtomicModelCP()
 
-    def init_params(self, the_object) -> None:
-        super().init_params(the_object)
-        self.selected_cp = the_object.selected_cp
-
     def add_all_elements(self) -> None:
         super().add_all_elements()
         self.add_critical_points()
@@ -91,6 +87,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         super().init_params(ogl_model)
         self.selected_cp = ogl_model.selected_cp
         self.is_bcp_property_visible = ogl_model.is_bcp_property_visible
+        self.is_bcp_property_for_all = ogl_model.is_bcp_property_for_all
         self.bcp_property = ogl_model.bcp_property
         self.is_cp_available = ogl_model.is_cp_available
         self.is_bond_path_available = ogl_model.is_bond_path_available
@@ -99,6 +96,10 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_show_rcp = ogl_model.is_show_rcp
         self.is_show_ncp = ogl_model.is_show_ncp
         self.is_show_nna = ogl_model.is_show_nna
+        self.color_of_bcp = ogl_model.color_of_bcp
+        self.color_of_rcp = ogl_model.color_of_rcp
+        self.color_of_ccp = ogl_model.color_of_ccp
+        self.color_of_bp = ogl_model.color_of_bp
         self.is_show_bond_path = ogl_model.is_show_bond_path
 
     def copy_state(self, ogl_model) -> None:
@@ -234,7 +235,11 @@ class GuiOpenGLCP(GuiOpenGLBase):
                     if self.is_bcp_property_for_all:
                         for i in range(0, len(self.main_model.cps)):
                             at = self.main_model.cps[i]
-                            text_to_render.append([*(self.scale_factor * at.xyz), at.visible_property])
+                            fl = (self.is_show_bcp and (at.let == "xb")) or (self.is_show_ccp and (at.let == "xc")) or \
+                                (self.is_show_rcp and (at.let == "xr")) or (self.is_show_nna and (at.let == "nn")) or \
+                                (self.is_show_ncp and (at.let == "A"))
+                            if fl:
+                                text_to_render.append([*(self.scale_factor * at.xyz), at.visible_property])
                     else:
                         for i in range(0, len(self.main_model.cps)):
                             at = self.main_model.cps[i]
