@@ -17,31 +17,32 @@ class GuiOpenGLCP(GuiOpenGLBase):
         # opengl lists
         self.list_for_cp: int = 8
         self.list_for_bondpath: int = 9
+        self.NLists = 10
 
+        self.selected_cp = -1
         self.is_cp_available: bool = False
         self.is_bond_path_available: bool = False
+        self.width_of_bp: int = 3
+
         self.is_show_bcp: bool = True
         self.is_show_ccp: bool = True
         self.is_show_rcp: bool = True
         self.is_show_ncp: bool = True
         self.is_show_nna: bool = True
         self.is_show_bond_path: bool = True
-        self.selected_cp = -1
+
         self.is_bcp_property_visible: bool = False
+        self.is_bcp_property_for_all: bool = False
         self.bcp_property: str = ""
-        self.NLists = 10
 
         self.color_of_bcp = (1, 0, 0)
         self.color_of_ccp = (1, 1, 1)
         self.color_of_rcp = (1, 1, 0)
         self.color_of_nna = (1, 0, 1)
+        self.color_of_bp = (0, 1, 0)
 
         self.selected_cp_callback: Callable = None
         self.main_model = AtomicModelCP()
-
-    def init_params(self, the_object) -> None:
-        super().init_params(the_object)
-        self.selected_cp = the_object.selected_cp
 
     def add_all_elements(self) -> None:
         super().add_all_elements()
@@ -55,6 +56,15 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_show_ncp = show_ncp
         self.is_show_nna = show_nnatr
         self.add_critical_points()
+
+    def set_width_of_bp(self, width_of_bp):
+        self.width_of_bp = width_of_bp
+        self.add_bond_path()
+        self.update()
+
+    def set_is_bcp_property_for_all(self, value):
+        self.is_bcp_property_for_all = not value
+        self.update()
 
     def set_property_bond_path(self, bond_path) -> None:
         self.is_show_bond_path = bond_path
@@ -77,6 +87,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
         super().init_params(ogl_model)
         self.selected_cp = ogl_model.selected_cp
         self.is_bcp_property_visible = ogl_model.is_bcp_property_visible
+        self.is_bcp_property_for_all = ogl_model.is_bcp_property_for_all
         self.bcp_property = ogl_model.bcp_property
         self.is_cp_available = ogl_model.is_cp_available
         self.is_bond_path_available = ogl_model.is_bond_path_available
@@ -85,6 +96,10 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_show_rcp = ogl_model.is_show_rcp
         self.is_show_ncp = ogl_model.is_show_ncp
         self.is_show_nna = ogl_model.is_show_nna
+        self.color_of_bcp = ogl_model.color_of_bcp
+        self.color_of_rcp = ogl_model.color_of_rcp
+        self.color_of_ccp = ogl_model.color_of_ccp
+        self.color_of_bp = ogl_model.color_of_bp
         self.is_show_bond_path = ogl_model.is_show_bond_path
 
     def copy_state(self, ogl_model) -> None:
@@ -105,9 +120,9 @@ class GuiOpenGLCP(GuiOpenGLBase):
     def add_critical_points(self) -> None:
         gl.glNewList(self.object + self.list_for_cp, gl.GL_COMPILE)
         for cp in self.main_model.cps:
-            if (self.is_show_bcp and (cp.let == "xb")) or (self.is_show_ccp and (cp.let == "xc")) or \
+            if ((self.is_show_bcp and (cp.let == "xb")) or (self.is_show_ccp and (cp.let == "xc")) or \
                     (self.is_show_rcp and (cp.let == "xr")) or (self.is_show_nna and (cp.let == "nn")) or \
-                    (self.is_show_ncp and (cp.let == "A")):
+                    (self.is_show_ncp and (cp.let == "A"))) and cp.is_visible:
                 gl.glPushMatrix()
                 gl.glTranslatef(*(self.scale_factor * cp.xyz))
                 color = (0, 0, 0)
@@ -130,6 +145,12 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.is_cp_available = True
         self.update()
 
+    def set_cp_related_colors(self, color_of_bcp, color_of_rcp, color_of_ccp, color_of_bp) -> None:
+        self.color_of_bcp = color_of_bcp
+        self.color_of_rcp = color_of_rcp
+        self.color_of_ccp = color_of_ccp
+        self.color_of_bp = color_of_bp
+
     def set_color_of_bcp(self, color) -> None:
         self.color_of_bcp = color
         self.add_critical_points()
@@ -145,13 +166,18 @@ class GuiOpenGLCP(GuiOpenGLBase):
         self.add_critical_points()
         self.update()
 
+    def set_color_of_bp(self, color) -> None:
+        self.color_of_bp = color
+        self.add_bond_path()
+        self.update()
+
     def add_bond_path(self) -> None:
         gl.glNewList(self.object + self.list_for_bondpath, gl.GL_COMPILE)
 
         for cp in self.main_model.cps:
-            self.add_critical_path(cp.bonds.get("bond1opt"))
-            self.add_critical_path(cp.bonds.get("bond2opt"))
-
+            if cp.is_visible:
+                self.add_critical_path(cp.bonds.get("bond1opt"))
+                self.add_critical_path(cp.bonds.get("bond2opt"))
         gl.glEndList()
         self.is_bond_path_available = True
         self.update()
@@ -163,11 +189,11 @@ class GuiOpenGLCP(GuiOpenGLBase):
         if np.linalg.norm(bond[0].xyz - bond[-1].xyz) > 4.0:
             return
 
-        gl.glColor3f(0, 1, 0)
+        gl.glColor3f(*self.color_of_bp)
         for i in range(1, len(bond)):
             self.add_bond(self.scale_factor * bond[i - 1].xyz,
                           self.scale_factor * bond[i].xyz,
-                          self.scale_factor * 0.03)
+                          self.scale_factor * 0.01 * self.width_of_bp)
 
     def paintGL(self) -> None:
         self.makeCurrent()
@@ -203,20 +229,27 @@ class GuiOpenGLCP(GuiOpenGLBase):
                 if self.is_atomic_numbers_visible:
                     for i in range(0, len(self.main_model.atoms)):
                         at = self.main_model.atoms[i]
-                        text_to_render.append([self.scale_factor * at.x, self.scale_factor * at.y,
-                                               self.scale_factor * at.z, at.let + str(i + 1)])
+                        text_to_render.append([*(self.scale_factor * at.xyz), at.let + str(i + 1)])
 
                 if self.is_bcp_property_visible:
-                    for i in range(0, len(self.main_model.cps)):
-                        at = self.main_model.cps[i]
-                        text_to_render.append([self.scale_factor * at.x, self.scale_factor * at.y,
-                                               self.scale_factor * at.z, at.visible_property])
+                    if self.is_bcp_property_for_all:
+                        for i in range(0, len(self.main_model.cps)):
+                            at = self.main_model.cps[i]
+                            fl = (self.is_show_bcp and (at.let == "xb")) or (self.is_show_ccp and (at.let == "xc")) or \
+                                (self.is_show_rcp and (at.let == "xr")) or (self.is_show_nna and (at.let == "nn")) or \
+                                (self.is_show_ncp and (at.let == "A"))
+                            if fl:
+                                text_to_render.append([*(self.scale_factor * at.xyz), at.visible_property])
+                    else:
+                        for i in range(0, len(self.main_model.cps)):
+                            at = self.main_model.cps[i]
+                            if at.active:
+                                text_to_render.append([*(self.scale_factor * at.xyz), at.visible_property])
 
                 if self.is_atomic_numbers_visible or self.is_bcp_property_visible:
                     self.render_text(text_to_render)
         except Exception as exc:
             print(exc)
-            pass
 
     def get_atom_on_screen(self) -> None:
         point = self.get_point_in_3d(self.x_scene, self.y_scene)
@@ -229,28 +262,28 @@ class GuiOpenGLCP(GuiOpenGLBase):
         cp_ind, cp_min_r = self.nearest_point(self.scale_factor, cps_visible, point)
         cp_ind = cps_ind[cp_ind]
 
-        if (cp_min_r < 1.4) and (cp_min_r <= atom_min_r):
-            if self.selected_cp == cp_ind:
-                if self.selected_cp > 0:
-                    self.main_model.cps[self.selected_cp].set_selected(False)
-                self.selected_cp = -1
-            else:
-                if self.selected_cp > 0:
-                    self.main_model.cps[self.selected_cp].set_selected(False)
-                self.selected_cp = cp_ind
-                if self.selected_atom > 0:
-                    self.main_model.atoms[self.selected_atom].set_selected(False)
-                self.selected_atom = -1
-                if self.selected_cp > 0:
-                    self.main_model.cps[self.selected_cp].set_selected(True)
-
-        if atom_min_r <= cp_min_r:
+        if cp_min_r < atom_min_r:
+            if cp_min_r < 1.4:
+                if self.selected_cp == cp_ind:
+                    if self.selected_cp > 0:
+                        self.main_model.cps[self.selected_cp].set_selected(False)
+                        self.selected_cp = -1
+                else:
+                    if self.selected_cp > 0:
+                        self.main_model.cps[self.selected_cp].set_selected(False)
+                    self.selected_cp = cp_ind
+                    if self.selected_atom > 0:
+                        self.main_model.atoms[self.selected_atom].set_selected(False)
+                        self.selected_atom = -1
+                    if self.selected_cp > 0:
+                        self.main_model.cps[self.selected_cp].set_selected(True)
+        else:
             self.update_selected_atom(atom_ind, atom_min_r)
 
         self.can_atom_search = False
         selected_atom_was_modified = old_selected != self.selected_atom
         selected_cp_was_modified = old_selected_cp != self.selected_cp
-        if selected_atom_was_modified:
+        if selected_atom_was_modified and (self.selected_atom > 0):
             if self.selected_cp > 0:
                 self.main_model.cps[self.selected_cp].set_selected(False)
                 self.selected_cp = -1

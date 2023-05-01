@@ -12,14 +12,14 @@ from src_critplot.models.atomic_model_cp import AtomicModelCP
 class ImporterExporter(object):
 
     @staticmethod
-    def import_from_file(filename: str):
+    def import_from_file(filename: str, is_add_translations = False):
         """import file"""
         models = []
         is_critic_open = False
         if os.path.exists(filename):
             file_format = helpers.check_format(filename)
             if file_format == "topond_out":
-                models = atomic_data_from_output(filename)
+                models = atomic_data_from_output(filename, is_add_translations)
             elif file_format == "critic_cro":
                 models = structure_from_cro_file(filename)
                 is_critic_open = True

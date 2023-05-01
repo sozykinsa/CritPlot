@@ -58,7 +58,7 @@ def get_atoms(filename):
     return model
 
 
-def parse_cp_data(filename: str, model: AtomicModelCP):
+def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = False):
     """Get critical points data."""
     if os.path.exists(filename):
         file1 = open(filename)
@@ -222,6 +222,7 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                         for j in range(4):
                             file1.readline()
                 row = ""
+
         for cp in model.cps:
             ind1 = cp.get_property("atom1")
             ind2 = cp.get_property("atom2")
@@ -231,16 +232,17 @@ def parse_cp_data(filename: str, model: AtomicModelCP):
                 p1 = CriticalPoint([*model.atoms[ind1 - 1].xyz + trans1, "xz", 1])
                 p2 = CriticalPoint([*cp.xyz, "xz", 1])
                 p3 = CriticalPoint([*model.atoms[ind2 - 1].xyz + trans2, "xz", 1])
-                if np.linalg.norm(trans1) > 0:
-                    atom = copy.deepcopy(model.atoms[ind1 - 1])
-                    atom.xyz += trans1
-                    atom.tag = "translated"
-                    model.add_atom(atom, min_dist=-0.01)
-                if np.linalg.norm(trans2) > 0:
-                    atom = copy.deepcopy(model.atoms[ind2 - 1])
-                    atom.xyz += trans2
-                    atom.tag = "translated"
-                    model.add_atom(atom, min_dist=-0.01)
+                if is_add_translations:
+                    if np.linalg.norm(trans1) > 0:
+                        atom = copy.deepcopy(model.atoms[ind1 - 1])
+                        atom.xyz += trans1
+                        atom.tag = "translated"
+                        model.add_atom(atom, min_dist=-0.01)
+                    if np.linalg.norm(trans2) > 0:
+                        atom = copy.deepcopy(model.atoms[ind2 - 1])
+                        atom.xyz += trans2
+                        atom.tag = "translated"
+                        model.add_atom(atom, min_dist=-0.01)
                 model.add_bond_path_point([p2, p1])
                 model.add_bond_path_point([p2, p3])
                 atom_to_atom = model.atoms[ind1 - 1].let + str(ind1) + "-" + model.atoms[ind2 - 1].let + str(ind2)
@@ -281,7 +283,7 @@ def parse_cp_point(file1, let, text, title):
     text += "lap : " + data[2] + "\n"
     row = file1.readline()
     if len(row) > 1:
-        if let == "xb":  # or (let == "xr"):
+        if let in ["xb", "xr", "xc", "nn"]:
             """KINETIC ENERGY DENSITIES (G,K) :  2.4448E-03 -1.0254E-03"""
             text += "KINETIC ENERGY DENSITIES (G) : " + row.split()[5] + "\n"
             text += "KINETIC ENERGY DENSITIES (K) : " + row.split()[6] + "\n"
@@ -291,11 +293,19 @@ def parse_cp_point(file1, let, text, title):
             row = helpers.spacedel(file1.readline()) + "\n"
             """ELF(PAA)                       :  6.3365E-03"""
             text += helpers.spacedel(row) + "\n"
-            for i in range(8):
-                file1.readline()
-            row = file1.readline()
-            """ELLIPTICITY                    :  1.4410E-01"""
-            text += helpers.spacedel(row)
+            if let == "xb":
+                for i in range(8):
+                    file1.readline()
+                row = file1.readline()
+                """ELLIPTICITY                    :  1.4410E-01"""
+                text += helpers.spacedel(row)
+        else:
+            """TRAJECTORY LENGTH(ANG)         :  7.1474E-01"""
+            text += helpers.spacedel(row) + "\n"
+            row = helpers.spacedel(file1.readline()) + "\n"
+            """INTEGRATION STEPS              :      67"""
+            text += helpers.spacedel(row) + "\n"
+
     cp.set_property("text", text)
     return cp, row
 
@@ -311,7 +321,7 @@ def add_associated_atoms(cp, model, row1):
     cp.set_property("atom2_translation", translation2)
 
 
-def atomic_data_from_output(filename):
+def atomic_data_from_output(filename, is_add_translations = False):
     """Import lattice and positions from TOPOND output."""
     model = AtomicModelCP()
     if os.path.exists(filename):
@@ -320,5 +330,5 @@ def atomic_data_from_output(filename):
         model = get_atoms(filename)
         # print("atoms: ",  len(model.atoms))
         model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
-        parse_cp_data(filename, model)
+        parse_cp_data(filename, model, is_add_translations)
     return [model]
