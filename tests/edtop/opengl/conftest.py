@@ -1,5 +1,5 @@
-from src.src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
-from src.src_critplot.qtbased.mainform import MainForm
+from src.src_edtop.qtbased.guiopengl_cp import GuiOpenGLCP
+from src.src_edtop.qtbased.mainform import MainForm
 from PySide2.QtCore import QCoreApplication, Qt
 
 import pytest

@@ -19,11 +19,11 @@ from PySide2.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QM
 from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem, QTreeWidgetItem
 from PySide2.QtWidgets import QTreeWidgetItemIterator
 
-from src_critplot.utils.import_export import ImporterExporter
-from src_critplot.program import critic2
-from src_critplot.qtbased.image3dexporter import Image3Dexporter
-from src_critplot.ui.about import Ui_DialogAbout as Ui_about
-from src_critplot.ui.form import Ui_MainWindow as Ui_form
+from src_edtop.utils.import_export import ImporterExporter
+from src_edtop.program import critic2
+from src_edtop.qtbased.image3dexporter import Image3Dexporter
+from src_edtop.ui.about import Ui_DialogAbout as Ui_about
+from src_edtop.ui.form import Ui_MainWindow as Ui_form
 
 sys.path.append('')
 
@@ -41,7 +41,6 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_form_elements(self.ui.FormSettingsViewCheckAtomSelection,
                                                self.orientation_model_changed, self.selected_atom_position,
                                                self.selected_atom_changed, 1)
-        self.PDOSdata = []
         self.filename: str = ""
         self.work_dir: str = None
         self.colors_cash = {}
@@ -460,16 +459,16 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.atoms_of_selected_fragment_to_form()
         self.ui.openGLWidget.update_view()
 
-    @staticmethod
-    def clear_qtree_widget(tree):
-        iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
-        while iterator.value():
-            iterator.value().takeChildren()
-            iterator += 1
-        i = tree.topLevelItemCount()
-        while i > -1:
-            tree.takeTopLevelItem(i)
-            i -= 1
+    #@staticmethod
+    #def clear_qtree_widget(tree):
+    #    iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
+    #    while iterator.value():
+    #        iterator.value().takeChildren()
+    #        iterator += 1
+    #    i = tree.topLevelItemCount()
+    #    while i > -1:
+    #        tree.takeTopLevelItem(i)
+    #        i -= 1
 
     def color_to_ui(self, color_ui, state_color):
         r = state_color.split()[0]
@@ -736,27 +735,27 @@ class MainForm(QMainWindow):
         line_width = self.ui.Form2DLineWidth.value()
         self.ui.PyqtGraphWidget.set_styles(title_font_size, axes_font_size, label_font_size, line_width, color)
 
-    def get_color_of_plane(self, minv, maxv, points, cmap, color_scale):
-        Nx = len(points)
-        Ny = len(points[0])
-        minv = float(minv)
-        maxv = float(maxv)
-        colors = []
-        if maxv == minv:
-            return colors
-        for i in range(0, Nx):
-            row = []
-            for j in range(0, Ny):
-                value = float(points[i][j][3])
-                prev = self.colors_cash.get(value)
-                if prev is None:
-                    color = MainForm.get_color(cmap, minv, maxv, value, color_scale)
-                    self.colors_cash[value] = [color[0], color[1], color[2]]
-                    row.append([color[0], color[1], color[2]])
-                else:
-                    row.append(prev)
-            colors.append(row)
-        return colors
+    #def get_color_of_plane(self, minv, maxv, points, cmap, color_scale):
+    #    Nx = len(points)
+    #    Ny = len(points[0])
+    #    minv = float(minv)
+    #    maxv = float(maxv)
+    #    colors = []
+    #    if maxv == minv:
+    #        return colors
+    #    for i in range(0, Nx):
+    #        row = []
+    #        for j in range(0, Ny):
+    #            value = float(points[i][j][3])
+    #            prev = self.colors_cash.get(value)
+    #            if prev is None:
+    #                color = MainForm.get_color(cmap, minv, maxv, value, color_scale)
+    #                self.colors_cash[value] = [color[0], color[1], color[2]]
+    #                row.append([color[0], color[1], color[2]])
+    #            else:
+    #                row.append(prev)
+    #        colors.append(row)
+    #    return colors
 
     @staticmethod
     def get_color(cmap, minv, maxv, value, scale):
@@ -788,10 +787,10 @@ class MainForm(QMainWindow):
 
     def load_settings(self) -> None:
         settings = QSettings()
-        state_check_show_axes = settings.value(SETTINGS_FormSettingsViewCheckShowAxes, False, type=bool)
+        state_check_show_axes = settings.value(SETTINGS_ViewCheckShowAxes, False, type=bool)
         self.ui.FormSettingsViewCheckShowAxes.setChecked(state_check_show_axes)
         self.ui.FormSettingsViewCheckShowAxes.clicked.connect(self.save_state_view_show_axes)
-        state_check_atom_selection = settings.value(SETTINGS_FormSettingsViewCheckAtomSelection, False, type=bool)
+        state_check_atom_selection = settings.value(SETTINGS_ViewCheckAtomSelection, False, type=bool)
         if state_check_atom_selection:
             self.ui.FormSettingsViewCheckAtomSelection.setChecked(True)
         else:
@@ -799,7 +798,7 @@ class MainForm(QMainWindow):
         self.ui.FormSettingsViewCheckAtomSelection.clicked.connect(self.save_state_view_atom_selection)
         self.ui.FormSettingsViewCheckModelMove.clicked.connect(self.save_state_view_atom_selection)
 
-        state_color_bonds_manual = settings.value(SETTINGS_FormSettingsViewRadioColorBondsManual, False, type=bool)
+        state_color_bonds_manual = settings.value(SETTINGS_ViewRadioColorBondsManual, False, type=bool)
         if state_color_bonds_manual:
             self.ui.FormSettingsViewRadioColorBondsManual.setChecked(True)
         else:
@@ -807,19 +806,19 @@ class MainForm(QMainWindow):
         self.ui.FormSettingsViewRadioColorBondsManual.clicked.connect(self.save_state_view_bond_color)
         self.ui.FormSettingsViewRadioColorBondsByAtoms.clicked.connect(self.save_state_view_bond_color)
 
-        state_show_atoms = settings.value(SETTINGS_FormSettingsViewCheckShowAtoms, True, type=bool)
+        state_show_atoms = settings.value(SETTINGS_ViewCheckShowAtoms, True, type=bool)
         self.ui.FormSettingsViewCheckShowAtoms.setChecked(state_show_atoms)
         self.ui.FormSettingsViewCheckShowAtoms.clicked.connect(self.save_state_view_show_atoms)
 
-        state_show_atom_number = settings.value(SETTINGS_FormSettingsViewCheckShowAtomNumber, True, type=bool)
+        state_show_atom_number = settings.value(SETTINGS_ViewCheckShowAtomNumber, True, type=bool)
         self.ui.FormSettingsViewCheckShowAtomNumber.setChecked(state_show_atom_number)
         self.ui.FormSettingsViewCheckShowAtomNumber.clicked.connect(self.save_state_view_show_atom_number)
 
-        state_show_box = settings.value(SETTINGS_FormSettingsViewCheckShowBox, False, type=bool)
+        state_show_box = settings.value(SETTINGS_ViewCheckShowBox, False, type=bool)
         self.ui.FormSettingsViewCheckShowBox.setChecked(state_show_box)
         self.ui.FormSettingsViewCheckShowBox.clicked.connect(self.save_state_view_show_box)
 
-        state_show_bonds = settings.value(SETTINGS_FormSettingsViewCheckShowBonds, True, type=bool)
+        state_show_bonds = settings.value(SETTINGS_ViewCheckShowBonds, True, type=bool)
         self.ui.FormSettingsViewCheckShowBonds.setChecked(state_show_bonds)
         self.ui.FormSettingsViewCheckShowBonds.clicked.connect(self.save_state_view_show_bonds)
 
@@ -836,25 +835,25 @@ class MainForm(QMainWindow):
         self.ui.is_show_props_for_cp_list.clicked.connect(self.save_state_show_props_for_cp_list)
 
         self.work_dir = str(settings.value(SETTINGS_Folder_CP, "/home"))
-        self.color_type = str(settings.value(SETTINGS_FormSettingsColorsScale, 'rainbow'))
+        self.color_type = str(settings.value(SETTINGS_ColorsScale, 'rainbow'))
         self.ui.FormSettingsColorsScale.currentIndexChanged.connect(self.save_state_colors_scale)
         self.ui.FormSettingsColorsScale.currentTextChanged.connect(self.state_changed_form_settings_colors_scale)
-        self.color_type_scale = str(settings.value(SETTINGS_FormSettingsColorsScaleType, 'Log'))
+        self.color_type_scale = str(settings.value(SETTINGS_ColorsScaleType, 'Log'))
         self.ui.FormSettingsColorsScaleType.currentIndexChanged.connect(self.save_state_colors_scale_type)
-        state_form_settings_colors_fixed = settings.value(SETTINGS_FormSettingsColorsFixed, False, type=bool)
+        state_form_settings_colors_fixed = settings.value(SETTINGS_ColorsFixed, False, type=bool)
         self.ui.FormSettingsColorsFixed.setChecked(state_form_settings_colors_fixed)
         self.ui.FormSettingsColorsFixed.clicked.connect(self.save_state_colors_fixed)
-        state_form_settings_colors_fixed_min = settings.value(SETTINGS_FormSettingsColorsFixedMin, '0.1')
+        state_form_settings_colors_fixed_min = settings.value(SETTINGS_ColorsFixedMin, '0.1')
         try:
             min_val = float(state_form_settings_colors_fixed_min)
         except Exception:
             min_val = 0.0001
         self.ui.FormSettingsColorsFixedMin.setValue(min_val)
         self.ui.FormSettingsColorsFixedMin.valueChanged.connect(self.save_state_colors_fixed_min)
-        state_form_settings_colors_fixed_max = settings.value(SETTINGS_FormSettingsColorsFixedMax, '0.2')
+        state_form_settings_colors_fixed_max = settings.value(SETTINGS_ColorsFixedMax, '0.2')
         self.ui.FormSettingsColorsFixedMax.setValue(float(state_form_settings_colors_fixed_max))
         self.ui.FormSettingsColorsFixedMax.valueChanged.connect(self.save_state_colors_fixed_max)
-        state_form_settings_view_spin_bond_width = int(settings.value(SETTINGS_FormSettingsViewSpinBondWidth, '20'))
+        state_form_settings_view_spin_bond_width = int(settings.value(SETTINGS_ViewSpinBondWidth, '20'))
         self.ui.FormSettingsViewSpinBondWidth.setValue(state_form_settings_view_spin_bond_width)
         self.ui.FormSettingsViewSpinBondWidth.valueChanged.connect(self.save_state_view_spin_bond_width)
         state_form_settings_bond_path_width = int(settings.value(SETTINGS_bond_path_width, '3'))
@@ -925,7 +924,7 @@ class MainForm(QMainWindow):
         self.state_color_of_bp = str(settings.value(SETTINGS_color_of_bp, '0 255 0'))
         self.color_to_ui(self.ui.color_bond_path, self.state_color_of_bp)
 
-        self.action_on_start = str(settings.value(SETTINGS_FormSettingsActionOnStart, 'Nothing'))
+        self.action_on_start = str(settings.value(SETTINGS_ActionOnStart, 'Nothing'))
 
         self.perspective_angle = int(settings.value(SETTINGS_perspective_angle, 45))
         self.ui.spin_perspective_angle.setValue(self.perspective_angle)
@@ -1312,25 +1311,25 @@ class MainForm(QMainWindow):
         self.save_property(SETTINGS_Folder_CP, self.work_dir)
 
     def save_state_view_show_axes(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowAxes,
+        self.save_property(SETTINGS_ViewCheckShowAxes,
                            self.ui.FormSettingsViewCheckShowAxes.isChecked())
         self.ui.openGLWidget.set_axes_visible(self.ui.FormSettingsViewCheckShowAxes.isChecked())
 
     def save_state_view_atom_selection(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckAtomSelection,
+        self.save_property(SETTINGS_ViewCheckAtomSelection,
                            self.ui.FormSettingsViewCheckAtomSelection.isChecked())
 
     def save_state_view_bond_color(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewRadioColorBondsManual,
+        self.save_property(SETTINGS_ViewRadioColorBondsManual,
                            self.ui.FormSettingsViewRadioColorBondsManual.isChecked())
         self.ui.openGLWidget.set_bond_color(self.ui.FormSettingsViewRadioColorBondsManual.isChecked())
 
     def save_state_view_show_atoms(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowAtoms, self.ui.FormSettingsViewCheckShowAtoms.isChecked())
+        self.save_property(SETTINGS_ViewCheckShowAtoms, self.ui.FormSettingsViewCheckShowAtoms.isChecked())
         self.ui.openGLWidget.set_atoms_visible(self.ui.FormSettingsViewCheckShowAtoms.isChecked())
 
     def save_state_view_show_atom_number(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowAtomNumber,
+        self.save_property(SETTINGS_ViewCheckShowAtomNumber,
                            self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
         self.ui.openGLWidget.set_atoms_numbered(self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
 
@@ -1344,14 +1343,14 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_is_bcp_property_for_all(self.ui.is_show_props_for_cp_list.isChecked())
 
     def save_state_action_on_start(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsActionOnStart, self.action_on_start)
+        self.save_property(SETTINGS_ActionOnStart, self.action_on_start)
 
     def save_state_view_show_box(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowBox, self.ui.FormSettingsViewCheckShowBox.isChecked())
+        self.save_property(SETTINGS_ViewCheckShowBox, self.ui.FormSettingsViewCheckShowBox.isChecked())
         self.ui.openGLWidget.set_box_visible(self.ui.FormSettingsViewCheckShowBox.isChecked())
 
     def save_state_view_show_bonds(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowBonds, self.ui.FormSettingsViewCheckShowBonds.isChecked())
+        self.save_property(SETTINGS_ViewCheckShowBonds, self.ui.FormSettingsViewCheckShowBonds.isChecked())
         self.ui.openGLWidget.set_bonds_visible(self.ui.FormSettingsViewCheckShowBonds.isChecked())
 
     def save_state_gl_cull_face(self):  # pragma: no cover
@@ -1359,18 +1358,18 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_gl_cull_face(self.ui.OpenGL_GL_CULL_FACE.isChecked())
 
     def save_state_colors_fixed(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsFixed, self.ui.FormSettingsColorsFixed.isChecked())
+        self.save_property(SETTINGS_ColorsFixed, self.ui.FormSettingsColorsFixed.isChecked())
 
     def save_state_view_spin_contour_width(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewSpinContourWidth, self.ui.FormSettingsViewSpinContourWidth.text())
+        self.save_property(SETTINGS_ViewSpinContourWidth, self.ui.FormSettingsViewSpinContourWidth.text())
         self.ui.openGLWidget.set_contour_width(self.ui.FormSettingsViewSpinContourWidth.value() / 1000)
         self.plot_contour()
 
     def save_state_colors_fixed_min(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsFixedMin, self.ui.FormSettingsColorsFixedMin.text())
+        self.save_property(SETTINGS_ColorsFixedMin, self.ui.FormSettingsColorsFixedMin.text())
 
     def save_state_view_spin_bond_width(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewSpinBondWidth, self.ui.FormSettingsViewSpinBondWidth.text())
+        self.save_property(SETTINGS_ViewSpinBondWidth, self.ui.FormSettingsViewSpinBondWidth.text())
         self.ui.openGLWidget.set_bond_width(self.ui.FormSettingsViewSpinBondWidth.value() * 0.005)
 
     def save_state_view_spin_bond_path_width(self):  # pragma: no cover
@@ -1378,23 +1377,23 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_width_of_bp(self.ui.bond_path_width.value())
 
     def save_state_colors_fixed_max(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsFixedMax, self.ui.FormSettingsColorsFixedMax.text())
+        self.save_property(SETTINGS_ColorsFixedMax, self.ui.FormSettingsColorsFixedMax.text())
 
     def save_state_colors_scale(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsScale, self.ui.FormSettingsColorsScale.currentText())
+        self.save_property(SETTINGS_ColorsScale, self.ui.FormSettingsColorsScale.currentText())
         self.colors_cash = {}
 
     def save_state_colors_scale_type(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsScaleType, self.ui.FormSettingsColorsScaleType.currentText())
+        self.save_property(SETTINGS_ColorsScaleType, self.ui.FormSettingsColorsScaleType.currentText())
         self.colors_cash = {}
 
     #def save_state_preferred_coordinates(self):  # pragma: no cover
-    #    self.save_property(SETTINGS_FormSettingsPreferredCoordinates,
+    #    self.save_property(SETTINGS_Coordinates,
     #                       self.ui.FormSettingsPreferredCoordinates.currentText())
     #    self.coord_type = self.ui.FormSettingsPreferredCoordinates.currentText()
 
     def save_state_preferred_coordinates_style(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsPreferredCoordinatesStyle,
+        self.save_property(SETTINGS_CoordinatesStyle,
                            self.ui.PreferredCoordinatesTypeSimple.isChecked())
         if self.ui.PreferredCoordinatesTypeSimple.isChecked():
             self.ui.FormSettingsPreferredCoordinates.setEnabled(True)
@@ -1402,12 +1401,12 @@ class MainForm(QMainWindow):
             self.ui.FormSettingsPreferredCoordinates.setEnabled(False)
 
     def save_state_preferred_units(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsPreferredUnits,
+        self.save_property(SETTINGS_Units,
                            self.ui.FormSettingsPreferredUnits.currentText())
         self.units_type = self.ui.FormSettingsPreferredUnits.currentText()
 
     def save_state_preferred_lattice(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsPreferredLattice, self.ui.FormSettingsPreferredLattice.currentText())
+        self.save_property(SETTINGS_Lattice, self.ui.FormSettingsPreferredLattice.currentText())
         self.lattice_type = self.ui.FormSettingsPreferredLattice.currentText()
 
     @staticmethod
@@ -1453,13 +1452,7 @@ class MainForm(QMainWindow):
             self.history_of_point_selection = []
             self.history_of_point_selection_xyz = []
             text = "Select any atom or critical point."
-            self.ui.selectedCP.setText("...")
-            self.ui.FormSelectedCP_f.setText("...")
-            self.ui.FormSelectedCP_g.setText("...")
-            self.ui.FormSelectedCP_lap.setText("...")
-            self.ui.selectedCP_bpLenLine.setText("...")
-            self.ui.selected_cp_title.setText("...")
-            self.ui.selectedCP_nuclei.setText("...")
+            self.selected_cp_clear()
         else:
             if selected_atom >= 0:
                 sel_atom = model.atoms[selected_atom]
@@ -1494,7 +1487,7 @@ class MainForm(QMainWindow):
                         text_sel += str(round(plane[0], 6)) + "x "
                         if plane[1] > 0:
                             text_sel += "+"
-                        text_sel +=  str(round(plane[1], 6)) + "y "
+                        text_sel += str(round(plane[1], 6)) + "y "
                         if plane[2] > 0:
                             text_sel += "+"
                         text_sel += str(round(plane[2], 6)) + "z "
@@ -1515,8 +1508,8 @@ class MainForm(QMainWindow):
                 text = "Selected critical point: " + str(selected_cp + 1) + " ("
                 cp = model.cps[selected_cp]
 
-                bond1 = cp.get_property("bond1")
-                bond2 = cp.get_property("bond2")
+                bond1 = cp.bonds.get("bond1")
+                bond2 = cp.bonds.get("bond2")
 
                 ind1 = cp.get_property("atom1")
                 ind2 = cp.get_property("atom2")
@@ -1554,6 +1547,15 @@ class MainForm(QMainWindow):
                     text += str(key) + ": " + str(model.cps[selected_cp].get_property(key)) + "\n"
 
         self.ui.atom_and_cp_properties_text.setText(text + text_sel)
+
+    def selected_cp_clear(self):
+        self.ui.selectedCP.setText("...")
+        self.ui.FormSelectedCP_f.setText("...")
+        self.ui.FormSelectedCP_g.setText("...")
+        self.ui.FormSelectedCP_lap.setText("...")
+        self.ui.selectedCP_bpLenLine.setText("...")
+        self.ui.selected_cp_title.setText("...")
+        self.ui.selectedCP_nuclei.setText("...")
 
     def set_manual_colors_default(self):
         self.periodic_table.init_manual_colors()
@@ -1687,6 +1689,7 @@ class MainForm(QMainWindow):
         self.remove_cp_from_model(model, bcp_selected)
         self.plot_model(self.active_model)
         self.clear_cp_list()
+        self.selected_cp_clear()
 
     def leave_cp_in_model(self):
         model = self.models[self.active_model]
@@ -1702,6 +1705,7 @@ class MainForm(QMainWindow):
         model.cps = new_cps
         self.ui.openGLWidget.selected_cp = -1
         self.clear_cp_list()
+        self.selected_cp_clear()
         self.plot_model(self.active_model)
 
     @staticmethod
@@ -1834,42 +1838,42 @@ class MainForm(QMainWindow):
 
 
 SETTINGS_Folder_CP = 'home'
-SETTINGS_FormSettingsColorsScale = 'colors/ColorsScale'
-SETTINGS_FormSettingsColorsFixed = 'colors/ColorsFixed'
-SETTINGS_FormSettingsColorsFixedMin = 'colors/ColorsFixedMin'
-SETTINGS_FormSettingsColorsFixedMax = 'colors/ColorsFixedMax'
-SETTINGS_FormSettingsColorsScaleType = 'colors/ColorsScaleType'
-SETTINGS_FormSettingsViewCheckAtomSelection = 'view/CheckAtomSelection'
-SETTINGS_FormSettingsViewRadioColorBondsManual = 'view/BondsColorType'
-SETTINGS_FormSettingsViewCheckShowAtoms = 'view/CheckShowAtoms'
-SETTINGS_FormSettingsViewCheckShowAtomNumber = 'view/CheckShowAtomNumber'
-SETTINGS_FormSettingsViewCheckShowBox = 'view/CheckShowBox'
-SETTINGS_FormSettingsViewCheckShowAxes = 'view/CheckShowAxes'
-SETTINGS_FormSettingsViewCheckShowBonds = 'view/CheckShowBonds'
-SETTINGS_FormSettingsViewSpinBondWidth = 'view/SpinBondWidth'
-SETTINGS_bond_path_width = 'view/bond_path_width'
-SETTINGS_FormSettingsViewSpinContourWidth = 'view/SpinContourWidth'
-SETTINGS_GlCullFace = 'view/GlCullFace'
-SETTINGS_FormSettingsActionOnStart = 'action/OnStart'
+SETTINGS_ColorsScale = 'ColorsScale'
+SETTINGS_ColorsFixed = 'ColorsFixed'
+SETTINGS_ColorsFixedMin = 'ColorsFixedMin'
+SETTINGS_ColorsFixedMax = 'ColorsFixedMax'
+SETTINGS_ColorsScaleType = 'ColorsScaleType'
+SETTINGS_ViewCheckAtomSelection = 'CheckAtomSelection'
+SETTINGS_ViewRadioColorBondsManual = 'BondsColorType'
+SETTINGS_ViewCheckShowAtoms = 'CheckShowAtoms'
+SETTINGS_ViewCheckShowAtomNumber = 'CheckShowAtomNumber'
+SETTINGS_ViewCheckShowBox = 'CheckShowBox'
+SETTINGS_ViewCheckShowAxes = 'CheckShowAxes'
+SETTINGS_ViewCheckShowBonds = 'CheckShowBonds'
+SETTINGS_ViewSpinBondWidth = 'SpinBondWidth'
+SETTINGS_bond_path_width = 'bond_path_width'
+SETTINGS_ViewSpinContourWidth = 'SpinContourWidth'
+SETTINGS_GlCullFace = 'GlCullFace'
+SETTINGS_ActionOnStart = 'action/OnStart'
 SETTINGS_PropertyFontSize = 'property/fontsize'
 SETTINGS_PropertyShiftX = 'property/shiftx'
 SETTINGS_PropertyShiftY = 'property/shifty'
 SETTINGS_IS_ADD_TRANSLATED_ATOMS = 'atoms/addtranslated'
 SETTINGS_IS_SHOW_ONLY_CP_PROPS_FOR_LIST = 'cps/showPropsStyle'
 
-SETTINGS_FormSettingsPreferredCoordinatesStyle = 'model/FormSettingsPreferredCoordinatesStyle'
-SETTINGS_FormSettingsPreferredCoordinates = 'model/FormSettingsPreferredCoordinates'
-SETTINGS_FormSettingsPreferredUnits = 'model/FormSettingsPreferred/units'
-SETTINGS_FormSettingsPreferredLattice = 'model/FormSettingsPreferredLattice'
+SETTINGS_CoordinatesStyle = 'model/FormSettingsPreferredCoordinatesStyle'
+SETTINGS_Coordinates = 'model/FormSettingsPreferredCoordinates'
+SETTINGS_Units = 'model/FormSettingsPreferred/units'
+SETTINGS_Lattice = 'model/FormSettingsPreferredLattice'
 
 SETTINGS_Color_Of_Atoms_Scheme = 'colors/scheme'
-SETTINGS_Color_Of_Atoms = 'colors/atoms'
-SETTINGS_Color_Of_Bonds = 'colors/bonds'
-SETTINGS_Color_Of_Background = 'colors/background'
-SETTINGS_Color_Of_Box = 'colors/box'
-SETTINGS_Color_Of_Axes = 'colors/axes'
-SETTINGS_color_of_bcp = 'colors/bcp'
-SETTINGS_color_of_rcp = 'colors/rcp'
-SETTINGS_color_of_ccp = 'colors/ccp'
-SETTINGS_color_of_bp = 'colors/bp'
+SETTINGS_Color_Of_Atoms = 'colors_atoms'
+SETTINGS_Color_Of_Bonds = 'colors_bonds'
+SETTINGS_Color_Of_Background = 'colors_background'
+SETTINGS_Color_Of_Box = 'colors_box'
+SETTINGS_Color_Of_Axes = 'colors_axes'
+SETTINGS_color_of_bcp = 'colors_bcp'
+SETTINGS_color_of_rcp = 'colors_rcp'
+SETTINGS_color_of_ccp = 'colors_ccp'
+SETTINGS_color_of_bp = 'colors_bp'
 SETTINGS_perspective_angle = 'perspectiveangle'

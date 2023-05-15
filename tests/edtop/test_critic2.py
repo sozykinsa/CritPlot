@@ -1,5 +1,5 @@
-from src.src_critplot.utils.import_export import ImporterExporter
-from src.src_critplot.models.atomic_model_cp import AtomicModelCP
+from src.src_edtop.utils.import_export import ImporterExporter
+from src.src_edtop.models.atomic_model_cp import AtomicModelCP
 
 
 def test_atoms_of_bond_path(tests_path):

@@ -1,6 +1,6 @@
-from src_critplot.models.atomic_model_cp import AtomicModelCP
-from src_critplot.program.topond import atomic_data_from_output
-from src_critplot.program.critic2 import structure_from_cro_file, parse_bondpaths
+from src_edtop.models.atomic_model_cp import AtomicModelCP
+from src_edtop.program.topond import atomic_data_from_output
+from src_edtop.program.critic2 import structure_from_cro_file, parse_bondpaths
 
 
 def test_critical_points(tests_path):

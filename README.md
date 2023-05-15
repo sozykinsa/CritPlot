@@ -2,18 +2,18 @@
 <img src="https://codecov.io/gh/sozykinsa/CritPlot/branch/main/graph/badge.svg?token=MS7qX21EMW"/>
 </a>
 
-# CritPlot
+# EDTop-Visual
 
-CritPlot (critical properties plot) - graphical user interface for Critic2 and TOPOND programms. It is a cross-platform program. 
+EDTop-Visual (Electron Density Topology Visualizer) - graphical user interface for Critic2 and TOPOND programms. It is a cross-platform program. 
 
 ## Install
-CritPlot program is written in Python 3 (version >= 3.8). It has some dependences. To install the necessary modules, run in the terminal (command line):
+EDTop-Visual program is written in Python 3 (version >= 3.8). It has some dependences. To install the necessary modules, run in the terminal (command line):
 
 pip3 install -r ./requirements.txt
 
 To run the program, type
 
-python3 critplot.py
+python3 edtop-visual.py
 
 ## Problems with Install?
 

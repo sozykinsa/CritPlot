@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'critplotform.ui'
+## Form generated from reading UI file 'edtopform.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -12,9 +12,9 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
-from src_critplot.qtbased.pyqtgraphwidget import PyqtGraphWidget
-from src_critplot.qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
+from src_edtop.qtbased.guiopengl_cp import GuiOpenGLCP
+from src_edtop.qtbased.pyqtgraphwidget import PyqtGraphWidget
+from src_edtop.qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
 
 
 class Ui_MainWindow(object):
@@ -2774,7 +2774,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 642, 734))
+        self.page_8.setGeometry(QRect(0, 0, 248, 153))
         self.verticalLayout_21 = QVBoxLayout(self.page_8)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.frame_15 = QFrame(self.page_8)
@@ -2812,7 +2812,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_8, u"2D Figure")
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 642, 734))
+        self.page.setGeometry(QRect(0, 0, 253, 136))
         self.verticalLayout_19 = QVBoxLayout(self.page)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
         self.frame_14 = QFrame(self.page)
@@ -2910,7 +2910,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"CritPlot - Interface to Critic2 and TOPOND programs", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"EDTop-Visual (Electron Density Topology Visualizer) - graphical user interface for Critic2 and TOPOND programms", None))
         self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"Open", None))
         self.actionOrtho.setText(QCoreApplication.translate("MainWindow", u"Ortho", None))
         self.actionPerspective.setText(QCoreApplication.translate("MainWindow", u"Perspective", None))

@@ -6,7 +6,7 @@ import math
 import numpy as np
 from copy import deepcopy
 from numpy.linalg import inv
-from src_critplot.models.critical_point import CriticalPoint
+from src_edtop.models.critical_point import CriticalPoint
 from core_gui_atomistic.atom import Atom
 from core_gui_atomistic.atomic_model import AtomicModel
 from core_gui_atomistic import helpers
@@ -92,7 +92,7 @@ class AtomicModelCP(AtomicModel):
 
                     ind1 = self.cps[i].get_property("atom1")
                     ind2 = self.cps[i].get_property("atom2")
-                    if (ind1 < len(self.atoms)) and (ind2 < len(self.atoms)):
+                    if (ind1 <= len(self.atoms)) and (ind2 <= len(self.atoms)):
                         p1 = CriticalPoint([*self.atoms[ind1 - 1].xyz, "xz", 1])
                         p2 = CriticalPoint([*self.cps[i].xyz, "xz", 1])
                         p3 = CriticalPoint([*self.atoms[ind2 - 1].xyz, "xz", 1])

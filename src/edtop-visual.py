@@ -12,7 +12,7 @@ from PySide2.QtCore import QCoreApplication, Qt
 from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import QApplication
 
-from src_critplot.qtbased.mainform import MainForm
+from src_edtop.qtbased.mainform import MainForm
 
 sys.path.append('.')
 
@@ -20,7 +20,7 @@ is_with_figure = True
 
 ORGANIZATION_NAME = 'SUSU'
 ORGANIZATION_DOMAIN = 'susu.ru'
-APPLICATION_NAME = 'gui4dft'
+APPLICATION_NAME = 'CritPlot'
 
 QCoreApplication.setApplicationName(ORGANIZATION_NAME)
 QCoreApplication.setOrganizationDomain(ORGANIZATION_DOMAIN)

@@ -1,0 +1,1 @@
+pyside2-uic edtopform.ui -o ./form.py

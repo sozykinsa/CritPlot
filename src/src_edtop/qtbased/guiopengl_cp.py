@@ -7,7 +7,7 @@ import OpenGL.GLU as glu
 import numpy as np
 from core_gui_atomistic.guiopenglbase import GuiOpenGLBase
 from core_gui_atomistic.helpers import is_number
-from src_critplot.models.atomic_model_cp import AtomicModelCP
+from src_edtop.models.atomic_model_cp import AtomicModelCP
 
 
 class GuiOpenGLCP(GuiOpenGLBase):

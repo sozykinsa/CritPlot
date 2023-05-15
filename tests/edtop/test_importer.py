@@ -1,4 +1,4 @@
-from src.src_critplot.utils.import_export import ImporterExporter
+from src.src_edtop.utils.import_export import ImporterExporter
 from core_gui_atomistic import helpers
 
 

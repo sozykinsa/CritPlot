@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>CritPlot - Interface to Critic2 and TOPOND programs</string>
+   <string>EDTop-Visual (Electron Density Topology Visualizer) - graphical user interface for Critic2 and TOPOND programms</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -5112,8 +5112,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>642</width>
-         <height>734</height>
+         <width>248</width>
+         <height>153</height>
         </rect>
        </property>
        <attribute name="label">
@@ -5184,8 +5184,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>642</width>
-         <height>734</height>
+         <width>253</width>
+         <height>136</height>
         </rect>
        </property>
        <attribute name="label">
