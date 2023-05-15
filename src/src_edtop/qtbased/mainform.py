@@ -217,6 +217,8 @@ class MainForm(QMainWindow):
         self.ui.FormSettingsColorsScaleType.setModel(color_type_scale)
         self.ui.FormSettingsColorsScaleType.setCurrentText(self.color_type_scale)
 
+        self.fill_cp_graph_types()
+
         self.ui.FormActionsPosTableBonds.setColumnCount(2)
         self.ui.FormActionsPosTableBonds.setHorizontalHeaderLabels(["Bond", "Lenght"])
         self.ui.FormActionsPosTableBonds.setColumnWidth(0, 120)
@@ -613,6 +615,11 @@ class MainForm(QMainWindow):
         self.ui.FormModifyCellEditC3.setValue(model.lat_vector3[2])
 
     def fill_cps(self):
+
+        cp_types = ["All", "C-C"]
+
+        self.fill_cp_graph_types(cp_types)
+
         is_bcp = False
         is_ccp = False
         is_rcp = False
@@ -661,6 +668,13 @@ class MainForm(QMainWindow):
         for i in range(0, len(properties)):
             for j in range(len(properties[i])):
                 cps_table.setItem(i, j, QTableWidgetItem(properties[i][j]))
+
+    def fill_cp_graph_types(self, cp_types=["All"]):
+        cp_type_gr = QStandardItemModel()
+        for item in cp_types:
+            cp_type_gr.appendRow(QStandardItem(item))
+        self.ui.bcp_for_figure.setModel(cp_type_gr)
+        self.ui.bcp_for_figure.setCurrentText("All")
 
     def fill_bonds(self):
         c1, c2 = self.fill_bonds_charges()
@@ -1695,7 +1709,7 @@ class MainForm(QMainWindow):
         model = self.models[self.active_model]
         new_cps = []
         sel_cps = self.selected_cp()
-        for cp  in model.cps:
+        for cp in model.cps:
             f = False
             for b in sel_cps:
                 if cp.to_string() == b.to_string():
