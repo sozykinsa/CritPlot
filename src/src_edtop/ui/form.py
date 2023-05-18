@@ -13,8 +13,8 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 from src_edtop.qtbased.guiopengl_cp import GuiOpenGLCP
-from src_edtop.qtbased.pyqtgraphwidget import PyqtGraphWidget
-from src_edtop.qtbased.pyqtgraphwidgetimage import PyqtGraphWidgetImage
+from core_gui_atomistic_qt.pyqtgraphwidget import PyqtGraphWidget
+from core_gui_atomistic_qt.pyqtgraphwidgetimage import PyqtGraphWidgetImage
 
 
 class Ui_MainWindow(object):
@@ -1884,6 +1884,28 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_18.addWidget(self.frame_4)
 
+        self.frame_17 = QFrame(self.groupBox_11)
+        self.frame_17.setObjectName(u"frame_17")
+        self.frame_17.setMinimumSize(QSize(0, 0))
+        self.frame_17.setFrameShape(QFrame.StyledPanel)
+        self.frame_17.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_14 = QHBoxLayout(self.frame_17)
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.horizontalLayout_14.setContentsMargins(0, 0, 0, 0)
+        self.show_bp_if_avail = QRadioButton(self.frame_17)
+        self.show_bp_if_avail.setObjectName(u"show_bp_if_avail")
+        self.show_bp_if_avail.setChecked(True)
+
+        self.horizontalLayout_14.addWidget(self.show_bp_if_avail)
+
+        self.radioButton_2 = QRadioButton(self.frame_17)
+        self.radioButton_2.setObjectName(u"radioButton_2")
+
+        self.horizontalLayout_14.addWidget(self.radioButton_2)
+
+
+        self.verticalLayout_18.addWidget(self.frame_17)
+
         self.frame_69 = QFrame(self.groupBox_11)
         self.frame_69.setObjectName(u"frame_69")
         self.frame_69.setMinimumSize(QSize(200, 0))
@@ -2774,7 +2796,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 248, 153))
+        self.page_8.setGeometry(QRect(0, 0, 642, 734))
         self.verticalLayout_21 = QVBoxLayout(self.page_8)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.frame_15 = QFrame(self.page_8)
@@ -2812,7 +2834,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_8, u"2D Figure")
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 253, 136))
+        self.page.setGeometry(QRect(0, 0, 642, 734))
         self.verticalLayout_19 = QVBoxLayout(self.page)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
         self.frame_14 = QFrame(self.page)
@@ -3063,6 +3085,8 @@ class Ui_MainWindow(object):
         self.show_ccp.setText(QCoreApplication.translate("MainWindow", u"CCP", None))
         self.groupBox_11.setTitle(QCoreApplication.translate("MainWindow", u"Bond path", None))
         self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Show", None))
+        self.show_bp_if_avail.setText(QCoreApplication.translate("MainWindow", u"bond path (if available)", None))
+        self.radioButton_2.setText(QCoreApplication.translate("MainWindow", u"only atom-atom lines", None))
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"Width", None))
         self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"BCP property", None))
         self.groupBox_34.setTitle(QCoreApplication.translate("MainWindow", u"OpenGl", None))

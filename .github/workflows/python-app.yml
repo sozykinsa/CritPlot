@@ -57,7 +57,7 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Test with pytest
         run: |
-          python -m pytest tests --cov=src/core_gui_atomistic --cov-report=xml --cov-report=term-missing --ignore=tests/critplot
+          python -m pytest tests --cov=src/core_gui_atomistic --cov=src/core_gui_atomistic_qt --cov-report=xml --cov-report=term-missing --ignore=tests/edtop
 
   test-linux:
 
@@ -78,7 +78,7 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Test with pytest
       run: |
-        python -m pytest tests --cov=src/src_edtop --cov-report=xml --cov-report=term-missing --ignore=src/core_gui_atomistic --ignore=tests/edtop/opengl
+        python -m pytest tests --cov=src/src_edtop --cov-report=xml --cov-report=term-missing --ignore=src/core_gui_atomistic --ignore=src/core_gui_atomistic_qt --ignore=tests/edtop/opengl
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -109,7 +109,7 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Test with pytest
       run: |
-        python -m pytest tests --color=yes --cov=src/src_edtop --cov-report=xml --cov-report=term-missing --ignore=tests/edtop/opengl
+        python -m pytest tests --ignore=src/core_gui_atomistic_qt --ignore=tests/edtop/opengl
 
   test-mac:
 
@@ -128,4 +128,4 @@ jobs:
             pip install -r requirements-dev.txt
     - name: Test with pytest
       run: |
-        python -m pytest tests --color=yes --cov=src/src_edtop --cov-report=xml --cov-report=term-missing --ignore=tests/edtop/opengl
+        python -m pytest tests --ignore=src/core_gui_atomistic_qt --ignore=tests/edtop/opengl

@@ -3409,6 +3409,53 @@
                 </widget>
                </item>
                <item>
+                <widget class="QFrame" name="frame_17">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_14">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QRadioButton" name="show_bp_if_avail">
+                    <property name="text">
+                     <string>bond path (if available)</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="radioButton_2">
+                    <property name="text">
+                     <string>only atom-atom lines</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
                 <widget class="QFrame" name="frame_69">
                  <property name="minimumSize">
                   <size>
@@ -5112,8 +5159,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>248</width>
-         <height>153</height>
+         <width>642</width>
+         <height>734</height>
         </rect>
        </property>
        <attribute name="label">
@@ -5184,8 +5231,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>253</width>
-         <height>136</height>
+         <width>642</width>
+         <height>734</height>
         </rect>
        </property>
        <attribute name="label">

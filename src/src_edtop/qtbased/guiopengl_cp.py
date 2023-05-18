@@ -5,7 +5,7 @@ from typing import Callable
 import OpenGL.GL as gl
 import OpenGL.GLU as glu
 import numpy as np
-from core_gui_atomistic.guiopenglbase import GuiOpenGLBase
+from core_gui_atomistic_qt.guiopenglbase import GuiOpenGLBase
 from core_gui_atomistic.helpers import is_number
 from src_edtop.models.atomic_model_cp import AtomicModelCP
 
@@ -176,20 +176,20 @@ class GuiOpenGLCP(GuiOpenGLBase):
 
         for cp in self.main_model.cps:
             if cp.is_visible:
-                self.add_critical_path(cp.bonds.get("bond1opt"))
-                self.add_critical_path(cp.bonds.get("bond2opt"))
+                self.add_critical_path(cp.bonds.get("bond1opt"), self.color_of_bp)
+                self.add_critical_path(cp.bonds.get("bond2opt"), self.color_of_bp)
         gl.glEndList()
         self.is_bond_path_available = True
         self.update()
 
-    def add_critical_path(self, bond) -> None:
+    def add_critical_path(self, bond, color) -> None:
         if not bond:
             return
 
         if np.linalg.norm(bond[0].xyz - bond[-1].xyz) > 4.0:
             return
 
-        gl.glColor3f(*self.color_of_bp)
+        gl.glColor3f(*color)
         for i in range(1, len(bond)):
             self.add_bond(self.scale_factor * bond[i - 1].xyz,
                           self.scale_factor * bond[i].xyz,
