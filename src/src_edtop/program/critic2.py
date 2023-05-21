@@ -4,6 +4,8 @@ import copy
 import os
 import math
 import numpy as np
+import numpy.linalg
+
 from core_gui_atomistic import helpers
 from src_edtop.models.critical_point import CriticalPoint
 from core_gui_atomistic.periodic_table import TPeriodTable
@@ -123,7 +125,7 @@ def structure_from_cro_file(filename):
                 model.add_bond_path_point([p2, p3])
                 atom_to_atom = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
                 cp.set_property("atom_to_atom", atom_to_atom)
-                bond_len = model.point_point_distance(model.cps[ind2 - 1].xyz, model.cps[ind1 - 1].xyz)
+                bond_len = np.linalg.norm(model.cps[ind2 - 1].xyz + trans1 - model.cps[ind1 - 1].xyz + trans2)
                 cp.set_property("cp_bp_len", bond_len)
         model.bond_path_points_optimize()
     return [model]
