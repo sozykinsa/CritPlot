@@ -518,12 +518,12 @@
               <item>
                <widget class="QLabel" name="label_111">
                 <property name="text">
-                 <string>Bond path length (lines):</string>
+                 <string>Bond length, A:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="selectedCP_bpLenLine">
+               <widget class="QLabel" name="selected_cp_bond_len">
                 <property name="text">
                  <string>...</string>
                 </property>

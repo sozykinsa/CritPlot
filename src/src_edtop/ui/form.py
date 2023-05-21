@@ -318,10 +318,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_156.addWidget(self.label_111)
 
-        self.selectedCP_bpLenLine = QLabel(self.frame_109)
-        self.selectedCP_bpLenLine.setObjectName(u"selectedCP_bpLenLine")
+        self.selected_cp_bond_len = QLabel(self.frame_109)
+        self.selected_cp_bond_len.setObjectName(u"selected_cp_bond_len")
 
-        self.horizontalLayout_156.addWidget(self.selectedCP_bpLenLine)
+        self.horizontalLayout_156.addWidget(self.selected_cp_bond_len)
 
 
         self.verticalLayout_16.addWidget(self.frame_109)
@@ -2959,8 +2959,8 @@ class Ui_MainWindow(object):
         self.selected_cp_title.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_107.setText(QCoreApplication.translate("MainWindow", u"Nuclei:", None))
         self.selectedCP_nuclei.setText(QCoreApplication.translate("MainWindow", u"...", None))
-        self.label_111.setText(QCoreApplication.translate("MainWindow", u"Bond path length (lines):", None))
-        self.selectedCP_bpLenLine.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.label_111.setText(QCoreApplication.translate("MainWindow", u"Bond length, A:", None))
+        self.selected_cp_bond_len.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_84.setText(QCoreApplication.translate("MainWindow", u"Field:", None))
         self.FormSelectedCP_f.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_85.setText(QCoreApplication.translate("MainWindow", u"|grad|:", None))

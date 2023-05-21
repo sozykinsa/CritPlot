@@ -1538,10 +1538,10 @@ class MainForm(QMainWindow):
                         text += str(len(bond1) + len(bond2)) + " points\n"
                     if dist is not None:
                         dist_line = round(dist, 4)
-                        self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
+                        self.ui.selected_cp_bond_len.setText(str(dist_line) + " A")
                         self.ui.selectedCP_nuclei.setText(atom_to_atom)
                     else:
-                        self.ui.selectedCP_bpLenLine.setText("...")
+                        self.ui.selected_cp_bond_len.setText("...")
                         self.ui.selectedCP_nuclei.setText("...")
                 else:
                     text += ")\n"
@@ -1567,7 +1567,7 @@ class MainForm(QMainWindow):
         self.ui.FormSelectedCP_f.setText("...")
         self.ui.FormSelectedCP_g.setText("...")
         self.ui.FormSelectedCP_lap.setText("...")
-        self.ui.selectedCP_bpLenLine.setText("...")
+        self.ui.selected_cp_bond_len.setText("...")
         self.ui.selected_cp_title.setText("...")
         self.ui.selectedCP_nuclei.setText("...")
 

@@ -247,9 +247,8 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
                 model.add_bond_path_point([p2, p3])
                 atom_to_atom = model.atoms[ind1 - 1].let + str(ind1) + "-" + model.atoms[ind2 - 1].let + str(ind2)
                 cp.set_property("atom_to_atom", atom_to_atom)
-                cp_bp_len = model.point_point_distance(cp.xyz, model.atoms[ind1 - 1].xyz) + \
-                            model.point_point_distance(model.atoms[ind2 - 1].xyz, cp.xyz)
-                cp.set_property("cp_bp_len", cp_bp_len)
+                bond_len = model.point_point_distance(model.atoms[ind2 - 1].xyz, model.atoms[ind1 - 1].xyz)
+                cp.set_property("cp_bp_len", bond_len)
         model.bond_path_points_optimize()
 
 
