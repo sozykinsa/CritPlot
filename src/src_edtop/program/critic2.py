@@ -19,7 +19,7 @@ def structure_from_cro_file(filename):
     #cp  ncp   typ        position (cryst. coords.)            end1 (lvec)      end2 (lvec)
     1      1    n   0.41201875    0.19237040    0.32843532
     """
-    # print("structure_from_cro_file start")
+    #  print("structure_from_cro_file start")
     period_table = TPeriodTable()
     model = AtomicModelCP()
     if os.path.exists(filename) and filename.endswith("cro"):
@@ -125,7 +125,7 @@ def structure_from_cro_file(filename):
                 model.add_bond_path_point([p2, p3])
                 atom_to_atom = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
                 cp.set_property("atom_to_atom", atom_to_atom)
-                bond_len = np.linalg.norm(model.cps[ind2 - 1].xyz + trans1 - model.cps[ind1 - 1].xyz + trans2)
+                bond_len = np.linalg.norm(model.cps[ind2 - 1].xyz + trans2 - model.cps[ind1 - 1].xyz - trans1)
                 cp.set_property("cp_bp_len", bond_len)
         model.bond_path_points_optimize()
     return [model]

@@ -44,15 +44,28 @@ class AtomicModelCP(AtomicModel):
         bond = deepcopy(cp.bonds.get(b))
         if bond is None:
             return
-        i = 2
-        while (i < len(bond)) and (len(bond) > 1):
-            m = (bond[i].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y) * (bond[i - 2].z - bond[i - 1].z)
-            j = (bond[i].y - bond[i - 1].y) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].z - bond[i - 1].z)
-            k = (bond[i].z - bond[i - 1].z) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y)
-            i += 1
-            if (math.fabs(m - j) < 1e-6) and (math.fabs(m - k) < 1e-6):
-                bond.pop(i - 2)
-                i -= 1
+        # i = 2
+        # while (i < len(bond)) and (len(bond) > 1):
+        #     m = (bond[i].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y) * (bond[i - 2].z - bond[i - 1].z)
+        #     j = (bond[i].y - bond[i - 1].y) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].z - bond[i - 1].z)
+        #     k = (bond[i].z - bond[i - 1].z) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y)
+        #     i += 1
+        #     if (math.fabs(m - j) < 1e-6) and (math.fabs(m - k) < 1e-6):
+        #         bond.pop(i - 2)
+        #         i -= 1
+
+        if len(bond) > 2:
+            k = 3
+            i = 0
+            while (i < len(bond)) and (len(bond) > 1):
+                for j in range(1, k):
+                    if (i + 1 < len(bond)):
+                        bond.pop(i + 1)
+                for j in range(k):
+                    if (i + 2 < len(bond)):
+                        bond.pop(i + 2)
+                i += 2
+
         cp.bonds[b + "opt"] = bond
 
     def move(self, dl: np.ndarray):

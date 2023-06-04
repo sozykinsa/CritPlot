@@ -176,23 +176,30 @@ class GuiOpenGLCP(GuiOpenGLBase):
 
         for cp in self.main_model.cps:
             if cp.is_visible:
-                self.add_critical_path(cp.bonds.get("bond1opt"), self.color_of_bp)
-                self.add_critical_path(cp.bonds.get("bond2opt"), self.color_of_bp)
+                self.add_critical_path(cp.bonds.get("bond1opt"))
+                self.add_critical_path(cp.bonds.get("bond2opt"))
         gl.glEndList()
         self.is_bond_path_available = True
         self.update()
 
-    def add_critical_path(self, bond, color) -> None:
+    def add_critical_path(self, bond) -> None:
         if not bond:
             return
 
         if np.linalg.norm(bond[0].xyz - bond[-1].xyz) > 4.0:
             return
 
-        gl.glColor3f(*color)
-        for i in range(1, len(bond)):
-            self.add_bond(self.scale_factor * bond[i - 1].xyz,
-                          self.scale_factor * bond[i].xyz,
+        gl.glColor3f(*self.color_of_bp)
+        if len(bond) > 2:
+            i = 1
+            while i < len(bond):
+                self.add_bond(self.scale_factor * bond[i - 1].xyz,
+                              self.scale_factor * bond[i].xyz,
+                              self.scale_factor * 0.01 * self.width_of_bp)
+                i += 2
+        else:
+            self.add_bond(self.scale_factor * bond[0].xyz,
+                          self.scale_factor * bond[1].xyz,
                           self.scale_factor * 0.01 * self.width_of_bp)
 
     def paintGL(self) -> None:

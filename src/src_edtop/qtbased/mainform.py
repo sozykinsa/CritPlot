@@ -785,12 +785,6 @@ class MainForm(QMainWindow):
             return cmap((math.log10(value) - math.log10(minv)) / (math.log10(maxv) - math.log10(minv)))
         return QColor.fromRgb(0, 0, 0, 1).getRgbF()
 
-    def get_fdf_file_name(self):  # pragma: no cover
-        fname = self.get_file_name_from_open_dialog("FDF files (*.fdf)")
-        if not fname.endswith(".fdf"):
-            fname += ".fdf"
-        return fname
-
     @staticmethod
     def get_color_from_setting(strcolor: str):
         r = strcolor.split()[0]
@@ -1007,7 +1001,7 @@ class MainForm(QMainWindow):
             os.execl(sys.executable, sys.executable, *sys.argv)
         self.ui.Form3Dand2DTabs.setCurrentIndex(0)
         if not file_name:
-            file_name = self.get_file_name_from_open_dialog("All files (*)")
+            file_name = self.get_file_name_from_open_dialog("Critic2 output (*.cro);;TOPOND output (*.outp)")
         if os.path.exists(file_name):
             self.filename = file_name
             self.work_dir = os.path.dirname(file_name)
