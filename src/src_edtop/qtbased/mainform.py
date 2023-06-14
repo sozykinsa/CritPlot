@@ -592,6 +592,13 @@ class MainForm(QMainWindow):
         model = self.ui.openGLWidget.get_model()
         properties.append(["Atoms", str(model.n_atoms())])
         properties.append(["CPs", str(model.n_cps())])
+        properties.append(["(3,-3)", str(model.n_ncp())])
+        properties.append(["(3,-1) bcp", str(model.n_bcp())])
+        properties.append(["(3,+1) rcp", str(model.n_rcp())])
+        properties.append(["(3,+3) ccp", str(model.n_cps())])
+        rule_text = str(model.n_ncp()) + "+" + str(model.n_bcp()) + "-" + str(model.n_rcp()) + "-" + str(model.n_ccp())
+        rule_int = model.n_ncp() + model.n_bcp() - model.n_rcp() - model.n_ccp()
+        properties.append(["Poincare-Hoff", rule_text + "=" + str(rule_int)])
         properties.append(["LatVect1", str(model.lat_vector1)])
         properties.append(["LatVect2", str(model.lat_vector2)])
         properties.append(["LatVect3", str(model.lat_vector3)])
@@ -1071,7 +1078,7 @@ class MainForm(QMainWindow):
                 if str(key) not in standart_prop:
                     atom_prop_type.appendRow(QStandardItem(str(key)))
             self.ui.PropertyForColorOfAtom.setModel(atom_prop_type)
-        if self.ui.openGLWidget.main_model.n_bcp() > 0:
+        if len(self.ui.openGLWidget.main_model.cps) > 0:
             bcp = self.ui.openGLWidget.main_model.cps[0]
             bcp_prop_type = QStandardItemModel()
             for key in bcp.properties:

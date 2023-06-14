@@ -9,6 +9,7 @@ def spacedel(row: str) -> str:
     """Removing extra spaces, line breaks."""
     row = row.replace('\n', ' ')
     row = row.replace('\r', ' ')
+    row = row.replace('\t', ' ')
     row = row.strip()
     while row.find('  ') >= 0:
         row = row.replace('  ', ' ')
@@ -245,6 +246,7 @@ def check_format(filename):
         return "unknown"
 
     name = filename.lower()
+    print(name)
     if name.endswith(".fdf"):
         return "SIESTAfdf"
 
@@ -302,5 +304,8 @@ def check_format(filename):
 
     if name.endswith("cro"):
         return "critic_cro"
+
+    if name.endswith(".struct"):
+        return "WIENstruct"
 
     return "unknown"

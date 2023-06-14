@@ -93,6 +93,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
          </widget>
         </item>
         <item>
@@ -315,7 +318,7 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
+              <enum>QFrame::Plain</enum>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_183">
               <property name="leftMargin">
@@ -401,7 +404,7 @@
            <item>
             <widget class="QFrame" name="frame_110">
              <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+              <enum>QFrame::Box</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
@@ -471,7 +474,7 @@
            <item>
             <widget class="QFrame" name="frame_87">
              <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+              <enum>QFrame::Box</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
@@ -535,7 +538,7 @@
            <item>
             <widget class="QFrame" name="frame_111">
              <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+              <enum>QFrame::Box</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
@@ -550,7 +553,7 @@
               <item>
                <widget class="QLabel" name="label_84">
                 <property name="text">
-                 <string>Field:</string>
+                 <string>RHO:</string>
                 </property>
                </widget>
               </item>
@@ -599,7 +602,7 @@
            <item>
             <widget class="QFrame" name="frame_113">
              <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+              <enum>QFrame::Box</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
@@ -620,6 +623,9 @@
               </item>
               <item>
                <widget class="QLabel" name="FormSelectedCP_lap">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
                 <property name="text">
                  <string>...</string>
                 </property>

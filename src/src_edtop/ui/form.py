@@ -85,6 +85,7 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.FormModelTableProperties.sizePolicy().hasHeightForWidth())
         self.FormModelTableProperties.setSizePolicy(sizePolicy1)
+        self.FormModelTableProperties.setFrameShadow(QFrame.Plain)
 
         self.verticalLayout.addWidget(self.FormModelTableProperties)
 
@@ -202,7 +203,7 @@ class Ui_MainWindow(object):
         self.frame_168 = QFrame(self.groupBox_32)
         self.frame_168.setObjectName(u"frame_168")
         self.frame_168.setFrameShape(QFrame.NoFrame)
-        self.frame_168.setFrameShadow(QFrame.Raised)
+        self.frame_168.setFrameShadow(QFrame.Plain)
         self.horizontalLayout_183 = QHBoxLayout(self.frame_168)
         self.horizontalLayout_183.setObjectName(u"horizontalLayout_183")
         self.horizontalLayout_183.setContentsMargins(0, 0, 0, 0)
@@ -247,7 +248,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
         self.frame_110 = QFrame(self.groupBox_30)
         self.frame_110.setObjectName(u"frame_110")
-        self.frame_110.setFrameShape(QFrame.NoFrame)
+        self.frame_110.setFrameShape(QFrame.Box)
         self.frame_110.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_112 = QHBoxLayout(self.frame_110)
         self.horizontalLayout_112.setObjectName(u"horizontalLayout_112")
@@ -288,7 +289,7 @@ class Ui_MainWindow(object):
 
         self.frame_87 = QFrame(self.groupBox_30)
         self.frame_87.setObjectName(u"frame_87")
-        self.frame_87.setFrameShape(QFrame.NoFrame)
+        self.frame_87.setFrameShape(QFrame.Box)
         self.frame_87.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_88 = QHBoxLayout(self.frame_87)
         self.horizontalLayout_88.setObjectName(u"horizontalLayout_88")
@@ -328,7 +329,7 @@ class Ui_MainWindow(object):
 
         self.frame_111 = QFrame(self.groupBox_30)
         self.frame_111.setObjectName(u"frame_111")
-        self.frame_111.setFrameShape(QFrame.NoFrame)
+        self.frame_111.setFrameShape(QFrame.Box)
         self.frame_111.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_113 = QHBoxLayout(self.frame_111)
         self.horizontalLayout_113.setObjectName(u"horizontalLayout_113")
@@ -368,7 +369,7 @@ class Ui_MainWindow(object):
 
         self.frame_113 = QFrame(self.groupBox_30)
         self.frame_113.setObjectName(u"frame_113")
-        self.frame_113.setFrameShape(QFrame.NoFrame)
+        self.frame_113.setFrameShape(QFrame.Box)
         self.frame_113.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_115 = QHBoxLayout(self.frame_113)
         self.horizontalLayout_115.setObjectName(u"horizontalLayout_115")
@@ -380,6 +381,7 @@ class Ui_MainWindow(object):
 
         self.FormSelectedCP_lap = QLabel(self.frame_113)
         self.FormSelectedCP_lap.setObjectName(u"FormSelectedCP_lap")
+        self.FormSelectedCP_lap.setFrameShape(QFrame.NoFrame)
 
         self.horizontalLayout_115.addWidget(self.FormSelectedCP_lap)
 
@@ -2961,7 +2963,7 @@ class Ui_MainWindow(object):
         self.selectedCP_nuclei.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_111.setText(QCoreApplication.translate("MainWindow", u"Bond length, A:", None))
         self.selected_cp_bond_len.setText(QCoreApplication.translate("MainWindow", u"...", None))
-        self.label_84.setText(QCoreApplication.translate("MainWindow", u"Field:", None))
+        self.label_84.setText(QCoreApplication.translate("MainWindow", u"RHO:", None))
         self.FormSelectedCP_f.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_85.setText(QCoreApplication.translate("MainWindow", u"|grad|:", None))
         self.FormSelectedCP_g.setText(QCoreApplication.translate("MainWindow", u"...", None))

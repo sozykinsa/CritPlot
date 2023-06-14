@@ -25,6 +25,35 @@ class AtomicModelCP(AtomicModel):
                 n += 1
         return n
 
+    def n_bcp(self):
+        # return len(self.cps)
+        n = 0
+        for cp in self.cps:
+            if cp.let == "xb":
+                n += 1
+        return n
+
+    def n_ccp(self):
+        n = 0
+        for cp in self.cps:
+            if cp.let == "xc":
+                n += 1
+        return n
+
+    def n_rcp(self):
+        n = 0
+        for cp in self.cps:
+            if cp.let == "xr":
+                n += 1
+        return n
+
+    def n_ncp(self):
+        n = 0
+        for cp in self.cps:
+            if cp.let == "nn":
+                n += 1
+        return n
+
     def bond_path_points_optimize(self) -> None:
         """Remove redundant points from all bond paths."""
         for cp in self.cps:
@@ -113,9 +142,6 @@ class AtomicModelCP(AtomicModel):
                         self.add_bond_path_point([p2, p1])
                         self.add_bond_path_point([p2, p3])
         self.bond_path_points_optimize()
-
-    def n_bcp(self):
-        return len(self.cps)
 
     def move_atoms_to_cell(self):
         a_inv = inv(self.lat_vectors)
