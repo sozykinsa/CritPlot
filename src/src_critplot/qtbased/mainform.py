@@ -19,11 +19,11 @@ from PySide2.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QM
 from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem, QTreeWidgetItem
 from PySide2.QtWidgets import QTreeWidgetItemIterator
 
-from src_edtop.utils.import_export import ImporterExporter
-from src_edtop.program import critic2
-from src_edtop.qtbased.image3dexporter import Image3Dexporter
-from src_edtop.ui.about import Ui_DialogAbout as Ui_about
-from src_edtop.ui.form import Ui_MainWindow as Ui_form
+from src_critplot.utils.import_export import ImporterExporter
+from src_critplot.program import critic2
+from src_critplot.qtbased.image3dexporter import Image3Dexporter
+from src_critplot.ui.about import Ui_DialogAbout as Ui_about
+from src_critplot.ui.form import Ui_MainWindow as Ui_form
 
 sys.path.append('')
 
@@ -592,13 +592,15 @@ class MainForm(QMainWindow):
         model = self.ui.openGLWidget.get_model()
         properties.append(["Atoms", str(model.n_atoms())])
         properties.append(["CPs", str(model.n_cps())])
-        properties.append(["(3,-3)", str(model.n_ncp())])
-        properties.append(["(3,-1) bcp", str(model.n_bcp())])
-        properties.append(["(3,+1) rcp", str(model.n_rcp())])
-        properties.append(["(3,+3) ccp", str(model.n_cps())])
-        rule_text = str(model.n_ncp()) + "+" + str(model.n_bcp()) + "-" + str(model.n_rcp()) + "-" + str(model.n_ccp())
+        # properties.append(["(3,-3)", str(model.n_ncp())])
+        # properties.append(["(3,-1) bcp", str(model.n_bcp())])
+        # properties.append(["(3,+1) rcp", str(model.n_rcp())])
+        # properties.append(["(3,+3) ccp", str(model.n_cps())])
+        rule_text = "(3,-3) : " + str(model.n_ncp()) + " + (3,-1) :" + str(model.n_bcp()) + " - (3,+1):" + \
+                    str(model.n_rcp()) + " - (3,+3):" + str(model.n_ccp())
         rule_int = model.n_ncp() + model.n_bcp() - model.n_rcp() - model.n_ccp()
-        properties.append(["Poincare-Hoff", rule_text + "=" + str(rule_int)])
+        # properties.append(["Poincare-Hoff", rule_text + "=" + str(rule_int)])
+        self.ui.cps_rule.setText("Poincare-Hoff rule " + rule_text + "=" + str(rule_int))
         properties.append(["LatVect1", str(model.lat_vector1)])
         properties.append(["LatVect2", str(model.lat_vector2)])
         properties.append(["LatVect3", str(model.lat_vector3)])
@@ -755,28 +757,6 @@ class MainForm(QMainWindow):
         axes_font_size = self.ui.FormAxesFontSize.value()
         line_width = self.ui.Form2DLineWidth.value()
         self.ui.PyqtGraphWidget.set_styles(title_font_size, axes_font_size, label_font_size, line_width, color)
-
-    #def get_color_of_plane(self, minv, maxv, points, cmap, color_scale):
-    #    Nx = len(points)
-    #    Ny = len(points[0])
-    #    minv = float(minv)
-    #    maxv = float(maxv)
-    #    colors = []
-    #    if maxv == minv:
-    #        return colors
-    #    for i in range(0, Nx):
-    #        row = []
-    #        for j in range(0, Ny):
-    #            value = float(points[i][j][3])
-    #            prev = self.colors_cash.get(value)
-    #            if prev is None:
-    #                color = MainForm.get_color(cmap, minv, maxv, value, color_scale)
-    #                self.colors_cash[value] = [color[0], color[1], color[2]]
-    #                row.append([color[0], color[1], color[2]])
-    #            else:
-    #                row.append(prev)
-    #        colors.append(row)
-    #    return colors
 
     @staticmethod
     def get_color(cmap, minv, maxv, value, scale):

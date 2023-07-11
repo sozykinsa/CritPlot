@@ -7,9 +7,9 @@ import numpy as np
 import numpy.linalg
 
 from core_gui_atomistic import helpers
-from src_edtop.models.critical_point import CriticalPoint
+from src_critplot.models.critical_point import CriticalPoint
 from core_gui_atomistic.periodic_table import TPeriodTable
-from src_edtop.models.atomic_model_cp import AtomicModelCP
+from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 def structure_from_cro_file(filename):

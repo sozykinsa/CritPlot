@@ -5246,6 +5246,19 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_19">
         <item>
+         <widget class="QLabel" name="cps_rule">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QFrame" name="frame_14">
           <property name="maximumSize">
            <size>

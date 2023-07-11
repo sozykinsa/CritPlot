@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from src_edtop.qtbased.guiopengl_cp import GuiOpenGLCP
+from src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
 from core_gui_atomistic_qt.pyqtgraphwidget import PyqtGraphWidget
 from core_gui_atomistic_qt.pyqtgraphwidgetimage import PyqtGraphWidgetImage
 
@@ -2839,6 +2839,12 @@ class Ui_MainWindow(object):
         self.page.setGeometry(QRect(0, 0, 642, 734))
         self.verticalLayout_19 = QVBoxLayout(self.page)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.cps_rule = QLabel(self.page)
+        self.cps_rule.setObjectName(u"cps_rule")
+        self.cps_rule.setMaximumSize(QSize(16777215, 30))
+
+        self.verticalLayout_19.addWidget(self.cps_rule)
+
         self.frame_14 = QFrame(self.page)
         self.frame_14.setObjectName(u"frame_14")
         self.frame_14.setMaximumSize(QSize(16777215, 30))
@@ -3150,6 +3156,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_7), QCoreApplication.translate("MainWindow", u"3D View", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Show critical points ", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_8), QCoreApplication.translate("MainWindow", u"2D Figure", None))
+        self.cps_rule.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.bcp_table.setText(QCoreApplication.translate("MainWindow", u"bcp", None))
         self.natr_table.setText(QCoreApplication.translate("MainWindow", u"natr", None))
         self.rcp_table.setText(QCoreApplication.translate("MainWindow", u"rcp", None))

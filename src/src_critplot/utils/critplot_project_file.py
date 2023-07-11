@@ -1,7 +1,7 @@
 import os
 from core_gui_atomistic.gui4dft_project_file import GUI4dftProjectFile
-from src_edtop.models.critical_point import CriticalPoint
-from src_edtop.models.atomic_model_cp import AtomicModelCP
+from src_critplot.models.critical_point import CriticalPoint
+from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 class CritPlotProjectFile(GUI4dftProjectFile):

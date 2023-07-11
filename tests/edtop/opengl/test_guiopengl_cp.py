@@ -1,4 +1,4 @@
-from src_edtop.models.atomic_model_cp import AtomicModelCP
+from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
 def test_guiopengl(guiopengl_widget):

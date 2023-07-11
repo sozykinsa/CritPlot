@@ -6,7 +6,7 @@ import math
 import numpy as np
 from copy import deepcopy
 from numpy.linalg import inv
-from src_edtop.models.critical_point import CriticalPoint
+from src_critplot.models.critical_point import CriticalPoint
 from core_gui_atomistic.atom import Atom
 from core_gui_atomistic.atomic_model import AtomicModel
 from core_gui_atomistic import helpers
