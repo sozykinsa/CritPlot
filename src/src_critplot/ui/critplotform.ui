@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>EDTop-Visual (Electron Density Topology Visualizer) - graphical user interface for Critic2 and TOPOND programms</string>
+   <string>CritPlot - Open interfece to the TOPOND and Critic2 programms</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">

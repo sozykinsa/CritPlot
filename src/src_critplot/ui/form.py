@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'edtopform.ui'
+## Form generated from reading UI file 'critplotform.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -2940,7 +2940,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"EDTop-Visual (Electron Density Topology Visualizer) - graphical user interface for Critic2 and TOPOND programms", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"CritPlot - Open interfece to the TOPOND and Critic2 programms", None))
         self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"Open", None))
         self.actionOrtho.setText(QCoreApplication.translate("MainWindow", u"Ortho", None))
         self.actionPerspective.setText(QCoreApplication.translate("MainWindow", u"Perspective", None))

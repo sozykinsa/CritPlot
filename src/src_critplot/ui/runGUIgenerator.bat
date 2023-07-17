@@ -1,1 +1,1 @@
-pyside2-uic edtopform.ui -o ./form.py
+pyside2-uic critplotform.ui -o ./form.py
