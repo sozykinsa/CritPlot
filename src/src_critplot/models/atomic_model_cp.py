@@ -97,6 +97,20 @@ class AtomicModelCP(AtomicModel):
 
         cp.bonds[b + "opt"] = bond
 
+    def get_cp_types(self):
+        cp_types = ["All"]
+        for cp in self.cps:
+            atom1 = cp.get_property("atom1")
+            atom2 = cp.get_property("atom2")
+            if not (atom1 is None) and not (atom2 is None):
+                atom1 = self.atoms[atom1 - 1].let
+                atom2 = self.atoms[atom2 - 1].let
+                str1 = atom1 + "-" + atom2
+                str2 = atom2 + "-" + atom1
+                if (str1 not in cp_types) and (str2 not in cp_types):
+                    cp_types.append(str1)
+        return cp_types
+
     def move(self, dl: np.ndarray):
         """Move model by the vector."""
         super().move(dl)

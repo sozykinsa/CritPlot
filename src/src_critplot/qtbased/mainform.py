@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+
 try:
     if os.environ["XDG_SESSION_TYPE"] == "wayland":
         os.environ["QT_QPA_PLATFORM"] = "wayland"
@@ -16,8 +17,7 @@ from core_gui_atomistic.periodic_table import TPeriodTable
 from PySide2.QtCore import QSettings, Qt, QSize
 from PySide2.QtGui import QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel
 from PySide2.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QMessageBox, QColorDialog
-from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem, QTreeWidgetItem
-from PySide2.QtWidgets import QTreeWidgetItemIterator
+from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem
 
 from src_critplot.utils.import_export import ImporterExporter
 from src_critplot.program import critic2
@@ -99,6 +99,7 @@ class MainForm(QMainWindow):
         self.ui.show_ncp.stateChanged.connect(self.show_cps)
         self.ui.show_nnatr.stateChanged.connect(self.show_cps)
         self.ui.show_bond_path.stateChanged.connect(self.show_bond_path)
+        self.ui.bcp_for_figure.currentTextChanged.connect(self.update_bcp_figure)
 
         self.ui.FormAtomsList1.currentIndexChanged.connect(self.bond_len_to_screen)
         self.ui.FormAtomsList2.currentIndexChanged.connect(self.bond_len_to_screen)
@@ -535,19 +536,19 @@ class MainForm(QMainWindow):
         self.ui.PropertyAtomAtomDistanceAt1.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistanceAt2.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistance.setText("")
-        self.plot_r_rho()
+        self.plot_r_rho(None)
 
-    def plot_r_rho(self) -> None:
-        model = self.models[self.active_model]
+    def plot_r_rho(self, model) -> None:
+        # = self.models[self.active_model]
         r = []
         rho = []
-
-        for cp in model.cps:
-            if cp.let == "xb":
-                dist = cp.get_property("cp_bp_len")
-                if dist is not None:
-                    r.append(dist)
-                    rho.append(float(cp.get_property("rho")))
+        if not (model is None):
+            for cp in model.cps:
+                if cp.let == "xb":
+                    dist = cp.get_property("cp_bp_len")
+                    if dist is not None:
+                        r.append(dist)
+                        rho.append(float(cp.get_property("rho")))
 
         self.ui.PyqtGraphWidget.set_xticks(None)
         self.ui.PyqtGraphWidget.clear()
@@ -624,17 +625,29 @@ class MainForm(QMainWindow):
         self.ui.FormModifyCellEditC3.setValue(model.lat_vector3[2])
 
     def fill_cps(self):
-
-        cp_types = ["All", "C-C"]
-
+        model = self.ui.openGLWidget.get_model()
+        cp_types = model.get_cp_types()
         self.fill_cp_graph_types(cp_types)
+        self.fill_bcp_table(model)
 
+    def fill_cp_graph_types(self, cp_types=["All"]):
+        cp_type_gr = QStandardItemModel()
+        for item in cp_types:
+            cp_type_gr.appendRow(QStandardItem(item))
+        self.ui.bcp_for_figure.setModel(cp_type_gr)
+        self.ui.bcp_for_figure.setCurrentText("All")
+
+    def update_bcp_figure(self):
+        model = self.ui.openGLWidget.get_model()
+        self.fill_bcp_table(model)
+        self.plot_r_rho(model)
+
+    def fill_bcp_table(self, model):
         is_bcp = False
         is_ccp = False
         is_rcp = False
         is_natr = False
         title = ["Property", "Value"]
-
         if self.ui.bcp_table.isChecked():
             is_bcp = True
             let = "xb"
@@ -652,18 +665,16 @@ class MainForm(QMainWindow):
             let = "nn"
             title = ["cp", "rho"]
         properties = []
-        model = self.ui.openGLWidget.get_model()
         n_cols = len(title)
-
-        for cp in model.cps:
-            if cp.let == let:
-                if is_bcp:
-                    properties.append([cp.get_property("title"), cp.get_property("atom_to_atom"),
-                                       cp.get_property("rho"),
-                                       str(round(cp.get_property("cp_bp_len"), 4))])
-                else:
-                    properties.append([cp.get_property("title"), cp.get_property("rho")])
-
+        if not (model is None):
+            for cp in model.cps:
+                if cp.let == let:
+                    if is_bcp:
+                        properties.append([cp.get_property("title"), cp.get_property("atom_to_atom"),
+                                           cp.get_property("rho"),
+                                           str(round(cp.get_property("cp_bp_len"), 4))])
+                    else:
+                        properties.append([cp.get_property("title"), cp.get_property("rho")])
         cps_table = self.ui.cps_table
         cps_table.clear()
         cps_table.setColumnCount(n_cols)
@@ -672,18 +683,10 @@ class MainForm(QMainWindow):
         cps_table.setColumnWidth(1, 260)
         cps_table.horizontalHeader().setStyleSheet(self.table_header_stylesheet)
         cps_table.verticalHeader().setStyleSheet(self.table_header_stylesheet)
-
         cps_table.setRowCount(len(properties))
         for i in range(0, len(properties)):
             for j in range(len(properties[i])):
                 cps_table.setItem(i, j, QTableWidgetItem(properties[i][j]))
-
-    def fill_cp_graph_types(self, cp_types=["All"]):
-        cp_type_gr = QStandardItemModel()
-        for item in cp_types:
-            cp_type_gr.appendRow(QStandardItem(item))
-        self.ui.bcp_for_figure.setModel(cp_type_gr)
-        self.ui.bcp_for_figure.setCurrentText("All")
 
     def fill_bonds(self):
         c1, c2 = self.fill_bonds_charges()
@@ -1218,12 +1221,12 @@ class MainForm(QMainWindow):
         self.show_property_enabling()
 
     def plot_bonds_histogram(self):
-        self.ui.PyqtGraphWidget.set_xticks(None)
+        self.ui.pyqt_hist_widget.set_xticks(None)
         self.ui.Form3Dand2DTabs.setCurrentIndex(1)
         c1, c2 = self.fill_bonds_charges()
         bonds, bonds_mean, bonds_err = self.ui.openGLWidget.main_model.get_bonds_for_charges(c1, c2)
 
-        self.ui.PyqtGraphWidget.clear()
+        self.ui.pyqt_hist_widget.clear()
         b = []
         for bond in bonds:
             b.append(bond[2])
@@ -1232,7 +1235,7 @@ class MainForm(QMainWindow):
         x_title = self.ui.bonds_x_label.text()
         y_title = self.ui.bonds_y_label.text()
         title = self.ui.bonds_title.text()
-        self.ui.PyqtGraphWidget.add_histogram(b, num_bins, (0, 0, 255, 90), title, x_title, y_title)
+        self.ui.pyqt_hist_widget.add_histogram(b, num_bins, (0, 0, 255, 90), title, x_title, y_title)
 
     @staticmethod
     def list_of_selected_items_in_combo(atom_index, combo):
