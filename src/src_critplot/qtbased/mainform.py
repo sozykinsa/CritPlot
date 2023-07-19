@@ -512,6 +512,7 @@ class MainForm(QMainWindow):
         mask = result[1]
         if file_name is not None:
             extension = mask.split("(*.")[1].split(")")[0]
+            print(file_name.lower(), extension.lower())
             if not file_name.lower().endswith(extension.lower()):
                 file_name += "." + extension.lower()
         if extension.lower() in ['png', 'jpg', 'bmp']:
@@ -536,10 +537,9 @@ class MainForm(QMainWindow):
         self.ui.PropertyAtomAtomDistanceAt1.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistanceAt2.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistance.setText("")
-        self.plot_r_rho(None)
+        self.plot_r_rho(self.models[self.active_model])
 
     def plot_r_rho(self, model) -> None:
-        # = self.models[self.active_model]
         r = []
         rho = []
         if not (model is None):
@@ -547,20 +547,33 @@ class MainForm(QMainWindow):
                 if cp.let == "xb":
                     dist = cp.get_property("cp_bp_len")
                     if dist is not None:
-                        r.append(dist)
-                        rho.append(float(cp.get_property("rho")))
+                        f = self.cp_need_to_gui(cp, model)
+                        if f:
+                            r.append(dist)
+                            rho.append(math.log(float(cp.get_property("rho"))))
 
         self.ui.PyqtGraphWidget.set_xticks(None)
         self.ui.PyqtGraphWidget.clear()
         if len(r) == 0:
             return
         x_title = "r"
-        y_title = "rho"
-        title = "rho(r)"
+        y_title = "ln(rho)"
+        title = "ln(rho(r))"
         self.ui.PyqtGraphWidget.add_legend()
         self.ui.PyqtGraphWidget.enable_auto_range()
         self.ui.PyqtGraphWidget.plot([], [], [None], title, x_title, y_title)
         self.ui.PyqtGraphWidget.add_scatter(r, rho)
+
+    def cp_need_to_gui(self, cp, model):
+        filt = self.ui.bcp_for_figure.currentText()
+        f = True
+        if filt != "All":
+            atom1 = cp.get_property("atom1")
+            atom2 = cp.get_property("atom2")
+            let1 = model.atoms[atom1 - 1].let
+            let2 = model.atoms[atom2 - 1].let
+            f = (filt == let1 + "-" + let2) or (filt == let2 + "-" + let1)
+        return f
 
     def fill_file_name(self, f_name):
         self.ui.Form3Dand2DTabs.setItemText(0, "3D View: " + f_name)
@@ -670,9 +683,10 @@ class MainForm(QMainWindow):
             for cp in model.cps:
                 if cp.let == let:
                     if is_bcp:
-                        properties.append([cp.get_property("title"), cp.get_property("atom_to_atom"),
-                                           cp.get_property("rho"),
-                                           str(round(cp.get_property("cp_bp_len"), 4))])
+                        if self.cp_need_to_gui(cp, model):
+                            properties.append([cp.get_property("title"), cp.get_property("atom_to_atom"),
+                                               cp.get_property("rho"),
+                                               str(round(cp.get_property("cp_bp_len"), 4))])
                     else:
                         properties.append([cp.get_property("title"), cp.get_property("rho")])
         cps_table = self.ui.cps_table

@@ -89,66 +89,63 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.FormModelTableProperties)
 
-        self.groupBox_32 = QGroupBox(self.FormTabModel)
-        self.groupBox_32.setObjectName(u"groupBox_32")
-        self.groupBox_32.setMinimumSize(QSize(0, 0))
-        self.verticalLayout_108 = QVBoxLayout(self.groupBox_32)
-        self.verticalLayout_108.setObjectName(u"verticalLayout_108")
-        self.verticalLayout_108.setContentsMargins(0, -1, 0, 0)
-        self.frame_166 = QFrame(self.groupBox_32)
-        self.frame_166.setObjectName(u"frame_166")
-        self.frame_166.setFrameShape(QFrame.NoFrame)
-        self.frame_166.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_181 = QHBoxLayout(self.frame_166)
-        self.horizontalLayout_181.setObjectName(u"horizontalLayout_181")
-        self.horizontalLayout_181.setContentsMargins(0, 0, 0, 0)
-        self.label_131 = QLabel(self.frame_166)
+        self.groupBox_13 = QGroupBox(self.FormTabModel)
+        self.groupBox_13.setObjectName(u"groupBox_13")
+        self.groupBox_13.setMinimumSize(QSize(0, 0))
+        self.horizontalLayout_15 = QHBoxLayout(self.groupBox_13)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.label_131 = QLabel(self.groupBox_13)
         self.label_131.setObjectName(u"label_131")
 
-        self.horizontalLayout_181.addWidget(self.label_131)
+        self.horizontalLayout_15.addWidget(self.label_131)
 
-        self.model_rotation_x = QDoubleSpinBox(self.frame_166)
+        self.model_rotation_x = QDoubleSpinBox(self.groupBox_13)
         self.model_rotation_x.setObjectName(u"model_rotation_x")
         self.model_rotation_x.setMinimum(-360.000000000000000)
         self.model_rotation_x.setMaximum(360.990000000000009)
 
-        self.horizontalLayout_181.addWidget(self.model_rotation_x)
+        self.horizontalLayout_15.addWidget(self.model_rotation_x)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.horizontalLayout_181.addItem(self.horizontalSpacer_3)
+        self.horizontalLayout_15.addItem(self.horizontalSpacer_3)
 
-        self.label_134 = QLabel(self.frame_166)
+        self.label_134 = QLabel(self.groupBox_13)
         self.label_134.setObjectName(u"label_134")
 
-        self.horizontalLayout_181.addWidget(self.label_134)
+        self.horizontalLayout_15.addWidget(self.label_134)
 
-        self.model_rotation_y = QDoubleSpinBox(self.frame_166)
+        self.model_rotation_y = QDoubleSpinBox(self.groupBox_13)
         self.model_rotation_y.setObjectName(u"model_rotation_y")
         self.model_rotation_y.setMinimum(-360.000000000000000)
         self.model_rotation_y.setMaximum(360.990000000000009)
 
-        self.horizontalLayout_181.addWidget(self.model_rotation_y)
+        self.horizontalLayout_15.addWidget(self.model_rotation_y)
 
         self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.horizontalLayout_181.addItem(self.horizontalSpacer_4)
+        self.horizontalLayout_15.addItem(self.horizontalSpacer_4)
 
-        self.label_135 = QLabel(self.frame_166)
+        self.label_135 = QLabel(self.groupBox_13)
         self.label_135.setObjectName(u"label_135")
 
-        self.horizontalLayout_181.addWidget(self.label_135)
+        self.horizontalLayout_15.addWidget(self.label_135)
 
-        self.model_rotation_z = QDoubleSpinBox(self.frame_166)
+        self.model_rotation_z = QDoubleSpinBox(self.groupBox_13)
         self.model_rotation_z.setObjectName(u"model_rotation_z")
         self.model_rotation_z.setMinimum(-360.000000000000000)
         self.model_rotation_z.setMaximum(360.990000000000009)
 
-        self.horizontalLayout_181.addWidget(self.model_rotation_z)
+        self.horizontalLayout_15.addWidget(self.model_rotation_z)
 
 
-        self.verticalLayout_108.addWidget(self.frame_166)
+        self.verticalLayout.addWidget(self.groupBox_13)
 
+        self.groupBox_32 = QGroupBox(self.FormTabModel)
+        self.groupBox_32.setObjectName(u"groupBox_32")
+        self.groupBox_32.setMinimumSize(QSize(0, 0))
+        self.horizontalLayout_18 = QHBoxLayout(self.groupBox_32)
+        self.horizontalLayout_18.setObjectName(u"horizontalLayout_18")
         self.frame_167 = QFrame(self.groupBox_32)
         self.frame_167.setObjectName(u"frame_167")
         self.frame_167.setFrameShape(QFrame.NoFrame)
@@ -182,9 +179,9 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_182.addWidget(self.camera_pos_y)
 
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_19 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.horizontalLayout_182.addItem(self.horizontalSpacer_5)
+        self.horizontalLayout_182.addItem(self.horizontalSpacer_19)
 
         self.label_139 = QLabel(self.frame_167)
         self.label_139.setObjectName(u"label_139")
@@ -198,37 +195,40 @@ class Ui_MainWindow(object):
         self.horizontalLayout_182.addWidget(self.camera_pos_z)
 
 
-        self.verticalLayout_108.addWidget(self.frame_167)
+        self.horizontalLayout_18.addWidget(self.frame_167)
 
-        self.frame_168 = QFrame(self.groupBox_32)
-        self.frame_168.setObjectName(u"frame_168")
-        self.frame_168.setFrameShape(QFrame.NoFrame)
-        self.frame_168.setFrameShadow(QFrame.Plain)
-        self.horizontalLayout_183 = QHBoxLayout(self.frame_168)
-        self.horizontalLayout_183.setObjectName(u"horizontalLayout_183")
-        self.horizontalLayout_183.setContentsMargins(0, 0, 0, 0)
-        self.label_136 = QLabel(self.frame_168)
-        self.label_136.setObjectName(u"label_136")
+        self.frame_166 = QFrame(self.groupBox_32)
+        self.frame_166.setObjectName(u"frame_166")
+        self.frame_166.setFrameShape(QFrame.NoFrame)
+        self.frame_166.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_181 = QHBoxLayout(self.frame_166)
+        self.horizontalLayout_181.setObjectName(u"horizontalLayout_181")
+        self.horizontalLayout_181.setContentsMargins(0, 0, 0, 0)
 
-        self.horizontalLayout_183.addWidget(self.label_136)
+        self.horizontalLayout_18.addWidget(self.frame_166)
 
-        self.model_scale = QDoubleSpinBox(self.frame_168)
+
+        self.verticalLayout.addWidget(self.groupBox_32)
+
+        self.groupBox_14 = QGroupBox(self.FormTabModel)
+        self.groupBox_14.setObjectName(u"groupBox_14")
+        self.groupBox_14.setMinimumSize(QSize(0, 50))
+        self.horizontalLayout_16 = QHBoxLayout(self.groupBox_14)
+        self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
+        self.model_scale = QDoubleSpinBox(self.groupBox_14)
         self.model_scale.setObjectName(u"model_scale")
         self.model_scale.setMinimum(0.010000000000000)
         self.model_scale.setSingleStep(0.100000000000000)
         self.model_scale.setValue(1.000000000000000)
 
-        self.horizontalLayout_183.addWidget(self.model_scale)
+        self.horizontalLayout_16.addWidget(self.model_scale)
 
-        self.horizontalSpacer_126 = QSpacerItem(289, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_17 = QSpacerItem(307, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.horizontalLayout_183.addItem(self.horizontalSpacer_126)
-
-
-        self.verticalLayout_108.addWidget(self.frame_168)
+        self.horizontalLayout_16.addItem(self.horizontalSpacer_17)
 
 
-        self.verticalLayout.addWidget(self.groupBox_32)
+        self.verticalLayout.addWidget(self.groupBox_14)
 
         self.tabWidget.addTab(self.FormTabModel, "")
         self.tab_51 = QWidget()
@@ -2961,14 +2961,15 @@ class Ui_MainWindow(object):
         self.actionHideBox.setText(QCoreApplication.translate("MainWindow", u"Hide Box", None))
         self.actionClose.setText(QCoreApplication.translate("MainWindow", u"Close", None))
         self.actionManual.setText(QCoreApplication.translate("MainWindow", u"Manual", None))
-        self.groupBox_32.setTitle(QCoreApplication.translate("MainWindow", u"Orientation", None))
-        self.label_131.setText(QCoreApplication.translate("MainWindow", u"Rotation: x", None))
+        self.groupBox_13.setTitle(QCoreApplication.translate("MainWindow", u"Rotation", None))
+        self.label_131.setText(QCoreApplication.translate("MainWindow", u"x", None))
         self.label_134.setText(QCoreApplication.translate("MainWindow", u"y", None))
         self.label_135.setText(QCoreApplication.translate("MainWindow", u"z", None))
-        self.label_137.setText(QCoreApplication.translate("MainWindow", u"Camera position: x", None))
+        self.groupBox_32.setTitle(QCoreApplication.translate("MainWindow", u"Camera position", None))
+        self.label_137.setText(QCoreApplication.translate("MainWindow", u"x", None))
         self.label_138.setText(QCoreApplication.translate("MainWindow", u"y", None))
         self.label_139.setText(QCoreApplication.translate("MainWindow", u"z", None))
-        self.label_136.setText(QCoreApplication.translate("MainWindow", u"Scale", None))
+        self.groupBox_14.setTitle(QCoreApplication.translate("MainWindow", u"Scale", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabModel), QCoreApplication.translate("MainWindow", u"Model", None))
         self.add_xyz_critic_data.setText(QCoreApplication.translate("MainWindow", u"Add data from *.xyz file (for opened *.cro file)", None))
         self.groupBox_30.setTitle(QCoreApplication.translate("MainWindow", u"Selected CP", None))
