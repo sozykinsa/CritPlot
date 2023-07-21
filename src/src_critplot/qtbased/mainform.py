@@ -115,10 +115,10 @@ class MainForm(QMainWindow):
         self.ui.camera_pos_z.valueChanged.connect(self.model_orientation_changed)
         self.ui.model_scale.valueChanged.connect(self.model_orientation_changed)
 
-        self.ui.bcp_table.clicked.connect(self.fill_cps)   # toggled
-        self.ui.natr_table.clicked.connect(self.fill_cps)
-        self.ui.rcp_table.clicked.connect(self.fill_cps)
-        self.ui.ccp_table.clicked.connect(self.fill_cps)
+        self.ui.bcp_table.clicked.connect(self.fill_cps_table)   # toggled
+        self.ui.natr_table.clicked.connect(self.fill_cps_table)
+        self.ui.rcp_table.clicked.connect(self.fill_cps_table)
+        self.ui.ccp_table.clicked.connect(self.fill_cps_table)
 
         # buttons
         self.ui.FormActionsPostButPlotBondsHistogram.clicked.connect(self.plot_bonds_histogram)
@@ -537,32 +537,62 @@ class MainForm(QMainWindow):
         self.ui.PropertyAtomAtomDistanceAt1.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistanceAt2.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistance.setText("")
-        self.plot_r_rho(self.models[self.active_model])
+        self.plot_r_rho()
 
-    def plot_r_rho(self, model) -> None:
+    def plot_r_rho(self) -> None:
+        model = self.ui.openGLWidget.get_model()
+        if model is None:
+            return
         r = []
         rho = []
-        if not (model is None):
-            for cp in model.cps:
-                if cp.let == "xb":
-                    dist = cp.get_property("cp_bp_len")
-                    if dist is not None:
-                        f = self.cp_need_to_gui(cp, model)
-                        if f:
-                            r.append(dist)
-                            rho.append(math.log(float(cp.get_property("rho"))))
+        n_types = self.ui.bcp_for_figure.count()
+        title_types = {}
+        for i in range(n_types):
+            r.append([])
+            rho.append([])
+            title_types[self.ui.bcp_for_figure.itemText(i)] = i
+
+        for cp in model.cps:
+            if cp.let == "xb":
+                dist = cp.get_property("cp_bp_len")
+                if not dist is None:
+                    if self.cp_need_to_gui(cp, model):
+                        ind = title_types[self.cp_type_title(cp, model, title_types)]
+                        r[ind].append(dist)
+                        rho[ind].append(math.log(float(cp.get_property("rho"))))
 
         self.ui.PyqtGraphWidget.set_xticks(None)
         self.ui.PyqtGraphWidget.clear()
-        if len(r) == 0:
-            return
         x_title = "r"
         y_title = "ln(rho)"
         title = "ln(rho(r))"
+        if len(r) == 0:
+            return
+
         self.ui.PyqtGraphWidget.add_legend()
         self.ui.PyqtGraphWidget.enable_auto_range()
         self.ui.PyqtGraphWidget.plot([], [], [None], title, x_title, y_title)
-        self.ui.PyqtGraphWidget.add_scatter(r, rho)
+        ind = self.ui.bcp_for_figure.currentIndex()
+        if ind == 0:
+            for i in range(n_types):
+                col = self.ui.PyqtGraphWidget.COLORS[i % len(self.ui.PyqtGraphWidget.COLORS)]
+                self.ui.PyqtGraphWidget.add_scatter(r[i], rho[i], color=col)
+        else:
+            col = self.ui.PyqtGraphWidget.COLORS[ind % len(self.ui.PyqtGraphWidget.COLORS)]
+
+            a, b = np.polyfit(r[ind], rho[ind], 1)
+            x_max = max(r[ind])
+            y_max = a * x_max + b
+            x_min = min(r[ind])
+            y_min = a * x_min + b
+            self.ui.PyqtGraphWidget.set_xticks(None)
+            self.ui.PyqtGraphWidget.clear()
+            leg = str(round(a, 5)) + " x "
+            if b >= 0:
+                leg += "+"
+            leg += str(round(b, 5))
+            self.ui.PyqtGraphWidget.plot([[x_min, x_max]], [[y_min, y_max]], [leg], title, x_title, y_title)
+            self.ui.PyqtGraphWidget.add_scatter(r[ind], rho[ind], color=col)
 
     def cp_need_to_gui(self, cp, model):
         filt = self.ui.bcp_for_figure.currentText()
@@ -572,8 +602,24 @@ class MainForm(QMainWindow):
             atom2 = cp.get_property("atom2")
             let1 = model.atoms[atom1 - 1].let
             let2 = model.atoms[atom2 - 1].let
-            f = (filt == let1 + "-" + let2) or (filt == let2 + "-" + let1)
+            title1 = let1 + "-" + let2
+            title2 = let2 + "-" + let1
+            f = (filt == title1) or (filt == title2)
         return f
+
+    @staticmethod
+    def cp_type_title(cp, model, title_types):
+        atom1 = cp.get_property("atom1")
+        atom2 = cp.get_property("atom2")
+        let1 = model.atoms[atom1 - 1].let
+        let2 = model.atoms[atom2 - 1].let
+        title1 = let1 + "-" + let2
+        title2 = let2 + "-" + let1
+        if not title_types.get(title1) is None:
+            return title1
+        if not title_types.get(title2) is None:
+            return title2
+        return "error"
 
     def fill_file_name(self, f_name):
         self.ui.Form3Dand2DTabs.setItemText(0, "3D View: " + f_name)
@@ -641,7 +687,7 @@ class MainForm(QMainWindow):
         model = self.ui.openGLWidget.get_model()
         cp_types = model.get_cp_types()
         self.fill_cp_graph_types(cp_types)
-        self.fill_bcp_table(model)
+        self.fill_cps_table()
 
     def fill_cp_graph_types(self, cp_types=["All"]):
         cp_type_gr = QStandardItemModel()
@@ -651,11 +697,11 @@ class MainForm(QMainWindow):
         self.ui.bcp_for_figure.setCurrentText("All")
 
     def update_bcp_figure(self):
-        model = self.ui.openGLWidget.get_model()
-        self.fill_bcp_table(model)
-        self.plot_r_rho(model)
+        self.fill_cps_table()
+        self.plot_r_rho()
 
-    def fill_bcp_table(self, model):
+    def fill_cps_table(self):
+        model = self.ui.openGLWidget.get_model()
         is_bcp = False
         is_ccp = False
         is_rcp = False

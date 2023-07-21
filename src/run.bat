@@ -1,1 +1,1 @@
-python edtop-visual.py
+python critplot.py
