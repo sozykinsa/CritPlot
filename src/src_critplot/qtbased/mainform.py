@@ -99,7 +99,7 @@ class MainForm(QMainWindow):
         self.ui.show_ncp.stateChanged.connect(self.show_cps)
         self.ui.show_nnatr.stateChanged.connect(self.show_cps)
         self.ui.show_bond_path.stateChanged.connect(self.show_bond_path)
-        self.ui.bcp_for_figure.currentTextChanged.connect(self.update_bcp_figure)
+        self.ui.bcp_for_figure.currentTextChanged.connect(self.update_bcp_figure_and_table)
 
         self.ui.FormAtomsList1.currentIndexChanged.connect(self.bond_len_to_screen)
         self.ui.FormAtomsList2.currentIndexChanged.connect(self.bond_len_to_screen)
@@ -115,7 +115,7 @@ class MainForm(QMainWindow):
         self.ui.camera_pos_z.valueChanged.connect(self.model_orientation_changed)
         self.ui.model_scale.valueChanged.connect(self.model_orientation_changed)
 
-        self.ui.bcp_table.clicked.connect(self.fill_cps_table)   # toggled
+        self.ui.bcp_table.clicked.connect(self.fill_cps_table)  # toggled
         self.ui.natr_table.clicked.connect(self.fill_cps_table)
         self.ui.rcp_table.clicked.connect(self.fill_cps_table)
         self.ui.ccp_table.clicked.connect(self.fill_cps_table)
@@ -398,7 +398,7 @@ class MainForm(QMainWindow):
             return
         charge, let, position = self.selected_atom_from_form()
         self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom] = Atom((position[0], position[1],
-                                                                                        position[2], let, charge))
+                                                                                         position[2], let, charge))
         self.model_to_screen(self.active_model)
 
     def selected_atom_from_form(self):
@@ -462,8 +462,8 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.atoms_of_selected_fragment_to_form()
         self.ui.openGLWidget.update_view()
 
-    #@staticmethod
-    #def clear_qtree_widget(tree):
+    # @staticmethod
+    # def clear_qtree_widget(tree):
     #    iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
     #    while iterator.value():
     #        iterator.value().takeChildren()
@@ -533,6 +533,7 @@ class MainForm(QMainWindow):
         self.fill_atoms_table()
         self.fill_properties_table()
         self.fill_cps()
+        self.poincare_hoff_rule()
 
         self.ui.PropertyAtomAtomDistanceAt1.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistanceAt2.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
@@ -556,10 +557,12 @@ class MainForm(QMainWindow):
             if cp.let == "xb":
                 dist = cp.get_property("cp_bp_len")
                 if not dist is None:
-                    if self.cp_need_to_gui(cp, model):
-                        ind = title_types[self.cp_type_title(cp, model, title_types)]
-                        r[ind].append(dist)
-                        rho[ind].append(math.log(float(cp.get_property("rho"))))
+                    if self.cp_need_to_gui(cp, model) and (float(cp.get_property("rho")) > 0):
+                        k = self.cp_type_title(cp, model, title_types)
+                        if k is not None:
+                            ind = title_types[k]
+                            r[ind].append(dist)
+                            rho[ind].append(math.log(float(cp.get_property("rho"))))
 
         self.ui.PyqtGraphWidget.set_xticks(None)
         self.ui.PyqtGraphWidget.clear()
@@ -574,52 +577,45 @@ class MainForm(QMainWindow):
         self.ui.PyqtGraphWidget.plot([], [], [None], title, x_title, y_title)
         ind = self.ui.bcp_for_figure.currentIndex()
         if ind == 0:
-            for i in range(n_types):
+            for i in range(1, n_types):
                 col = self.ui.PyqtGraphWidget.COLORS[i % len(self.ui.PyqtGraphWidget.COLORS)]
                 self.ui.PyqtGraphWidget.add_scatter(r[i], rho[i], color=col)
         else:
-            col = self.ui.PyqtGraphWidget.COLORS[ind % len(self.ui.PyqtGraphWidget.COLORS)]
-
-            a, b = np.polyfit(r[ind], rho[ind], 1)
-            x_max = max(r[ind])
-            y_max = a * x_max + b
-            x_min = min(r[ind])
-            y_min = a * x_min + b
             self.ui.PyqtGraphWidget.set_xticks(None)
             self.ui.PyqtGraphWidget.clear()
-            leg = str(round(a, 5)) + " x "
-            if b >= 0:
-                leg += "+"
-            leg += str(round(b, 5))
-            self.ui.PyqtGraphWidget.plot([[x_min, x_max]], [[y_min, y_max]], [leg], title, x_title, y_title)
+            col = self.ui.PyqtGraphWidget.COLORS[ind % len(self.ui.PyqtGraphWidget.COLORS)]
             self.ui.PyqtGraphWidget.add_scatter(r[ind], rho[ind], color=col)
+            if len(r[ind]) > 1:
+                x_max = max(r[ind])
+                x_min = min(r[ind])
+                if (len(r[ind]) >= 2) and (x_max != x_min):
+                    a, b = np.polyfit(r[ind], rho[ind], 1)
+                    y_max = a * x_max + b
+                    y_min = a * x_min + b
+                    leg = str(round(a, 5)) + " x "
+                    if b >= 0:
+                        leg += "+"
+                    leg += str(round(b, 5))
+                    self.ui.PyqtGraphWidget.plot([[x_min, x_max]], [[y_min, y_max]], [leg], title, x_title, y_title)
 
     def cp_need_to_gui(self, cp, model):
         filt = self.ui.bcp_for_figure.currentText()
-        f = True
-        if filt != "All":
-            atom1 = cp.get_property("atom1")
-            atom2 = cp.get_property("atom2")
-            let1 = model.atoms[atom1 - 1].let
-            let2 = model.atoms[atom2 - 1].let
-            title1 = let1 + "-" + let2
-            title2 = let2 + "-" + let1
+        f = cp.is_visible
+        if (filt != "All") and f:
+            title1, title2 = model.equivalent_titles(cp)
             f = (filt == title1) or (filt == title2)
         return f
 
     @staticmethod
     def cp_type_title(cp, model, title_types):
-        atom1 = cp.get_property("atom1")
-        atom2 = cp.get_property("atom2")
-        let1 = model.atoms[atom1 - 1].let
-        let2 = model.atoms[atom2 - 1].let
-        title1 = let1 + "-" + let2
-        title2 = let2 + "-" + let1
+        title1, title2 = model.equivalent_titles(cp)
+        if (title1 is None) or (title2 is None):
+            return None
         if not title_types.get(title1) is None:
             return title1
         if not title_types.get(title2) is None:
             return title2
-        return "error"
+        return None
 
     def fill_file_name(self, f_name):
         self.ui.Form3Dand2DTabs.setItemText(0, "3D View: " + f_name)
@@ -652,15 +648,6 @@ class MainForm(QMainWindow):
         model = self.ui.openGLWidget.get_model()
         properties.append(["Atoms", str(model.n_atoms())])
         properties.append(["CPs", str(model.n_cps())])
-        # properties.append(["(3,-3)", str(model.n_ncp())])
-        # properties.append(["(3,-1) bcp", str(model.n_bcp())])
-        # properties.append(["(3,+1) rcp", str(model.n_rcp())])
-        # properties.append(["(3,+3) ccp", str(model.n_cps())])
-        rule_text = "(3,-3) : " + str(model.n_ncp()) + " + (3,-1) :" + str(model.n_bcp()) + " - (3,+1):" + \
-                    str(model.n_rcp()) + " - (3,+3):" + str(model.n_ccp())
-        rule_int = model.n_ncp() + model.n_bcp() - model.n_rcp() - model.n_ccp()
-        # properties.append(["Poincare-Hoff", rule_text + "=" + str(rule_int)])
-        self.ui.cps_rule.setText("Poincare-Hoff rule " + rule_text + "=" + str(rule_int))
         properties.append(["LatVect1", str(model.lat_vector1)])
         properties.append(["LatVect2", str(model.lat_vector2)])
         properties.append(["LatVect3", str(model.lat_vector3)])
@@ -683,6 +670,11 @@ class MainForm(QMainWindow):
         self.ui.FormModifyCellEditC2.setValue(model.lat_vector3[1])
         self.ui.FormModifyCellEditC3.setValue(model.lat_vector3[2])
 
+    def poincare_hoff_rule(self):
+        model = self.ui.openGLWidget.get_model()
+        rule_text, rule_int = model.poincare_hoff_rule()
+        self.ui.cps_rule.setText("Poincare-Hoff rule " + rule_text + "=" + str(rule_int))
+
     def fill_cps(self):
         model = self.ui.openGLWidget.get_model()
         cp_types = model.get_cp_types()
@@ -696,32 +688,26 @@ class MainForm(QMainWindow):
         self.ui.bcp_for_figure.setModel(cp_type_gr)
         self.ui.bcp_for_figure.setCurrentText("All")
 
-    def update_bcp_figure(self):
+    def update_bcp_figure_and_table(self):
         self.fill_cps_table()
         self.plot_r_rho()
 
     def fill_cps_table(self):
         model = self.ui.openGLWidget.get_model()
         is_bcp = False
-        is_ccp = False
-        is_rcp = False
-        is_natr = False
         title = ["Property", "Value"]
         if self.ui.bcp_table.isChecked():
             is_bcp = True
             let = "xb"
             title = ["cp", "atoms", "rho", "dist"]
         if self.ui.ccp_table.isChecked():
-            is_ccp = True
             let = "xc"
             title = ["cp", "rho"]
         if self.ui.rcp_table.isChecked():
-            is_rcp = True
             let = "xr"
             title = ["cp", "rho"]
         if self.ui.natr_table.isChecked():
-            is_natr = True
-            let = "nn"
+            let = "attr"
             title = ["cp", "rho"]
         properties = []
         n_cols = len(title)
@@ -729,7 +715,7 @@ class MainForm(QMainWindow):
             for cp in model.cps:
                 if cp.let == let:
                     if is_bcp:
-                        if self.cp_need_to_gui(cp, model):
+                        if self.cp_need_to_gui(cp, model) and (cp.get_property("cp_bp_len") is not None):
                             properties.append([cp.get_property("title"), cp.get_property("atom_to_atom"),
                                                cp.get_property("rho"),
                                                str(round(cp.get_property("cp_bp_len"), 4))])
@@ -796,7 +782,7 @@ class MainForm(QMainWindow):
         self.fill_bonds()
         self.ui.FormActionsPostButPlotBondsHistogram.setEnabled(True)
 
-    def get_bond(self):   # pragma: no cover
+    def get_bond(self):  # pragma: no cover
         i = self.ui.PropertyAtomAtomDistanceAt1.value()
         j = self.ui.PropertyAtomAtomDistanceAt2.value()
         bond = round(self.ui.openGLWidget.main_model.atom_atom_distance(i - 1, j - 1), 4)
@@ -1045,7 +1031,7 @@ class MainForm(QMainWindow):
                 self.show_error(e)
 
     def menu_open(self, file_name=False):
-        if len(self.models) > 0:   # pragma: no cover
+        if len(self.models) > 0:  # pragma: no cover
             self.action_on_start = 'Open'
             self.save_state_action_on_start()
             os.execl(sys.executable, sys.executable, *sys.argv)
@@ -1276,6 +1262,7 @@ class MainForm(QMainWindow):
                                                       view_axes, axes_color)
         self.ui.openGLWidget.set_cp_parameters(self.ui.show_bcp_text.isChecked())
         self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
+        self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
         self.ui.AtomsInSelectedFragment.clear()
 
         self.show_property_enabling()
@@ -1446,7 +1433,7 @@ class MainForm(QMainWindow):
         self.save_property(SETTINGS_ColorsScaleType, self.ui.FormSettingsColorsScaleType.currentText())
         self.colors_cash = {}
 
-    #def save_state_preferred_coordinates(self):  # pragma: no cover
+    # def save_state_preferred_coordinates(self):  # pragma: no cover
     #    self.save_property(SETTINGS_Coordinates,
     #                       self.ui.FormSettingsPreferredCoordinates.currentText())
     #    self.coord_type = self.ui.FormSettingsPreferredCoordinates.currentText()
@@ -1524,7 +1511,7 @@ class MainForm(QMainWindow):
 
             if len(self.history_of_point_selection) > 1:
                 text_sel = "\nHistory of points selection: " + str(np.array(self.history_of_point_selection)) + "\n"
-                text_sel += "Distance from " + self.history_of_point_selection[-1] + " to " +\
+                text_sel += "Distance from " + self.history_of_point_selection[-1] + " to " + \
                             self.history_of_point_selection[-2] + " : "
 
                 dist = model.point_point_distance(self.history_of_point_selection_xyz[-1],
@@ -1841,7 +1828,7 @@ class MainForm(QMainWindow):
         if self.ui.form_critic_prop_rdg.isChecked():
             text_prop += 'POINTPROP RDG\n'
 
-        #fname = name[0]
+        # fname = name[0]
         if len(fname) > 0:
             model = self.models[self.active_model]
 
@@ -1872,7 +1859,7 @@ class MainForm(QMainWindow):
         axescolor = self.change_color(self.ui.ColorAxes, SETTINGS_Color_Of_Axes)
         self.ui.openGLWidget.set_color_of_axes(axescolor)
 
-    def change_color(self, color_ui, var_property):   # pragma: no cover
+    def change_color(self, color_ui, var_property):  # pragma: no cover
         color = QColorDialog.getColor()
         color_ui.setStyleSheet(
             "background-color:rgb(" + str(color.getRgb()[0]) + "," + str(color.getRgb()[1]) + "," + str(

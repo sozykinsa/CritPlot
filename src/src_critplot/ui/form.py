@@ -405,36 +405,363 @@ class Ui_MainWindow(object):
         self.frame_16.setObjectName(u"frame_16")
         self.frame_16.setFrameShape(QFrame.StyledPanel)
         self.frame_16.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_11 = QVBoxLayout(self.frame_16)
-        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.verticalLayout_26 = QVBoxLayout(self.frame_16)
+        self.verticalLayout_26.setObjectName(u"verticalLayout_26")
+        self.verticalLayout_26.setContentsMargins(-1, -1, 0, -1)
         self.add_cp_to_list = QPushButton(self.frame_16)
         self.add_cp_to_list.setObjectName(u"add_cp_to_list")
 
-        self.verticalLayout_11.addWidget(self.add_cp_to_list)
+        self.verticalLayout_26.addWidget(self.add_cp_to_list)
 
         self.delete_cp_from_list = QPushButton(self.frame_16)
         self.delete_cp_from_list.setObjectName(u"delete_cp_from_list")
 
-        self.verticalLayout_11.addWidget(self.delete_cp_from_list)
+        self.verticalLayout_26.addWidget(self.delete_cp_from_list)
 
         self.clear_cp_list = QPushButton(self.frame_16)
         self.clear_cp_list.setObjectName(u"clear_cp_list")
 
-        self.verticalLayout_11.addWidget(self.clear_cp_list)
+        self.verticalLayout_26.addWidget(self.clear_cp_list)
 
         self.delete_cp_from_model = QPushButton(self.frame_16)
         self.delete_cp_from_model.setObjectName(u"delete_cp_from_model")
 
-        self.verticalLayout_11.addWidget(self.delete_cp_from_model)
+        self.verticalLayout_26.addWidget(self.delete_cp_from_model)
 
         self.leave_cp_in_model = QPushButton(self.frame_16)
         self.leave_cp_in_model.setObjectName(u"leave_cp_in_model")
 
-        self.verticalLayout_11.addWidget(self.leave_cp_in_model)
+        self.verticalLayout_26.addWidget(self.leave_cp_in_model)
 
-        self.verticalSpacer_20 = QSpacerItem(20, 232, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.groupBox_15 = QGroupBox(self.frame_16)
+        self.groupBox_15.setObjectName(u"groupBox_15")
+        self.verticalLayout_11 = QVBoxLayout(self.groupBox_15)
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
+        self.tabWidget_15 = QTabWidget(self.groupBox_15)
+        self.tabWidget_15.setObjectName(u"tabWidget_15")
+        self.tabWidget_15.setMinimumSize(QSize(0, 300))
+        self.tab_39 = QWidget()
+        self.tab_39.setObjectName(u"tab_39")
+        self.verticalLayout_20 = QVBoxLayout(self.tab_39)
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.frame_58 = QFrame(self.tab_39)
+        self.frame_58.setObjectName(u"frame_58")
+        self.frame_58.setFrameShape(QFrame.StyledPanel)
+        self.frame_58.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_99 = QVBoxLayout(self.frame_58)
+        self.verticalLayout_99.setObjectName(u"verticalLayout_99")
+        self.form_critic_list = QRadioButton(self.frame_58)
+        self.form_critic_list.setObjectName(u"form_critic_list")
+        self.form_critic_list.setChecked(True)
 
-        self.verticalLayout_11.addItem(self.verticalSpacer_20)
+        self.verticalLayout_99.addWidget(self.form_critic_list)
+
+        self.form_critic_all = QRadioButton(self.frame_58)
+        self.form_critic_all.setObjectName(u"form_critic_all")
+
+        self.verticalLayout_99.addWidget(self.form_critic_all)
+
+
+        self.verticalLayout_20.addWidget(self.frame_58)
+
+        self.widget = QWidget(self.tab_39)
+        self.widget.setObjectName(u"widget")
+        self.horizontalLayout_176 = QHBoxLayout(self.widget)
+        self.horizontalLayout_176.setObjectName(u"horizontalLayout_176")
+        self.horizontalSpacer_57 = QSpacerItem(104, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_176.addItem(self.horizontalSpacer_57)
+
+        self.export_cp_to_csv = QPushButton(self.widget)
+        self.export_cp_to_csv.setObjectName(u"export_cp_to_csv")
+
+        self.horizontalLayout_176.addWidget(self.export_cp_to_csv)
+
+        self.horizontalSpacer_123 = QSpacerItem(103, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_176.addItem(self.horizontalSpacer_123)
+
+
+        self.verticalLayout_20.addWidget(self.widget)
+
+        self.verticalSpacer = QSpacerItem(20, 365, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_20.addItem(self.verticalSpacer)
+
+        self.tabWidget_15.addTab(self.tab_39, "")
+        self.tab_53 = QWidget()
+        self.tab_53.setObjectName(u"tab_53")
+        self.verticalLayout_69 = QVBoxLayout(self.tab_53)
+        self.verticalLayout_69.setObjectName(u"verticalLayout_69")
+        self.tabWidget_14 = QTabWidget(self.tab_53)
+        self.tabWidget_14.setObjectName(u"tabWidget_14")
+        self.tab_48 = QWidget()
+        self.tab_48.setObjectName(u"tab_48")
+        self.horizontalLayout_162 = QHBoxLayout(self.tab_48)
+        self.horizontalLayout_162.setObjectName(u"horizontalLayout_162")
+        self.criticalPointImports = QTextBrowser(self.tab_48)
+        self.criticalPointImports.setObjectName(u"criticalPointImports")
+
+        self.horizontalLayout_162.addWidget(self.criticalPointImports)
+
+        self.tabWidget_14.addTab(self.tab_48, "")
+        self.tab_46 = QWidget()
+        self.tab_46.setObjectName(u"tab_46")
+        self.verticalLayout_87 = QVBoxLayout(self.tab_46)
+        self.verticalLayout_87.setObjectName(u"verticalLayout_87")
+        self.frame_140 = QFrame(self.tab_46)
+        self.frame_140.setObjectName(u"frame_140")
+        self.frame_140.setFrameShape(QFrame.NoFrame)
+        self.frame_140.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_143 = QHBoxLayout(self.frame_140)
+        self.horizontalLayout_143.setObjectName(u"horizontalLayout_143")
+        self.form_critic_all_cp = QCheckBox(self.frame_140)
+        self.form_critic_all_cp.setObjectName(u"form_critic_all_cp")
+
+        self.horizontalLayout_143.addWidget(self.form_critic_all_cp)
+
+
+        self.verticalLayout_87.addWidget(self.frame_140)
+
+        self.frame_134 = QFrame(self.tab_46)
+        self.frame_134.setObjectName(u"frame_134")
+        self.frame_134.setFrameShape(QFrame.NoFrame)
+        self.frame_134.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_137 = QHBoxLayout(self.frame_134)
+        self.horizontalLayout_137.setObjectName(u"horizontalLayout_137")
+        self.radioButton_9 = QRadioButton(self.frame_134)
+        self.radioButton_9.setObjectName(u"radioButton_9")
+
+        self.horizontalLayout_137.addWidget(self.radioButton_9)
+
+        self.formCriticBPradio = QRadioButton(self.frame_134)
+        self.formCriticBPradio.setObjectName(u"formCriticBPradio")
+        self.formCriticBPradio.setChecked(True)
+
+        self.horizontalLayout_137.addWidget(self.formCriticBPradio)
+
+        self.FormExtraPoints = QSpinBox(self.frame_134)
+        self.FormExtraPoints.setObjectName(u"FormExtraPoints")
+
+        self.horizontalLayout_137.addWidget(self.FormExtraPoints)
+
+        self.label_86 = QLabel(self.frame_134)
+        self.label_86.setObjectName(u"label_86")
+
+        self.horizontalLayout_137.addWidget(self.label_86)
+
+
+        self.verticalLayout_87.addWidget(self.frame_134)
+
+        self.verticalSpacer_30 = QSpacerItem(20, 342, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_87.addItem(self.verticalSpacer_30)
+
+        self.tabWidget_14.addTab(self.tab_46, "")
+        self.tab_47 = QWidget()
+        self.tab_47.setObjectName(u"tab_47")
+        self.verticalLayout_86 = QVBoxLayout(self.tab_47)
+        self.verticalLayout_86.setObjectName(u"verticalLayout_86")
+        self.frame_135 = QFrame(self.tab_47)
+        self.frame_135.setObjectName(u"frame_135")
+        self.frame_135.setFrameShape(QFrame.NoFrame)
+        self.frame_135.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_138 = QHBoxLayout(self.frame_135)
+        self.horizontalLayout_138.setObjectName(u"horizontalLayout_138")
+        self.horizontalLayout_138.setContentsMargins(-1, -1, 0, -1)
+        self.form_critic_prop_lag = QCheckBox(self.frame_135)
+        self.form_critic_prop_lag.setObjectName(u"form_critic_prop_lag")
+
+        self.horizontalLayout_138.addWidget(self.form_critic_prop_lag)
+
+        self.form_critic_prop_htf_kir = QCheckBox(self.frame_135)
+        self.form_critic_prop_htf_kir.setObjectName(u"form_critic_prop_htf_kir")
+
+        self.horizontalLayout_138.addWidget(self.form_critic_prop_htf_kir)
+
+        self.form_critic_prop_htf = QCheckBox(self.frame_135)
+        self.form_critic_prop_htf.setObjectName(u"form_critic_prop_htf")
+
+        self.horizontalLayout_138.addWidget(self.form_critic_prop_htf)
+
+        self.form_critic_prop_gtf = QCheckBox(self.frame_135)
+        self.form_critic_prop_gtf.setObjectName(u"form_critic_prop_gtf")
+
+        self.horizontalLayout_138.addWidget(self.form_critic_prop_gtf)
+
+        self.form_critic_prop_gtf_kir = QCheckBox(self.frame_135)
+        self.form_critic_prop_gtf_kir.setObjectName(u"form_critic_prop_gtf_kir")
+
+        self.horizontalLayout_138.addWidget(self.form_critic_prop_gtf_kir)
+
+
+        self.verticalLayout_86.addWidget(self.frame_135)
+
+        self.frame_136 = QFrame(self.tab_47)
+        self.frame_136.setObjectName(u"frame_136")
+        self.frame_136.setMinimumSize(QSize(0, 0))
+        self.frame_136.setFrameShape(QFrame.NoFrame)
+        self.frame_136.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_86 = QHBoxLayout(self.frame_136)
+        self.horizontalLayout_86.setObjectName(u"horizontalLayout_86")
+        self.horizontalLayout_86.setContentsMargins(-1, -1, 0, -1)
+        self.form_critic_prop_lol_kir = QCheckBox(self.frame_136)
+        self.form_critic_prop_lol_kir.setObjectName(u"form_critic_prop_lol_kir")
+
+        self.horizontalLayout_86.addWidget(self.form_critic_prop_lol_kir)
+
+        self.form_critic_prop_rdg = QCheckBox(self.frame_136)
+        self.form_critic_prop_rdg.setObjectName(u"form_critic_prop_rdg")
+
+        self.horizontalLayout_86.addWidget(self.form_critic_prop_rdg)
+
+        self.form_critic_prop_vtf = QCheckBox(self.frame_136)
+        self.form_critic_prop_vtf.setObjectName(u"form_critic_prop_vtf")
+
+        self.horizontalLayout_86.addWidget(self.form_critic_prop_vtf)
+
+        self.form_critic_prop_vtf_kir = QCheckBox(self.frame_136)
+        self.form_critic_prop_vtf_kir.setObjectName(u"form_critic_prop_vtf_kir")
+
+        self.horizontalLayout_86.addWidget(self.form_critic_prop_vtf_kir)
+
+
+        self.verticalLayout_86.addWidget(self.frame_136)
+
+        self.verticalSpacer_28 = QSpacerItem(20, 344, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_86.addItem(self.verticalSpacer_28)
+
+        self.tabWidget_14.addTab(self.tab_47, "")
+        self.tab_49 = QWidget()
+        self.tab_49.setObjectName(u"tab_49")
+        self.addLinesToCriticFile = QCheckBox(self.tab_49)
+        self.addLinesToCriticFile.setObjectName(u"addLinesToCriticFile")
+        self.addLinesToCriticFile.setGeometry(QRect(10, 10, 311, 20))
+        self.tabWidget_14.addTab(self.tab_49, "")
+
+        self.verticalLayout_69.addWidget(self.tabWidget_14)
+
+        self.frame_115 = QFrame(self.tab_53)
+        self.frame_115.setObjectName(u"frame_115")
+        self.frame_115.setMinimumSize(QSize(0, 0))
+        self.frame_115.setFrameShape(QFrame.NoFrame)
+        self.frame_115.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_141 = QHBoxLayout(self.frame_115)
+        self.horizontalLayout_141.setObjectName(u"horizontalLayout_141")
+        self.horizontalSpacer_77 = QSpacerItem(95, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_141.addItem(self.horizontalSpacer_77)
+
+        self.FormCreateCriFile = QPushButton(self.frame_115)
+        self.FormCreateCriFile.setObjectName(u"FormCreateCriFile")
+
+        self.horizontalLayout_141.addWidget(self.FormCreateCriFile)
+
+        self.horizontalSpacer_97 = QSpacerItem(95, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_141.addItem(self.horizontalSpacer_97)
+
+
+        self.verticalLayout_69.addWidget(self.frame_115)
+
+        self.tabWidget_15.addTab(self.tab_53, "")
+        self.tab_52 = QWidget()
+        self.tab_52.setObjectName(u"tab_52")
+        self.verticalLayout_106 = QVBoxLayout(self.tab_52)
+        self.verticalLayout_106.setObjectName(u"verticalLayout_106")
+        self.frame_125 = QFrame(self.tab_52)
+        self.frame_125.setObjectName(u"frame_125")
+        self.frame_125.setMinimumSize(QSize(0, 0))
+        self.frame_125.setFrameShape(QFrame.NoFrame)
+        self.frame_125.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_130 = QHBoxLayout(self.frame_125)
+        self.horizontalLayout_130.setObjectName(u"horizontalLayout_130")
+        self.frame_126 = QFrame(self.frame_125)
+        self.frame_126.setObjectName(u"frame_126")
+        self.frame_126.setMinimumSize(QSize(0, 0))
+        self.frame_126.setFrameShape(QFrame.NoFrame)
+        self.frame_126.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_129 = QHBoxLayout(self.frame_126)
+        self.horizontalLayout_129.setObjectName(u"horizontalLayout_129")
+        self.radio_with_cp = QRadioButton(self.frame_126)
+        self.radio_with_cp.setObjectName(u"radio_with_cp")
+        self.radio_with_cp.setChecked(True)
+
+        self.horizontalLayout_129.addWidget(self.radio_with_cp)
+
+        self.radio_without_cp = QRadioButton(self.frame_126)
+        self.radio_without_cp.setObjectName(u"radio_without_cp")
+
+        self.horizontalLayout_129.addWidget(self.radio_without_cp)
+
+
+        self.horizontalLayout_130.addWidget(self.frame_126)
+
+        self.label_93 = QLabel(self.frame_125)
+        self.label_93.setObjectName(u"label_93")
+
+        self.horizontalLayout_130.addWidget(self.label_93)
+
+
+        self.verticalLayout_106.addWidget(self.frame_125)
+
+        self.frame_139 = QFrame(self.tab_52)
+        self.frame_139.setObjectName(u"frame_139")
+        self.frame_139.setFrameShape(QFrame.NoFrame)
+        self.frame_139.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_142 = QHBoxLayout(self.frame_139)
+        self.horizontalLayout_142.setObjectName(u"horizontalLayout_142")
+        self.horizontalSpacer_98 = QSpacerItem(93, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_142.addItem(self.horizontalSpacer_98)
+
+        self.FormCreateCriXYZFile = QPushButton(self.frame_139)
+        self.FormCreateCriXYZFile.setObjectName(u"FormCreateCriXYZFile")
+
+        self.horizontalLayout_142.addWidget(self.FormCreateCriXYZFile)
+
+        self.horizontalSpacer_99 = QSpacerItem(93, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_142.addItem(self.horizontalSpacer_99)
+
+
+        self.verticalLayout_106.addWidget(self.frame_139)
+
+        self.frame = QFrame(self.tab_52)
+        self.frame.setObjectName(u"frame")
+        self.frame.setMinimumSize(QSize(0, 0))
+        self.frame.setFrameShape(QFrame.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_4 = QHBoxLayout(self.frame)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalSpacer = QSpacerItem(103, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer)
+
+        self.save_all_data = QPushButton(self.frame)
+        self.save_all_data.setObjectName(u"save_all_data")
+
+        self.horizontalLayout_4.addWidget(self.save_all_data)
+
+        self.horizontalSpacer_2 = QSpacerItem(103, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
+
+
+        self.verticalLayout_106.addWidget(self.frame)
+
+        self.verticalSpacer_31 = QSpacerItem(20, 399, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_106.addItem(self.verticalSpacer_31)
+
+        self.tabWidget_15.addTab(self.tab_52, "")
+
+        self.verticalLayout_11.addWidget(self.tabWidget_15)
+
+
+        self.verticalLayout_26.addWidget(self.groupBox_15)
 
 
         self.horizontalLayout_6.addWidget(self.frame_16)
@@ -1008,333 +1335,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.groupBox_20)
 
         self.tabWidget.addTab(self.tab_5, "")
-        self.tab_2 = QWidget()
-        self.tab_2.setObjectName(u"tab_2")
-        self.verticalLayout_4 = QVBoxLayout(self.tab_2)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.tabWidget_15 = QTabWidget(self.tab_2)
-        self.tabWidget_15.setObjectName(u"tabWidget_15")
-        self.tabWidget_15.setMinimumSize(QSize(0, 300))
-        self.tab_39 = QWidget()
-        self.tab_39.setObjectName(u"tab_39")
-        self.verticalLayout_20 = QVBoxLayout(self.tab_39)
-        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
-        self.frame_58 = QFrame(self.tab_39)
-        self.frame_58.setObjectName(u"frame_58")
-        self.frame_58.setFrameShape(QFrame.StyledPanel)
-        self.frame_58.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_99 = QVBoxLayout(self.frame_58)
-        self.verticalLayout_99.setObjectName(u"verticalLayout_99")
-        self.form_critic_list = QRadioButton(self.frame_58)
-        self.form_critic_list.setObjectName(u"form_critic_list")
-        self.form_critic_list.setChecked(True)
-
-        self.verticalLayout_99.addWidget(self.form_critic_list)
-
-        self.form_critic_all = QRadioButton(self.frame_58)
-        self.form_critic_all.setObjectName(u"form_critic_all")
-
-        self.verticalLayout_99.addWidget(self.form_critic_all)
-
-
-        self.verticalLayout_20.addWidget(self.frame_58)
-
-        self.widget = QWidget(self.tab_39)
-        self.widget.setObjectName(u"widget")
-        self.horizontalLayout_176 = QHBoxLayout(self.widget)
-        self.horizontalLayout_176.setObjectName(u"horizontalLayout_176")
-        self.horizontalSpacer_57 = QSpacerItem(104, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_176.addItem(self.horizontalSpacer_57)
-
-        self.export_cp_to_csv = QPushButton(self.widget)
-        self.export_cp_to_csv.setObjectName(u"export_cp_to_csv")
-
-        self.horizontalLayout_176.addWidget(self.export_cp_to_csv)
-
-        self.horizontalSpacer_123 = QSpacerItem(103, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_176.addItem(self.horizontalSpacer_123)
-
-
-        self.verticalLayout_20.addWidget(self.widget)
-
-        self.verticalSpacer = QSpacerItem(20, 365, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_20.addItem(self.verticalSpacer)
-
-        self.tabWidget_15.addTab(self.tab_39, "")
-        self.tab_53 = QWidget()
-        self.tab_53.setObjectName(u"tab_53")
-        self.verticalLayout_69 = QVBoxLayout(self.tab_53)
-        self.verticalLayout_69.setObjectName(u"verticalLayout_69")
-        self.tabWidget_14 = QTabWidget(self.tab_53)
-        self.tabWidget_14.setObjectName(u"tabWidget_14")
-        self.tab_48 = QWidget()
-        self.tab_48.setObjectName(u"tab_48")
-        self.horizontalLayout_162 = QHBoxLayout(self.tab_48)
-        self.horizontalLayout_162.setObjectName(u"horizontalLayout_162")
-        self.criticalPointImports = QTextBrowser(self.tab_48)
-        self.criticalPointImports.setObjectName(u"criticalPointImports")
-
-        self.horizontalLayout_162.addWidget(self.criticalPointImports)
-
-        self.tabWidget_14.addTab(self.tab_48, "")
-        self.tab_46 = QWidget()
-        self.tab_46.setObjectName(u"tab_46")
-        self.verticalLayout_87 = QVBoxLayout(self.tab_46)
-        self.verticalLayout_87.setObjectName(u"verticalLayout_87")
-        self.frame_140 = QFrame(self.tab_46)
-        self.frame_140.setObjectName(u"frame_140")
-        self.frame_140.setFrameShape(QFrame.NoFrame)
-        self.frame_140.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_143 = QHBoxLayout(self.frame_140)
-        self.horizontalLayout_143.setObjectName(u"horizontalLayout_143")
-        self.form_critic_all_cp = QCheckBox(self.frame_140)
-        self.form_critic_all_cp.setObjectName(u"form_critic_all_cp")
-
-        self.horizontalLayout_143.addWidget(self.form_critic_all_cp)
-
-
-        self.verticalLayout_87.addWidget(self.frame_140)
-
-        self.frame_134 = QFrame(self.tab_46)
-        self.frame_134.setObjectName(u"frame_134")
-        self.frame_134.setFrameShape(QFrame.NoFrame)
-        self.frame_134.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_137 = QHBoxLayout(self.frame_134)
-        self.horizontalLayout_137.setObjectName(u"horizontalLayout_137")
-        self.radioButton_9 = QRadioButton(self.frame_134)
-        self.radioButton_9.setObjectName(u"radioButton_9")
-
-        self.horizontalLayout_137.addWidget(self.radioButton_9)
-
-        self.formCriticBPradio = QRadioButton(self.frame_134)
-        self.formCriticBPradio.setObjectName(u"formCriticBPradio")
-        self.formCriticBPradio.setChecked(True)
-
-        self.horizontalLayout_137.addWidget(self.formCriticBPradio)
-
-        self.FormExtraPoints = QSpinBox(self.frame_134)
-        self.FormExtraPoints.setObjectName(u"FormExtraPoints")
-
-        self.horizontalLayout_137.addWidget(self.FormExtraPoints)
-
-        self.label_86 = QLabel(self.frame_134)
-        self.label_86.setObjectName(u"label_86")
-
-        self.horizontalLayout_137.addWidget(self.label_86)
-
-
-        self.verticalLayout_87.addWidget(self.frame_134)
-
-        self.verticalSpacer_30 = QSpacerItem(20, 342, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_87.addItem(self.verticalSpacer_30)
-
-        self.tabWidget_14.addTab(self.tab_46, "")
-        self.tab_47 = QWidget()
-        self.tab_47.setObjectName(u"tab_47")
-        self.verticalLayout_86 = QVBoxLayout(self.tab_47)
-        self.verticalLayout_86.setObjectName(u"verticalLayout_86")
-        self.frame_135 = QFrame(self.tab_47)
-        self.frame_135.setObjectName(u"frame_135")
-        self.frame_135.setFrameShape(QFrame.NoFrame)
-        self.frame_135.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_138 = QHBoxLayout(self.frame_135)
-        self.horizontalLayout_138.setObjectName(u"horizontalLayout_138")
-        self.horizontalLayout_138.setContentsMargins(-1, -1, 0, -1)
-        self.form_critic_prop_lag = QCheckBox(self.frame_135)
-        self.form_critic_prop_lag.setObjectName(u"form_critic_prop_lag")
-
-        self.horizontalLayout_138.addWidget(self.form_critic_prop_lag)
-
-        self.form_critic_prop_htf_kir = QCheckBox(self.frame_135)
-        self.form_critic_prop_htf_kir.setObjectName(u"form_critic_prop_htf_kir")
-
-        self.horizontalLayout_138.addWidget(self.form_critic_prop_htf_kir)
-
-        self.form_critic_prop_htf = QCheckBox(self.frame_135)
-        self.form_critic_prop_htf.setObjectName(u"form_critic_prop_htf")
-
-        self.horizontalLayout_138.addWidget(self.form_critic_prop_htf)
-
-        self.form_critic_prop_gtf = QCheckBox(self.frame_135)
-        self.form_critic_prop_gtf.setObjectName(u"form_critic_prop_gtf")
-
-        self.horizontalLayout_138.addWidget(self.form_critic_prop_gtf)
-
-        self.form_critic_prop_gtf_kir = QCheckBox(self.frame_135)
-        self.form_critic_prop_gtf_kir.setObjectName(u"form_critic_prop_gtf_kir")
-
-        self.horizontalLayout_138.addWidget(self.form_critic_prop_gtf_kir)
-
-
-        self.verticalLayout_86.addWidget(self.frame_135)
-
-        self.frame_136 = QFrame(self.tab_47)
-        self.frame_136.setObjectName(u"frame_136")
-        self.frame_136.setMinimumSize(QSize(0, 0))
-        self.frame_136.setFrameShape(QFrame.NoFrame)
-        self.frame_136.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_86 = QHBoxLayout(self.frame_136)
-        self.horizontalLayout_86.setObjectName(u"horizontalLayout_86")
-        self.horizontalLayout_86.setContentsMargins(-1, -1, 0, -1)
-        self.form_critic_prop_lol_kir = QCheckBox(self.frame_136)
-        self.form_critic_prop_lol_kir.setObjectName(u"form_critic_prop_lol_kir")
-
-        self.horizontalLayout_86.addWidget(self.form_critic_prop_lol_kir)
-
-        self.form_critic_prop_rdg = QCheckBox(self.frame_136)
-        self.form_critic_prop_rdg.setObjectName(u"form_critic_prop_rdg")
-
-        self.horizontalLayout_86.addWidget(self.form_critic_prop_rdg)
-
-        self.form_critic_prop_vtf = QCheckBox(self.frame_136)
-        self.form_critic_prop_vtf.setObjectName(u"form_critic_prop_vtf")
-
-        self.horizontalLayout_86.addWidget(self.form_critic_prop_vtf)
-
-        self.form_critic_prop_vtf_kir = QCheckBox(self.frame_136)
-        self.form_critic_prop_vtf_kir.setObjectName(u"form_critic_prop_vtf_kir")
-
-        self.horizontalLayout_86.addWidget(self.form_critic_prop_vtf_kir)
-
-
-        self.verticalLayout_86.addWidget(self.frame_136)
-
-        self.verticalSpacer_28 = QSpacerItem(20, 344, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_86.addItem(self.verticalSpacer_28)
-
-        self.tabWidget_14.addTab(self.tab_47, "")
-        self.tab_49 = QWidget()
-        self.tab_49.setObjectName(u"tab_49")
-        self.addLinesToCriticFile = QCheckBox(self.tab_49)
-        self.addLinesToCriticFile.setObjectName(u"addLinesToCriticFile")
-        self.addLinesToCriticFile.setGeometry(QRect(10, 10, 311, 20))
-        self.tabWidget_14.addTab(self.tab_49, "")
-
-        self.verticalLayout_69.addWidget(self.tabWidget_14)
-
-        self.frame_115 = QFrame(self.tab_53)
-        self.frame_115.setObjectName(u"frame_115")
-        self.frame_115.setMinimumSize(QSize(0, 0))
-        self.frame_115.setFrameShape(QFrame.NoFrame)
-        self.frame_115.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_141 = QHBoxLayout(self.frame_115)
-        self.horizontalLayout_141.setObjectName(u"horizontalLayout_141")
-        self.horizontalSpacer_77 = QSpacerItem(95, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_141.addItem(self.horizontalSpacer_77)
-
-        self.FormCreateCriFile = QPushButton(self.frame_115)
-        self.FormCreateCriFile.setObjectName(u"FormCreateCriFile")
-
-        self.horizontalLayout_141.addWidget(self.FormCreateCriFile)
-
-        self.horizontalSpacer_97 = QSpacerItem(95, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_141.addItem(self.horizontalSpacer_97)
-
-
-        self.verticalLayout_69.addWidget(self.frame_115)
-
-        self.tabWidget_15.addTab(self.tab_53, "")
-        self.tab_52 = QWidget()
-        self.tab_52.setObjectName(u"tab_52")
-        self.verticalLayout_106 = QVBoxLayout(self.tab_52)
-        self.verticalLayout_106.setObjectName(u"verticalLayout_106")
-        self.frame_125 = QFrame(self.tab_52)
-        self.frame_125.setObjectName(u"frame_125")
-        self.frame_125.setMinimumSize(QSize(0, 0))
-        self.frame_125.setFrameShape(QFrame.NoFrame)
-        self.frame_125.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_130 = QHBoxLayout(self.frame_125)
-        self.horizontalLayout_130.setObjectName(u"horizontalLayout_130")
-        self.frame_126 = QFrame(self.frame_125)
-        self.frame_126.setObjectName(u"frame_126")
-        self.frame_126.setMinimumSize(QSize(0, 0))
-        self.frame_126.setFrameShape(QFrame.NoFrame)
-        self.frame_126.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_129 = QHBoxLayout(self.frame_126)
-        self.horizontalLayout_129.setObjectName(u"horizontalLayout_129")
-        self.radio_with_cp = QRadioButton(self.frame_126)
-        self.radio_with_cp.setObjectName(u"radio_with_cp")
-        self.radio_with_cp.setChecked(True)
-
-        self.horizontalLayout_129.addWidget(self.radio_with_cp)
-
-        self.radio_without_cp = QRadioButton(self.frame_126)
-        self.radio_without_cp.setObjectName(u"radio_without_cp")
-
-        self.horizontalLayout_129.addWidget(self.radio_without_cp)
-
-
-        self.horizontalLayout_130.addWidget(self.frame_126)
-
-        self.label_93 = QLabel(self.frame_125)
-        self.label_93.setObjectName(u"label_93")
-
-        self.horizontalLayout_130.addWidget(self.label_93)
-
-
-        self.verticalLayout_106.addWidget(self.frame_125)
-
-        self.frame_139 = QFrame(self.tab_52)
-        self.frame_139.setObjectName(u"frame_139")
-        self.frame_139.setFrameShape(QFrame.NoFrame)
-        self.frame_139.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_142 = QHBoxLayout(self.frame_139)
-        self.horizontalLayout_142.setObjectName(u"horizontalLayout_142")
-        self.horizontalSpacer_98 = QSpacerItem(93, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_142.addItem(self.horizontalSpacer_98)
-
-        self.FormCreateCriXYZFile = QPushButton(self.frame_139)
-        self.FormCreateCriXYZFile.setObjectName(u"FormCreateCriXYZFile")
-
-        self.horizontalLayout_142.addWidget(self.FormCreateCriXYZFile)
-
-        self.horizontalSpacer_99 = QSpacerItem(93, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_142.addItem(self.horizontalSpacer_99)
-
-
-        self.verticalLayout_106.addWidget(self.frame_139)
-
-        self.frame = QFrame(self.tab_52)
-        self.frame.setObjectName(u"frame")
-        self.frame.setMinimumSize(QSize(0, 0))
-        self.frame.setFrameShape(QFrame.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_4 = QHBoxLayout(self.frame)
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.horizontalSpacer = QSpacerItem(103, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_4.addItem(self.horizontalSpacer)
-
-        self.save_all_data = QPushButton(self.frame)
-        self.save_all_data.setObjectName(u"save_all_data")
-
-        self.horizontalLayout_4.addWidget(self.save_all_data)
-
-        self.horizontalSpacer_2 = QSpacerItem(103, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
-
-
-        self.verticalLayout_106.addWidget(self.frame)
-
-        self.verticalSpacer_31 = QSpacerItem(20, 399, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_106.addItem(self.verticalSpacer_31)
-
-        self.tabWidget_15.addTab(self.tab_52, "")
-
-        self.verticalLayout_4.addWidget(self.tabWidget_15)
-
-        self.tabWidget.addTab(self.tab_2, "")
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
         self.verticalLayout_15 = QVBoxLayout(self.tab)
@@ -2991,8 +2991,39 @@ class Ui_MainWindow(object):
         self.add_cp_to_list.setText(QCoreApplication.translate("MainWindow", u"Add to List", None))
         self.delete_cp_from_list.setText(QCoreApplication.translate("MainWindow", u"Delete selected from List", None))
         self.clear_cp_list.setText(QCoreApplication.translate("MainWindow", u"Clear List", None))
-        self.delete_cp_from_model.setText(QCoreApplication.translate("MainWindow", u"Exclude CPs from list", None))
-        self.leave_cp_in_model.setText(QCoreApplication.translate("MainWindow", u"Limit to CPs from list", None))
+        self.delete_cp_from_model.setText(QCoreApplication.translate("MainWindow", u"Exclude CPs (list) from model", None))
+        self.leave_cp_in_model.setText(QCoreApplication.translate("MainWindow", u"Limit to CPs (list) in model", None))
+        self.groupBox_15.setTitle(QCoreApplication.translate("MainWindow", u"Export", None))
+        self.form_critic_list.setText(QCoreApplication.translate("MainWindow", u"From list", None))
+        self.form_critic_all.setText(QCoreApplication.translate("MainWindow", u"All CP", None))
+        self.export_cp_to_csv.setText(QCoreApplication.translate("MainWindow", u"Export to *.csv", None))
+        self.tabWidget_15.setTabText(self.tabWidget_15.indexOf(self.tab_39), QCoreApplication.translate("MainWindow", u"*.csv", None))
+        self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_48), QCoreApplication.translate("MainWindow", u"Imports", None))
+        self.form_critic_all_cp.setText(QCoreApplication.translate("MainWindow", u"All CP", None))
+        self.radioButton_9.setText(QCoreApplication.translate("MainWindow", u"CP only", None))
+        self.formCriticBPradio.setText(QCoreApplication.translate("MainWindow", u"BP with", None))
+        self.label_86.setText(QCoreApplication.translate("MainWindow", u"extra points", None))
+        self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_46), QCoreApplication.translate("MainWindow", u"CP", None))
+        self.form_critic_prop_lag.setText(QCoreApplication.translate("MainWindow", u"lag", None))
+        self.form_critic_prop_htf_kir.setText(QCoreApplication.translate("MainWindow", u"htf_kir", None))
+        self.form_critic_prop_htf.setText(QCoreApplication.translate("MainWindow", u"htf", None))
+        self.form_critic_prop_gtf.setText(QCoreApplication.translate("MainWindow", u"gtf", None))
+        self.form_critic_prop_gtf_kir.setText(QCoreApplication.translate("MainWindow", u"gtf_kir", None))
+        self.form_critic_prop_lol_kir.setText(QCoreApplication.translate("MainWindow", u"lol_kir", None))
+        self.form_critic_prop_rdg.setText(QCoreApplication.translate("MainWindow", u"rdg", None))
+        self.form_critic_prop_vtf.setText(QCoreApplication.translate("MainWindow", u"vtf", None))
+        self.form_critic_prop_vtf_kir.setText(QCoreApplication.translate("MainWindow", u"vtf_kir", None))
+        self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_47), QCoreApplication.translate("MainWindow", u"Properties", None))
+        self.addLinesToCriticFile.setText(QCoreApplication.translate("MainWindow", u"add lines to *.cri file", None))
+        self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_49), QCoreApplication.translate("MainWindow", u"Lines", None))
+        self.FormCreateCriFile.setText(QCoreApplication.translate("MainWindow", u"Create *.cri file", None))
+        self.tabWidget_15.setTabText(self.tabWidget_15.indexOf(self.tab_53), QCoreApplication.translate("MainWindow", u"*.cri", None))
+        self.radio_with_cp.setText(QCoreApplication.translate("MainWindow", u"with", None))
+        self.radio_without_cp.setText(QCoreApplication.translate("MainWindow", u"without", None))
+        self.label_93.setText(QCoreApplication.translate("MainWindow", u"selected CP", None))
+        self.FormCreateCriXYZFile.setText(QCoreApplication.translate("MainWindow", u"Create *.xyz file", None))
+        self.save_all_data.setText(QCoreApplication.translate("MainWindow", u"SaveAllData", None))
+        self.tabWidget_15.setTabText(self.tabWidget_15.indexOf(self.tab_52), QCoreApplication.translate("MainWindow", u"*.xyz", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_51), QCoreApplication.translate("MainWindow", u"CPs", None))
         self.groupBox_7.setTitle(QCoreApplication.translate("MainWindow", u"RHO", None))
         self.hide_cps_min_rho.setText(QCoreApplication.translate("MainWindow", u"Hide cp with smaller RHO", None))
@@ -3029,37 +3060,6 @@ class Ui_MainWindow(object):
         self.label_62.setText(QCoreApplication.translate("MainWindow", u":", None))
         self.PropertyAtomAtomDistanceGet.setText(QCoreApplication.translate("MainWindow", u"Get", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("MainWindow", u"Bonds", None))
-        self.form_critic_list.setText(QCoreApplication.translate("MainWindow", u"From list", None))
-        self.form_critic_all.setText(QCoreApplication.translate("MainWindow", u"All CP", None))
-        self.export_cp_to_csv.setText(QCoreApplication.translate("MainWindow", u"Export to *.csv", None))
-        self.tabWidget_15.setTabText(self.tabWidget_15.indexOf(self.tab_39), QCoreApplication.translate("MainWindow", u"*.csv", None))
-        self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_48), QCoreApplication.translate("MainWindow", u"Imports", None))
-        self.form_critic_all_cp.setText(QCoreApplication.translate("MainWindow", u"All CP", None))
-        self.radioButton_9.setText(QCoreApplication.translate("MainWindow", u"CP only", None))
-        self.formCriticBPradio.setText(QCoreApplication.translate("MainWindow", u"BP with", None))
-        self.label_86.setText(QCoreApplication.translate("MainWindow", u"extra points", None))
-        self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_46), QCoreApplication.translate("MainWindow", u"CP", None))
-        self.form_critic_prop_lag.setText(QCoreApplication.translate("MainWindow", u"lag", None))
-        self.form_critic_prop_htf_kir.setText(QCoreApplication.translate("MainWindow", u"htf_kir", None))
-        self.form_critic_prop_htf.setText(QCoreApplication.translate("MainWindow", u"htf", None))
-        self.form_critic_prop_gtf.setText(QCoreApplication.translate("MainWindow", u"gtf", None))
-        self.form_critic_prop_gtf_kir.setText(QCoreApplication.translate("MainWindow", u"gtf_kir", None))
-        self.form_critic_prop_lol_kir.setText(QCoreApplication.translate("MainWindow", u"lol_kir", None))
-        self.form_critic_prop_rdg.setText(QCoreApplication.translate("MainWindow", u"rdg", None))
-        self.form_critic_prop_vtf.setText(QCoreApplication.translate("MainWindow", u"vtf", None))
-        self.form_critic_prop_vtf_kir.setText(QCoreApplication.translate("MainWindow", u"vtf_kir", None))
-        self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_47), QCoreApplication.translate("MainWindow", u"Properties", None))
-        self.addLinesToCriticFile.setText(QCoreApplication.translate("MainWindow", u"add lines to *.cri file", None))
-        self.tabWidget_14.setTabText(self.tabWidget_14.indexOf(self.tab_49), QCoreApplication.translate("MainWindow", u"Lines", None))
-        self.FormCreateCriFile.setText(QCoreApplication.translate("MainWindow", u"Create *.cri file", None))
-        self.tabWidget_15.setTabText(self.tabWidget_15.indexOf(self.tab_53), QCoreApplication.translate("MainWindow", u"*.cri", None))
-        self.radio_with_cp.setText(QCoreApplication.translate("MainWindow", u"with", None))
-        self.radio_without_cp.setText(QCoreApplication.translate("MainWindow", u"without", None))
-        self.label_93.setText(QCoreApplication.translate("MainWindow", u"selected CP", None))
-        self.FormCreateCriXYZFile.setText(QCoreApplication.translate("MainWindow", u"Create *.xyz file", None))
-        self.save_all_data.setText(QCoreApplication.translate("MainWindow", u"SaveAllData", None))
-        self.tabWidget_15.setTabText(self.tabWidget_15.indexOf(self.tab_52), QCoreApplication.translate("MainWindow", u"*.xyz", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Export", None))
         self.ColorAtomsProperty.setText(QCoreApplication.translate("MainWindow", u"Color atoms with property", None))
         self.ActivateFragmentSelectionModeCheckBox.setText(QCoreApplication.translate("MainWindow", u"Activate fragment selection mode", None))
         self.groupBox_21.setTitle(QCoreApplication.translate("MainWindow", u"Visual effect for selected fragment", None))

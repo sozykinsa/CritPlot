@@ -8,5 +8,15 @@ class CriticalPoint(Atom):
 
     def __init__(self, at_data):
         """Constructor"""
-        super().__init__(at_data)
+        self.xyz = at_data[0]
+        self.let = at_data[1]
+        self.cp_type: str = at_data[2]
+        self.charge = 0
+        self.is_visible: bool = True
+        self.selected: bool = False
+        self.active: bool = False
+        self.fragment1: bool = False
+        self.properties = {}
+        self.visible_property = ""
+        self.tag = ""
         self.bonds = {}
