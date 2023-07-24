@@ -2786,15 +2786,40 @@ class Ui_MainWindow(object):
         self.tabWidget_2.addTab(self.tab_7, "")
         self.tab_8 = QWidget()
         self.tab_8.setObjectName(u"tab_8")
-        self.pyqt_hist_widget = PyqtGraphWidget(self.tab_8)
-        self.pyqt_hist_widget.setObjectName(u"pyqt_hist_widget")
-        self.pyqt_hist_widget.setGeometry(QRect(10, 270, 592, 351))
-        sizePolicy3.setHeightForWidth(self.pyqt_hist_widget.sizePolicy().hasHeightForWidth())
-        self.pyqt_hist_widget.setSizePolicy(sizePolicy3)
-        self.pyqt_hist_widget.setMinimumSize(QSize(0, 100))
-        self.groupBox_52 = QGroupBox(self.tab_8)
+        self.verticalLayout_4 = QVBoxLayout(self.tab_8)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.frame_18 = QFrame(self.tab_8)
+        self.frame_18.setObjectName(u"frame_18")
+        self.frame_18.setFrameShape(QFrame.StyledPanel)
+        self.frame_18.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_19 = QHBoxLayout(self.frame_18)
+        self.horizontalLayout_19.setObjectName(u"horizontalLayout_19")
+        self.horizontalLayout_19.setContentsMargins(0, -1, 0, -1)
+        self.groupBox_16 = QGroupBox(self.frame_18)
+        self.groupBox_16.setObjectName(u"groupBox_16")
+        self.verticalLayout_27 = QVBoxLayout(self.groupBox_16)
+        self.verticalLayout_27.setObjectName(u"verticalLayout_27")
+        self.bp_len_histogram = QRadioButton(self.groupBox_16)
+        self.bp_len_histogram.setObjectName(u"bp_len_histogram")
+
+        self.verticalLayout_27.addWidget(self.bp_len_histogram)
+
+        self.bcp_rho_histogram = QRadioButton(self.groupBox_16)
+        self.bcp_rho_histogram.setObjectName(u"bcp_rho_histogram")
+
+        self.verticalLayout_27.addWidget(self.bcp_rho_histogram)
+
+        self.bonds_histogram = QRadioButton(self.groupBox_16)
+        self.bonds_histogram.setObjectName(u"bonds_histogram")
+        self.bonds_histogram.setCheckable(False)
+
+        self.verticalLayout_27.addWidget(self.bonds_histogram)
+
+
+        self.horizontalLayout_19.addWidget(self.groupBox_16)
+
+        self.groupBox_52 = QGroupBox(self.frame_18)
         self.groupBox_52.setObjectName(u"groupBox_52")
-        self.groupBox_52.setGeometry(QRect(10, 10, 399, 177))
         self.groupBox_52.setMinimumSize(QSize(0, 0))
         self.verticalLayout_101 = QVBoxLayout(self.groupBox_52)
         self.verticalLayout_101.setObjectName(u"verticalLayout_101")
@@ -2810,10 +2835,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_168.addWidget(self.label_125)
 
-        self.bonds_title = QLineEdit(self.frame_153)
-        self.bonds_title.setObjectName(u"bonds_title")
+        self.histogram_title = QLineEdit(self.frame_153)
+        self.histogram_title.setObjectName(u"histogram_title")
 
-        self.horizontalLayout_168.addWidget(self.bonds_title)
+        self.horizontalLayout_168.addWidget(self.histogram_title)
 
 
         self.verticalLayout_101.addWidget(self.frame_153)
@@ -2830,10 +2855,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_169.addWidget(self.label_126)
 
-        self.bonds_x_label = QLineEdit(self.frame_154)
-        self.bonds_x_label.setObjectName(u"bonds_x_label")
+        self.histogram_x_label = QLineEdit(self.frame_154)
+        self.histogram_x_label.setObjectName(u"histogram_x_label")
 
-        self.horizontalLayout_169.addWidget(self.bonds_x_label)
+        self.horizontalLayout_169.addWidget(self.histogram_x_label)
 
 
         self.verticalLayout_101.addWidget(self.frame_154)
@@ -2850,10 +2875,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_170.addWidget(self.label_127)
 
-        self.bonds_y_label = QLineEdit(self.frame_155)
-        self.bonds_y_label.setObjectName(u"bonds_y_label")
+        self.histogram_y_label = QLineEdit(self.frame_155)
+        self.histogram_y_label.setObjectName(u"histogram_y_label")
 
-        self.horizontalLayout_170.addWidget(self.bonds_y_label)
+        self.horizontalLayout_170.addWidget(self.histogram_y_label)
 
 
         self.verticalLayout_101.addWidget(self.frame_155)
@@ -2877,11 +2902,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_32.addWidget(self.FormActionsPostPlotBondsHistogramN)
 
-        self.FormActionsPostButPlotBondsHistogram = QPushButton(self.frame_7)
-        self.FormActionsPostButPlotBondsHistogram.setObjectName(u"FormActionsPostButPlotBondsHistogram")
-        self.FormActionsPostButPlotBondsHistogram.setEnabled(False)
+        self.plot_histogram = QPushButton(self.frame_7)
+        self.plot_histogram.setObjectName(u"plot_histogram")
+        self.plot_histogram.setEnabled(False)
 
-        self.horizontalLayout_32.addWidget(self.FormActionsPostButPlotBondsHistogram)
+        self.horizontalLayout_32.addWidget(self.plot_histogram)
 
         self.horizontalSpacer_26 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -2889,6 +2914,20 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_101.addWidget(self.frame_7)
+
+
+        self.horizontalLayout_19.addWidget(self.groupBox_52)
+
+
+        self.verticalLayout_4.addWidget(self.frame_18)
+
+        self.pyqt_hist_widget = PyqtGraphWidget(self.tab_8)
+        self.pyqt_hist_widget.setObjectName(u"pyqt_hist_widget")
+        sizePolicy3.setHeightForWidth(self.pyqt_hist_widget.sizePolicy().hasHeightForWidth())
+        self.pyqt_hist_widget.setSizePolicy(sizePolicy3)
+        self.pyqt_hist_widget.setMinimumSize(QSize(0, 100))
+
+        self.verticalLayout_4.addWidget(self.pyqt_hist_widget)
 
         self.tabWidget_2.addTab(self.tab_8, "")
 
@@ -3158,7 +3197,7 @@ class Ui_MainWindow(object):
         self.is_show_props_for_cp_list.setText(QCoreApplication.translate("MainWindow", u"Show properties only for CPs from list", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabSettings), QCoreApplication.translate("MainWindow", u"Settings", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_7), QCoreApplication.translate("MainWindow", u"3D View", None))
-        self.cps_rule.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.cps_rule.setText(QCoreApplication.translate("MainWindow", u"Poincare-Hoff rule ...", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Bond ritical points filter", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_6), QCoreApplication.translate("MainWindow", u"RHO(r)", None))
         self.bcp_table.setText(QCoreApplication.translate("MainWindow", u"bcp", None))
@@ -3166,14 +3205,18 @@ class Ui_MainWindow(object):
         self.rcp_table.setText(QCoreApplication.translate("MainWindow", u"rcp", None))
         self.ccp_table.setText(QCoreApplication.translate("MainWindow", u"ccp", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_7), QCoreApplication.translate("MainWindow", u"Properties table", None))
-        self.groupBox_52.setTitle(QCoreApplication.translate("MainWindow", u"Plot", None))
+        self.groupBox_16.setTitle(QCoreApplication.translate("MainWindow", u"Source", None))
+        self.bp_len_histogram.setText(QCoreApplication.translate("MainWindow", u"BP len", None))
+        self.bcp_rho_histogram.setText(QCoreApplication.translate("MainWindow", u"BCP rho", None))
+        self.bonds_histogram.setText(QCoreApplication.translate("MainWindow", u"Bonds", None))
+        self.groupBox_52.setTitle(QCoreApplication.translate("MainWindow", u"Plot details", None))
         self.label_125.setText(QCoreApplication.translate("MainWindow", u"Title", None))
-        self.bonds_title.setText(QCoreApplication.translate("MainWindow", u"Bonds", None))
+        self.histogram_title.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_126.setText(QCoreApplication.translate("MainWindow", u"X label", None))
-        self.bonds_x_label.setText(QCoreApplication.translate("MainWindow", u"Bond lenght, A", None))
+        self.histogram_x_label.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_127.setText(QCoreApplication.translate("MainWindow", u"Y label", None))
-        self.bonds_y_label.setText(QCoreApplication.translate("MainWindow", u"Number of bonds", None))
-        self.FormActionsPostButPlotBondsHistogram.setText(QCoreApplication.translate("MainWindow", u"Plot histogram", None))
+        self.histogram_y_label.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.plot_histogram.setText(QCoreApplication.translate("MainWindow", u"Plot histogram", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_8), QCoreApplication.translate("MainWindow", u"Histogram", None))
         self.Form3Dand2DTabs.setItemText(self.Form3Dand2DTabs.indexOf(self.page_8), QCoreApplication.translate("MainWindow", u"CPs statistics", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))

@@ -120,8 +120,12 @@ class MainForm(QMainWindow):
         self.ui.rcp_table.clicked.connect(self.fill_cps_table)
         self.ui.ccp_table.clicked.connect(self.fill_cps_table)
 
+        self.ui.bonds_histogram.clicked.connect(self.default_histogram_text)
+        self.ui.bp_len_histogram.clicked.connect(self.default_histogram_text)
+        self.ui.bcp_rho_histogram.clicked.connect(self.default_histogram_text)
+
         # buttons
-        self.ui.FormActionsPostButPlotBondsHistogram.clicked.connect(self.plot_bonds_histogram)
+        self.ui.plot_histogram.clicked.connect(self.plot_histogram_of_data)
 
         # colors
         self.ui.ColorBackgroundDialogButton.clicked.connect(self.select_background_color)
@@ -675,6 +679,20 @@ class MainForm(QMainWindow):
         rule_text, rule_int = model.poincare_hoff_rule()
         self.ui.cps_rule.setText("Poincare-Hoff rule " + rule_text + "=" + str(rule_int))
 
+    def default_histogram_text(self):
+        if self.ui.bonds_histogram.isChecked():
+            self.ui.histogram_x_label.setText("Bond lenght, A")
+            self.ui.histogram_y_label.setText("Number of bonds")
+            self.ui.histogram_title.setText("Bonds")
+        if self.ui.bp_len_histogram.isChecked():
+            self.ui.histogram_x_label.setText("Atom-atom distance, A")
+            self.ui.histogram_y_label.setText("Number of bonds")
+            self.ui.histogram_title.setText("Atom-atom distance")
+        if self.ui.bcp_rho_histogram.isChecked():
+            self.ui.histogram_x_label.setText("RHO, a.u.")
+            self.ui.histogram_y_label.setText("Number of BCP")
+            self.ui.histogram_title.setText("BCPs")
+
     def fill_cps(self):
         model = self.ui.openGLWidget.get_model()
         cp_types = model.get_cp_types()
@@ -780,7 +798,8 @@ class MainForm(QMainWindow):
         self.ui.FormActionsPostComboBonds.currentIndexChanged.connect(self.fill_bonds)
 
         self.fill_bonds()
-        self.ui.FormActionsPostButPlotBondsHistogram.setEnabled(True)
+        self.ui.bonds_histogram.setCheckable(True)
+        self.ui.plot_histogram.setEnabled(True)
 
     def get_bond(self):  # pragma: no cover
         i = self.ui.PropertyAtomAtomDistanceAt1.value()
@@ -1052,6 +1071,7 @@ class MainForm(QMainWindow):
                 self.show_error(e)
             try:
                 self.plot_last_model()
+                self.ui.plot_histogram.setEnabled(True)
             except Exception as e:  # pragma: no cover
                 self.show_error(e)
 
@@ -1267,22 +1287,39 @@ class MainForm(QMainWindow):
 
         self.show_property_enabling()
 
-    def plot_bonds_histogram(self):
+    def plot_histogram_of_data(self):
         self.ui.pyqt_hist_widget.set_xticks(None)
         self.ui.Form3Dand2DTabs.setCurrentIndex(1)
-        c1, c2 = self.fill_bonds_charges()
-        bonds, bonds_mean, bonds_err = self.ui.openGLWidget.main_model.get_bonds_for_charges(c1, c2)
-
         self.ui.pyqt_hist_widget.clear()
         b = []
-        for bond in bonds:
-            b.append(bond[2])
 
-        num_bins = self.ui.FormActionsPostPlotBondsHistogramN.value()
-        x_title = self.ui.bonds_x_label.text()
-        y_title = self.ui.bonds_y_label.text()
-        title = self.ui.bonds_title.text()
-        self.ui.pyqt_hist_widget.add_histogram(b, num_bins, (0, 0, 255, 90), title, x_title, y_title)
+        f1 = self.ui.bonds_histogram.isChecked()
+        if f1:
+            c1, c2 = self.fill_bonds_charges()
+            bonds, bonds_mean, bonds_err = self.ui.openGLWidget.main_model.get_bonds_for_charges(c1, c2)
+            for bond in bonds:
+                b.append(bond[2])
+
+        if self.ui.bp_len_histogram.isChecked():
+            model = self.ui.openGLWidget.get_model()
+            if not (model is None):
+                for cp in model.cps:
+                    if (cp.let == "xb") and (cp.get_property("cp_bp_len") is not None):
+                        b.append(round(cp.get_property("cp_bp_len"), 4))
+
+        if self.ui.bcp_rho_histogram.isChecked():
+            model = self.ui.openGLWidget.get_model()
+            if not (model is None):
+                for cp in model.cps:
+                    if cp.let == "xb":
+                        b.append(float(cp.get_property("rho")))
+
+        if f1 or self.ui.bp_len_histogram.isChecked() or self.ui.bcp_rho_histogram.isChecked():
+            num_bins = self.ui.FormActionsPostPlotBondsHistogramN.value()
+            x_title = self.ui.histogram_x_label.text()
+            y_title = self.ui.histogram_y_label.text()
+            title = self.ui.histogram_title.text()
+            self.ui.pyqt_hist_widget.add_histogram(b, num_bins, (0, 0, 255, 90), title, x_title, y_title)
 
     @staticmethod
     def list_of_selected_items_in_combo(atom_index, combo):
