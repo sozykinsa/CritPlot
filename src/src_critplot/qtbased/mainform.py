@@ -1034,7 +1034,7 @@ class MainForm(QMainWindow):
         if len(self.models) > 0:  # pragma: no cover
             self.action_on_start = 'Open'
             self.save_state_action_on_start()
-            os.execl(sys.executable, sys.executable, *sys.argv)
+            os.execl(sys.executable, '"' + sys.executable + '"', *sys.argv)
         self.ui.Form3Dand2DTabs.setCurrentIndex(0)
         if not file_name:
             name_filter = "All supported files (*.cro *.outp);;Critic2 output (*.cro);;TOPOND output (*.outp)"
