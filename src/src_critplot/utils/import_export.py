@@ -18,6 +18,7 @@ class ImporterExporter(object):
         is_critic_open = False
         if os.path.exists(filename):
             file_format = helpers.check_format(filename)
+            print("format: ", file_format)
             if file_format == "topond_out":
                 models = atomic_data_from_output(filename, is_add_translations)
             elif file_format == "critic_cro":

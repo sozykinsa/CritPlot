@@ -7,11 +7,11 @@ def test_critical_points(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     models: AtomicModelCP = structure_from_cro_file(f_name)
     assert len(models[0].cps) == 11
-    assert models[0].cps[5].get_property("cp_bp_len") == 3.5165430594833227
+    assert models[0].cps[5].get_property("cp_bp_len") == 3.4582895082860503
     f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
     models = atomic_data_from_output(f_name, True)
     assert len(models[0].cps) == 7
-    assert models[0].cps[3].get_property("cp_bp_len") == 4.275076459477063
+    assert models[0].cps[3].get_property("cp_bp_len") == 4.279603412116594
 
 
 def test_critical_path_simplifier(tests_path):
@@ -28,6 +28,13 @@ def test_critical_path_simplifier(tests_path):
     assert len(bond1) == 44
 
 
+def test_get_cp_types(tests_path):
+    f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
+    models: AtomicModelCP = structure_from_cro_file(f_name)
+    cp_types = models[0].get_cp_types()
+    assert len(cp_types) == 4
+
+
 def test_create_csv_file_cp(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
     models: AtomicModelCP = structure_from_cro_file(f_name)
@@ -36,4 +43,12 @@ def test_create_csv_file_cp(tests_path):
     models = parse_bondpaths(f_name, models[0])
     cp_list = range(len(models[0].cps))
     text = models[0].create_csv_file_cp(cp_list, True, False, False, False, False)
-    assert len(text) == 2092
+    assert len(text) == 2086
+
+
+def test_go_to_positive_coordinates_translate(tests_path):
+    f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
+    models = atomic_data_from_output(f_name, True)
+    assert len(models[0].atoms) == 9
+    models[0].go_to_positive_coordinates_translate()
+    assert len(models[0].atoms) == 4

@@ -5,7 +5,7 @@ from typing import Callable
 import OpenGL.GL as gl
 import OpenGL.GLU as glu
 import numpy as np
-from core_gui_atomistic.guiopenglbase import GuiOpenGLBase
+from core_gui_atomistic_qt.guiopenglbase import GuiOpenGLBase
 from core_gui_atomistic.helpers import is_number
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
@@ -190,9 +190,16 @@ class GuiOpenGLCP(GuiOpenGLBase):
             return
 
         gl.glColor3f(*self.color_of_bp)
-        for i in range(1, len(bond)):
-            self.add_bond(self.scale_factor * bond[i - 1].xyz,
-                          self.scale_factor * bond[i].xyz,
+        if len(bond) > 2:
+            i = 1
+            while i < len(bond):
+                self.add_bond(self.scale_factor * bond[i - 1].xyz,
+                              self.scale_factor * bond[i].xyz,
+                              self.scale_factor * 0.01 * self.width_of_bp)
+                i += 2
+        else:
+            self.add_bond(self.scale_factor * bond[0].xyz,
+                          self.scale_factor * bond[1].xyz,
                           self.scale_factor * 0.01 * self.width_of_bp)
 
     def paintGL(self) -> None:

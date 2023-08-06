@@ -9,6 +9,7 @@ def spacedel(row: str) -> str:
     """Removing extra spaces, line breaks."""
     row = row.replace('\n', ' ')
     row = row.replace('\r', ' ')
+    row = row.replace('\t', ' ')
     row = row.strip()
     while row.find('  ') >= 0:
         row = row.replace('  ', ' ')
@@ -106,7 +107,6 @@ def plane_for_3_points(xyz1, xyz2, xyz3):
     b = v2[0] * v1[2] - v1[0] * v2[2]
     c = v1[0] * v2[1] - v1[1] * v2[0]
     d = (- a * xyz1[0] - b * xyz1[1] - c * xyz1[2])
-    # print("equation of plane is ", str(a), "x +", str(b), "y +", str(c), "z +", str(d), "= 0.")
     return [a, b, c, d]
 
 
@@ -245,6 +245,7 @@ def check_format(filename):
         return "unknown"
 
     name = filename.lower()
+    print(name)
     if name.endswith(".fdf"):
         return "SIESTAfdf"
 
@@ -255,7 +256,13 @@ def check_format(filename):
             if str1.find("WELCOME TO SIESTA") >= 0:
                 f.close()
                 return "SIESTAout"
-            if str1.find("DIRECT LATTICE VECTORS CARTESIAN COMPONENTS (ANGSTROM)") >= 0:
+            if str1.find("*                               CRYSTAL14                                     *") >= 0:
+                f.close()
+                return "CRYSTALout"
+            if str1.find("*                               CRYSTAL17                                     *") >= 0:
+                f.close()
+                return "CRYSTALout"
+            if str1.find("*                               CRYSTAL23                                     *") >= 0:
                 f.close()
                 return "CRYSTALout"
             if str1.find("Program PWSCF v") >= 0:
@@ -302,5 +309,8 @@ def check_format(filename):
 
     if name.endswith("cro"):
         return "critic_cro"
+
+    if name.endswith(".struct"):
+        return "WIENstruct"
 
     return "unknown"

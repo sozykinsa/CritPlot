@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+
 try:
     if os.environ["XDG_SESSION_TYPE"] == "wayland":
         os.environ["QT_QPA_PLATFORM"] = "wayland"
@@ -16,8 +17,7 @@ from core_gui_atomistic.periodic_table import TPeriodTable
 from PySide2.QtCore import QSettings, Qt, QSize
 from PySide2.QtGui import QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel
 from PySide2.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QMessageBox, QColorDialog
-from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem, QTreeWidgetItem
-from PySide2.QtWidgets import QTreeWidgetItemIterator
+from PySide2.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem
 
 from src_critplot.utils.import_export import ImporterExporter
 from src_critplot.program import critic2
@@ -41,7 +41,6 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_form_elements(self.ui.FormSettingsViewCheckAtomSelection,
                                                self.orientation_model_changed, self.selected_atom_position,
                                                self.selected_atom_changed, 1)
-        self.PDOSdata = []
         self.filename: str = ""
         self.work_dir: str = None
         self.colors_cash = {}
@@ -100,6 +99,7 @@ class MainForm(QMainWindow):
         self.ui.show_ncp.stateChanged.connect(self.show_cps)
         self.ui.show_nnatr.stateChanged.connect(self.show_cps)
         self.ui.show_bond_path.stateChanged.connect(self.show_bond_path)
+        self.ui.bcp_for_figure.currentTextChanged.connect(self.update_bcp_figure_and_table)
 
         self.ui.FormAtomsList1.currentIndexChanged.connect(self.bond_len_to_screen)
         self.ui.FormAtomsList2.currentIndexChanged.connect(self.bond_len_to_screen)
@@ -115,13 +115,17 @@ class MainForm(QMainWindow):
         self.ui.camera_pos_z.valueChanged.connect(self.model_orientation_changed)
         self.ui.model_scale.valueChanged.connect(self.model_orientation_changed)
 
-        self.ui.bcp_table.clicked.connect(self.fill_cps)   # toggled
-        self.ui.natr_table.clicked.connect(self.fill_cps)
-        self.ui.rcp_table.clicked.connect(self.fill_cps)
-        self.ui.ccp_table.clicked.connect(self.fill_cps)
+        self.ui.bcp_table.clicked.connect(self.fill_cps_table)  # toggled
+        self.ui.natr_table.clicked.connect(self.fill_cps_table)
+        self.ui.rcp_table.clicked.connect(self.fill_cps_table)
+        self.ui.ccp_table.clicked.connect(self.fill_cps_table)
+
+        self.ui.bonds_histogram.clicked.connect(self.default_histogram_text)
+        self.ui.bp_len_histogram.clicked.connect(self.default_histogram_text)
+        self.ui.bcp_rho_histogram.clicked.connect(self.default_histogram_text)
 
         # buttons
-        self.ui.FormActionsPostButPlotBondsHistogram.clicked.connect(self.plot_bonds_histogram)
+        self.ui.plot_histogram.clicked.connect(self.plot_histogram_of_data)
 
         # colors
         self.ui.ColorBackgroundDialogButton.clicked.connect(self.select_background_color)
@@ -217,6 +221,8 @@ class MainForm(QMainWindow):
         color_type_scale.appendRow(QStandardItem("Log"))
         self.ui.FormSettingsColorsScaleType.setModel(color_type_scale)
         self.ui.FormSettingsColorsScaleType.setCurrentText(self.color_type_scale)
+
+        self.fill_cp_graph_types()
 
         self.ui.FormActionsPosTableBonds.setColumnCount(2)
         self.ui.FormActionsPosTableBonds.setHorizontalHeaderLabels(["Bond", "Lenght"])
@@ -396,7 +402,7 @@ class MainForm(QMainWindow):
             return
         charge, let, position = self.selected_atom_from_form()
         self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom] = Atom((position[0], position[1],
-                                                                                        position[2], let, charge))
+                                                                                         position[2], let, charge))
         self.model_to_screen(self.active_model)
 
     def selected_atom_from_form(self):
@@ -460,16 +466,16 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.atoms_of_selected_fragment_to_form()
         self.ui.openGLWidget.update_view()
 
-    @staticmethod
-    def clear_qtree_widget(tree):
-        iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
-        while iterator.value():
-            iterator.value().takeChildren()
-            iterator += 1
-        i = tree.topLevelItemCount()
-        while i > -1:
-            tree.takeTopLevelItem(i)
-            i -= 1
+    # @staticmethod
+    # def clear_qtree_widget(tree):
+    #    iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
+    #    while iterator.value():
+    #        iterator.value().takeChildren()
+    #        iterator += 1
+    #    i = tree.topLevelItemCount()
+    #    while i > -1:
+    #        tree.takeTopLevelItem(i)
+    #        i -= 1
 
     def color_to_ui(self, color_ui, state_color):
         r = state_color.split()[0]
@@ -510,6 +516,7 @@ class MainForm(QMainWindow):
         mask = result[1]
         if file_name is not None:
             extension = mask.split("(*.")[1].split(")")[0]
+            print(file_name.lower(), extension.lower())
             if not file_name.lower().endswith(extension.lower()):
                 file_name += "." + extension.lower()
         if extension.lower() in ['png', 'jpg', 'bmp']:
@@ -530,6 +537,7 @@ class MainForm(QMainWindow):
         self.fill_atoms_table()
         self.fill_properties_table()
         self.fill_cps()
+        self.poincare_hoff_rule()
 
         self.ui.PropertyAtomAtomDistanceAt1.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
         self.ui.PropertyAtomAtomDistanceAt2.setMaximum(self.ui.openGLWidget.main_model.n_atoms())
@@ -537,28 +545,81 @@ class MainForm(QMainWindow):
         self.plot_r_rho()
 
     def plot_r_rho(self) -> None:
-        model = self.models[self.active_model]
+        model = self.ui.openGLWidget.get_model()
+        if model is None:
+            return
         r = []
         rho = []
+        n_types = self.ui.bcp_for_figure.count()
+        title_types = {}
+        for i in range(n_types):
+            r.append([])
+            rho.append([])
+            title_types[self.ui.bcp_for_figure.itemText(i)] = i
 
         for cp in model.cps:
             if cp.let == "xb":
                 dist = cp.get_property("cp_bp_len")
-                if dist is not None:
-                    r.append(dist)
-                    rho.append(float(cp.get_property("rho")))
+                if not dist is None:
+                    if self.cp_need_to_gui(cp, model) and (float(cp.get_property("rho")) > 0):
+                        k = self.cp_type_title(cp, model, title_types)
+                        if k is not None:
+                            ind = title_types[k]
+                            r[ind].append(dist)
+                            rho[ind].append(math.log(float(cp.get_property("rho"))))
 
         self.ui.PyqtGraphWidget.set_xticks(None)
         self.ui.PyqtGraphWidget.clear()
+        x_title = "r"
+        y_title = "ln(rho)"
+        title = "ln(rho(r))"
         if len(r) == 0:
             return
-        x_title = "r"
-        y_title = "rho"
-        title = "rho(r)"
+
         self.ui.PyqtGraphWidget.add_legend()
         self.ui.PyqtGraphWidget.enable_auto_range()
         self.ui.PyqtGraphWidget.plot([], [], [None], title, x_title, y_title)
-        self.ui.PyqtGraphWidget.add_scatter(r, rho)
+        ind = self.ui.bcp_for_figure.currentIndex()
+        if ind == 0:
+            for i in range(1, n_types):
+                col = self.ui.PyqtGraphWidget.COLORS[i % len(self.ui.PyqtGraphWidget.COLORS)]
+                self.ui.PyqtGraphWidget.add_scatter(r[i], rho[i], color=col)
+        else:
+            self.ui.PyqtGraphWidget.set_xticks(None)
+            self.ui.PyqtGraphWidget.clear()
+            col = self.ui.PyqtGraphWidget.COLORS[ind % len(self.ui.PyqtGraphWidget.COLORS)]
+            self.ui.PyqtGraphWidget.add_scatter(r[ind], rho[ind], color=col)
+            if len(r[ind]) > 1:
+                x_max = max(r[ind])
+                x_min = min(r[ind])
+                if (len(r[ind]) >= 2) and (x_max != x_min):
+                    a, b = np.polyfit(r[ind], rho[ind], 1)
+                    y_max = a * x_max + b
+                    y_min = a * x_min + b
+                    leg = str(round(a, 5)) + " x "
+                    if b >= 0:
+                        leg += "+"
+                    leg += str(round(b, 5))
+                    self.ui.PyqtGraphWidget.plot([[x_min, x_max]], [[y_min, y_max]], [leg], title, x_title, y_title)
+
+    def cp_need_to_gui(self, cp, model):
+        filt = self.ui.bcp_for_figure.currentText()
+        f = cp.is_visible
+        if (filt != "All") and f:
+            title1, title2 = model.equivalent_titles(cp)
+            f = (filt == title1) or (filt == title2)
+        return f
+
+    @staticmethod
+    def cp_type_title(cp, model, title_types):
+        title1, title2 = model.equivalent_titles(cp)
+        if (title1 is None) or (title2 is None):
+            return None
+        if not title_types.get(title1) is None:
+            return title1
+        if not title_types.get(title2) is None:
+            return title2
+        return None
 
     def fill_file_name(self, f_name):
         self.ui.Form3Dand2DTabs.setItemText(0, "3D View: " + f_name)
@@ -613,42 +674,71 @@ class MainForm(QMainWindow):
         self.ui.FormModifyCellEditC2.setValue(model.lat_vector3[1])
         self.ui.FormModifyCellEditC3.setValue(model.lat_vector3[2])
 
-    def fill_cps(self):
-        is_bcp = False
-        is_ccp = False
-        is_rcp = False
-        is_natr = False
-        title = ["Property", "Value"]
+    def poincare_hoff_rule(self):
+        model = self.ui.openGLWidget.get_model()
+        rule_text, rule_int = model.poincare_hoff_rule()
+        self.ui.cps_rule.setText("Poincare-Hoff rule " + rule_text + "=" + str(rule_int))
 
+    def default_histogram_text(self):
+        if self.ui.bonds_histogram.isChecked():
+            self.ui.histogram_x_label.setText("Bond lenght, A")
+            self.ui.histogram_y_label.setText("Number of bonds")
+            self.ui.histogram_title.setText("Bonds")
+        if self.ui.bp_len_histogram.isChecked():
+            self.ui.histogram_x_label.setText("Atom-atom distance, A")
+            self.ui.histogram_y_label.setText("Number of bonds")
+            self.ui.histogram_title.setText("Atom-atom distance")
+        if self.ui.bcp_rho_histogram.isChecked():
+            self.ui.histogram_x_label.setText("RHO, a.u.")
+            self.ui.histogram_y_label.setText("Number of BCP")
+            self.ui.histogram_title.setText("BCPs")
+
+    def fill_cps(self):
+        model = self.ui.openGLWidget.get_model()
+        cp_types = model.get_cp_types()
+        self.fill_cp_graph_types(cp_types)
+        self.fill_cps_table()
+
+    def fill_cp_graph_types(self, cp_types=["All"]):
+        cp_type_gr = QStandardItemModel()
+        for item in cp_types:
+            cp_type_gr.appendRow(QStandardItem(item))
+        self.ui.bcp_for_figure.setModel(cp_type_gr)
+        self.ui.bcp_for_figure.setCurrentText("All")
+
+    def update_bcp_figure_and_table(self):
+        self.fill_cps_table()
+        self.plot_r_rho()
+
+    def fill_cps_table(self):
+        model = self.ui.openGLWidget.get_model()
+        is_bcp = False
+        title = ["Property", "Value"]
         if self.ui.bcp_table.isChecked():
             is_bcp = True
             let = "xb"
             title = ["cp", "atoms", "rho", "dist"]
         if self.ui.ccp_table.isChecked():
-            is_ccp = True
             let = "xc"
             title = ["cp", "rho"]
         if self.ui.rcp_table.isChecked():
-            is_rcp = True
             let = "xr"
             title = ["cp", "rho"]
         if self.ui.natr_table.isChecked():
-            is_natr = True
-            let = "nn"
+            let = "attr"
             title = ["cp", "rho"]
         properties = []
-        model = self.ui.openGLWidget.get_model()
         n_cols = len(title)
-
-        for cp in model.cps:
-            if cp.let == let:
-                if is_bcp:
-                    properties.append([cp.get_property("title"), cp.get_property("atom_to_atom"),
-                                       cp.get_property("rho"),
-                                       str(round(cp.get_property("cp_bp_len"), 4))])
-                else:
-                    properties.append([cp.get_property("title"), cp.get_property("rho")])
-
+        if not (model is None):
+            for cp in model.cps:
+                if cp.let == let:
+                    if is_bcp:
+                        if self.cp_need_to_gui(cp, model) and (cp.get_property("cp_bp_len") is not None):
+                            properties.append([cp.get_property("title"), cp.get_property("atom_to_atom"),
+                                               cp.get_property("rho"),
+                                               str(round(cp.get_property("cp_bp_len"), 4))])
+                    else:
+                        properties.append([cp.get_property("title"), cp.get_property("rho")])
         cps_table = self.ui.cps_table
         cps_table.clear()
         cps_table.setColumnCount(n_cols)
@@ -657,7 +747,6 @@ class MainForm(QMainWindow):
         cps_table.setColumnWidth(1, 260)
         cps_table.horizontalHeader().setStyleSheet(self.table_header_stylesheet)
         cps_table.verticalHeader().setStyleSheet(self.table_header_stylesheet)
-
         cps_table.setRowCount(len(properties))
         for i in range(0, len(properties)):
             for j in range(len(properties[i])):
@@ -709,9 +798,10 @@ class MainForm(QMainWindow):
         self.ui.FormActionsPostComboBonds.currentIndexChanged.connect(self.fill_bonds)
 
         self.fill_bonds()
-        self.ui.FormActionsPostButPlotBondsHistogram.setEnabled(True)
+        self.ui.bonds_histogram.setCheckable(True)
+        self.ui.plot_histogram.setEnabled(True)
 
-    def get_bond(self):   # pragma: no cover
+    def get_bond(self):  # pragma: no cover
         i = self.ui.PropertyAtomAtomDistanceAt1.value()
         j = self.ui.PropertyAtomAtomDistanceAt2.value()
         bond = round(self.ui.openGLWidget.main_model.atom_atom_distance(i - 1, j - 1), 4)
@@ -736,28 +826,6 @@ class MainForm(QMainWindow):
         line_width = self.ui.Form2DLineWidth.value()
         self.ui.PyqtGraphWidget.set_styles(title_font_size, axes_font_size, label_font_size, line_width, color)
 
-    def get_color_of_plane(self, minv, maxv, points, cmap, color_scale):
-        Nx = len(points)
-        Ny = len(points[0])
-        minv = float(minv)
-        maxv = float(maxv)
-        colors = []
-        if maxv == minv:
-            return colors
-        for i in range(0, Nx):
-            row = []
-            for j in range(0, Ny):
-                value = float(points[i][j][3])
-                prev = self.colors_cash.get(value)
-                if prev is None:
-                    color = MainForm.get_color(cmap, minv, maxv, value, color_scale)
-                    self.colors_cash[value] = [color[0], color[1], color[2]]
-                    row.append([color[0], color[1], color[2]])
-                else:
-                    row.append(prev)
-            colors.append(row)
-        return colors
-
     @staticmethod
     def get_color(cmap, minv, maxv, value, scale):
         if scale == "black":
@@ -772,12 +840,6 @@ class MainForm(QMainWindow):
             return cmap((math.log10(value) - math.log10(minv)) / (math.log10(maxv) - math.log10(minv)))
         return QColor.fromRgb(0, 0, 0, 1).getRgbF()
 
-    def get_fdf_file_name(self):  # pragma: no cover
-        fname = self.get_file_name_from_open_dialog("FDF files (*.fdf)")
-        if not fname.endswith(".fdf"):
-            fname += ".fdf"
-        return fname
-
     @staticmethod
     def get_color_from_setting(strcolor: str):
         r = strcolor.split()[0]
@@ -788,10 +850,10 @@ class MainForm(QMainWindow):
 
     def load_settings(self) -> None:
         settings = QSettings()
-        state_check_show_axes = settings.value(SETTINGS_FormSettingsViewCheckShowAxes, False, type=bool)
+        state_check_show_axes = settings.value(SETTINGS_ViewCheckShowAxes, False, type=bool)
         self.ui.FormSettingsViewCheckShowAxes.setChecked(state_check_show_axes)
         self.ui.FormSettingsViewCheckShowAxes.clicked.connect(self.save_state_view_show_axes)
-        state_check_atom_selection = settings.value(SETTINGS_FormSettingsViewCheckAtomSelection, False, type=bool)
+        state_check_atom_selection = settings.value(SETTINGS_ViewCheckAtomSelection, False, type=bool)
         if state_check_atom_selection:
             self.ui.FormSettingsViewCheckAtomSelection.setChecked(True)
         else:
@@ -799,7 +861,7 @@ class MainForm(QMainWindow):
         self.ui.FormSettingsViewCheckAtomSelection.clicked.connect(self.save_state_view_atom_selection)
         self.ui.FormSettingsViewCheckModelMove.clicked.connect(self.save_state_view_atom_selection)
 
-        state_color_bonds_manual = settings.value(SETTINGS_FormSettingsViewRadioColorBondsManual, False, type=bool)
+        state_color_bonds_manual = settings.value(SETTINGS_ViewRadioColorBondsManual, False, type=bool)
         if state_color_bonds_manual:
             self.ui.FormSettingsViewRadioColorBondsManual.setChecked(True)
         else:
@@ -807,19 +869,19 @@ class MainForm(QMainWindow):
         self.ui.FormSettingsViewRadioColorBondsManual.clicked.connect(self.save_state_view_bond_color)
         self.ui.FormSettingsViewRadioColorBondsByAtoms.clicked.connect(self.save_state_view_bond_color)
 
-        state_show_atoms = settings.value(SETTINGS_FormSettingsViewCheckShowAtoms, True, type=bool)
+        state_show_atoms = settings.value(SETTINGS_ViewCheckShowAtoms, True, type=bool)
         self.ui.FormSettingsViewCheckShowAtoms.setChecked(state_show_atoms)
         self.ui.FormSettingsViewCheckShowAtoms.clicked.connect(self.save_state_view_show_atoms)
 
-        state_show_atom_number = settings.value(SETTINGS_FormSettingsViewCheckShowAtomNumber, True, type=bool)
+        state_show_atom_number = settings.value(SETTINGS_ViewCheckShowAtomNumber, True, type=bool)
         self.ui.FormSettingsViewCheckShowAtomNumber.setChecked(state_show_atom_number)
         self.ui.FormSettingsViewCheckShowAtomNumber.clicked.connect(self.save_state_view_show_atom_number)
 
-        state_show_box = settings.value(SETTINGS_FormSettingsViewCheckShowBox, False, type=bool)
+        state_show_box = settings.value(SETTINGS_ViewCheckShowBox, False, type=bool)
         self.ui.FormSettingsViewCheckShowBox.setChecked(state_show_box)
         self.ui.FormSettingsViewCheckShowBox.clicked.connect(self.save_state_view_show_box)
 
-        state_show_bonds = settings.value(SETTINGS_FormSettingsViewCheckShowBonds, True, type=bool)
+        state_show_bonds = settings.value(SETTINGS_ViewCheckShowBonds, True, type=bool)
         self.ui.FormSettingsViewCheckShowBonds.setChecked(state_show_bonds)
         self.ui.FormSettingsViewCheckShowBonds.clicked.connect(self.save_state_view_show_bonds)
 
@@ -836,25 +898,25 @@ class MainForm(QMainWindow):
         self.ui.is_show_props_for_cp_list.clicked.connect(self.save_state_show_props_for_cp_list)
 
         self.work_dir = str(settings.value(SETTINGS_Folder_CP, "/home"))
-        self.color_type = str(settings.value(SETTINGS_FormSettingsColorsScale, 'rainbow'))
+        self.color_type = str(settings.value(SETTINGS_ColorsScale, 'rainbow'))
         self.ui.FormSettingsColorsScale.currentIndexChanged.connect(self.save_state_colors_scale)
         self.ui.FormSettingsColorsScale.currentTextChanged.connect(self.state_changed_form_settings_colors_scale)
-        self.color_type_scale = str(settings.value(SETTINGS_FormSettingsColorsScaleType, 'Log'))
+        self.color_type_scale = str(settings.value(SETTINGS_ColorsScaleType, 'Log'))
         self.ui.FormSettingsColorsScaleType.currentIndexChanged.connect(self.save_state_colors_scale_type)
-        state_form_settings_colors_fixed = settings.value(SETTINGS_FormSettingsColorsFixed, False, type=bool)
+        state_form_settings_colors_fixed = settings.value(SETTINGS_ColorsFixed, False, type=bool)
         self.ui.FormSettingsColorsFixed.setChecked(state_form_settings_colors_fixed)
         self.ui.FormSettingsColorsFixed.clicked.connect(self.save_state_colors_fixed)
-        state_form_settings_colors_fixed_min = settings.value(SETTINGS_FormSettingsColorsFixedMin, '0.1')
+        state_form_settings_colors_fixed_min = settings.value(SETTINGS_ColorsFixedMin, '0.1')
         try:
             min_val = float(state_form_settings_colors_fixed_min)
         except Exception:
             min_val = 0.0001
         self.ui.FormSettingsColorsFixedMin.setValue(min_val)
         self.ui.FormSettingsColorsFixedMin.valueChanged.connect(self.save_state_colors_fixed_min)
-        state_form_settings_colors_fixed_max = settings.value(SETTINGS_FormSettingsColorsFixedMax, '0.2')
+        state_form_settings_colors_fixed_max = settings.value(SETTINGS_ColorsFixedMax, '0.2')
         self.ui.FormSettingsColorsFixedMax.setValue(float(state_form_settings_colors_fixed_max))
         self.ui.FormSettingsColorsFixedMax.valueChanged.connect(self.save_state_colors_fixed_max)
-        state_form_settings_view_spin_bond_width = int(settings.value(SETTINGS_FormSettingsViewSpinBondWidth, '20'))
+        state_form_settings_view_spin_bond_width = int(settings.value(SETTINGS_ViewSpinBondWidth, '20'))
         self.ui.FormSettingsViewSpinBondWidth.setValue(state_form_settings_view_spin_bond_width)
         self.ui.FormSettingsViewSpinBondWidth.valueChanged.connect(self.save_state_view_spin_bond_width)
         state_form_settings_bond_path_width = int(settings.value(SETTINGS_bond_path_width, '3'))
@@ -925,7 +987,7 @@ class MainForm(QMainWindow):
         self.state_color_of_bp = str(settings.value(SETTINGS_color_of_bp, '0 255 0'))
         self.color_to_ui(self.ui.color_bond_path, self.state_color_of_bp)
 
-        self.action_on_start = str(settings.value(SETTINGS_FormSettingsActionOnStart, 'Nothing'))
+        self.action_on_start = str(settings.value(SETTINGS_ActionOnStart, 'Nothing'))
 
         self.perspective_angle = int(settings.value(SETTINGS_perspective_angle, 45))
         self.ui.spin_perspective_angle.setValue(self.perspective_angle)
@@ -988,13 +1050,14 @@ class MainForm(QMainWindow):
                 self.show_error(e)
 
     def menu_open(self, file_name=False):
-        if len(self.models) > 0:   # pragma: no cover
+        if len(self.models) > 0:  # pragma: no cover
             self.action_on_start = 'Open'
             self.save_state_action_on_start()
-            os.execl(sys.executable, sys.executable, *sys.argv)
+            os.execl(sys.executable, '"' + sys.executable + '"', *sys.argv)
         self.ui.Form3Dand2DTabs.setCurrentIndex(0)
         if not file_name:
-            file_name = self.get_file_name_from_open_dialog("All files (*)")
+            name_filter = "All supported files (*.cro *.outp);;Critic2 output (*.cro);;TOPOND output (*.outp)"
+            file_name = self.get_file_name_from_open_dialog(name_filter)
         if os.path.exists(file_name):
             self.filename = file_name
             self.work_dir = os.path.dirname(file_name)
@@ -1008,6 +1071,7 @@ class MainForm(QMainWindow):
                 self.show_error(e)
             try:
                 self.plot_last_model()
+                self.ui.plot_histogram.setEnabled(True)
             except Exception as e:  # pragma: no cover
                 self.show_error(e)
 
@@ -1064,7 +1128,7 @@ class MainForm(QMainWindow):
                 if str(key) not in standart_prop:
                     atom_prop_type.appendRow(QStandardItem(str(key)))
             self.ui.PropertyForColorOfAtom.setModel(atom_prop_type)
-        if self.ui.openGLWidget.main_model.n_bcp() > 0:
+        if len(self.ui.openGLWidget.main_model.cps) > 0:
             bcp = self.ui.openGLWidget.main_model.cps[0]
             bcp_prop_type = QStandardItemModel()
             for key in bcp.properties:
@@ -1218,26 +1282,44 @@ class MainForm(QMainWindow):
                                                       view_axes, axes_color)
         self.ui.openGLWidget.set_cp_parameters(self.ui.show_bcp_text.isChecked())
         self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
+        self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
         self.ui.AtomsInSelectedFragment.clear()
 
         self.show_property_enabling()
 
-    def plot_bonds_histogram(self):
-        self.ui.PyqtGraphWidget.set_xticks(None)
+    def plot_histogram_of_data(self):
+        self.ui.pyqt_hist_widget.set_xticks(None)
         self.ui.Form3Dand2DTabs.setCurrentIndex(1)
-        c1, c2 = self.fill_bonds_charges()
-        bonds, bonds_mean, bonds_err = self.ui.openGLWidget.main_model.get_bonds_for_charges(c1, c2)
-
-        self.ui.PyqtGraphWidget.clear()
+        self.ui.pyqt_hist_widget.clear()
         b = []
-        for bond in bonds:
-            b.append(bond[2])
 
-        num_bins = self.ui.FormActionsPostPlotBondsHistogramN.value()
-        x_title = self.ui.bonds_x_label.text()
-        y_title = self.ui.bonds_y_label.text()
-        title = self.ui.bonds_title.text()
-        self.ui.PyqtGraphWidget.add_histogram(b, num_bins, (0, 0, 255, 90), title, x_title, y_title)
+        f1 = self.ui.bonds_histogram.isChecked()
+        if f1:
+            c1, c2 = self.fill_bonds_charges()
+            bonds, bonds_mean, bonds_err = self.ui.openGLWidget.main_model.get_bonds_for_charges(c1, c2)
+            for bond in bonds:
+                b.append(bond[2])
+
+        if self.ui.bp_len_histogram.isChecked():
+            model = self.ui.openGLWidget.get_model()
+            if not (model is None):
+                for cp in model.cps:
+                    if (cp.let == "xb") and (cp.get_property("cp_bp_len") is not None):
+                        b.append(round(cp.get_property("cp_bp_len"), 4))
+
+        if self.ui.bcp_rho_histogram.isChecked():
+            model = self.ui.openGLWidget.get_model()
+            if not (model is None):
+                for cp in model.cps:
+                    if cp.let == "xb":
+                        b.append(float(cp.get_property("rho")))
+
+        if f1 or self.ui.bp_len_histogram.isChecked() or self.ui.bcp_rho_histogram.isChecked():
+            num_bins = self.ui.FormActionsPostPlotBondsHistogramN.value()
+            x_title = self.ui.histogram_x_label.text()
+            y_title = self.ui.histogram_y_label.text()
+            title = self.ui.histogram_title.text()
+            self.ui.pyqt_hist_widget.add_histogram(b, num_bins, (0, 0, 255, 90), title, x_title, y_title)
 
     @staticmethod
     def list_of_selected_items_in_combo(atom_index, combo):
@@ -1312,25 +1394,25 @@ class MainForm(QMainWindow):
         self.save_property(SETTINGS_Folder_CP, self.work_dir)
 
     def save_state_view_show_axes(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowAxes,
+        self.save_property(SETTINGS_ViewCheckShowAxes,
                            self.ui.FormSettingsViewCheckShowAxes.isChecked())
         self.ui.openGLWidget.set_axes_visible(self.ui.FormSettingsViewCheckShowAxes.isChecked())
 
     def save_state_view_atom_selection(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckAtomSelection,
+        self.save_property(SETTINGS_ViewCheckAtomSelection,
                            self.ui.FormSettingsViewCheckAtomSelection.isChecked())
 
     def save_state_view_bond_color(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewRadioColorBondsManual,
+        self.save_property(SETTINGS_ViewRadioColorBondsManual,
                            self.ui.FormSettingsViewRadioColorBondsManual.isChecked())
         self.ui.openGLWidget.set_bond_color(self.ui.FormSettingsViewRadioColorBondsManual.isChecked())
 
     def save_state_view_show_atoms(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowAtoms, self.ui.FormSettingsViewCheckShowAtoms.isChecked())
+        self.save_property(SETTINGS_ViewCheckShowAtoms, self.ui.FormSettingsViewCheckShowAtoms.isChecked())
         self.ui.openGLWidget.set_atoms_visible(self.ui.FormSettingsViewCheckShowAtoms.isChecked())
 
     def save_state_view_show_atom_number(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowAtomNumber,
+        self.save_property(SETTINGS_ViewCheckShowAtomNumber,
                            self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
         self.ui.openGLWidget.set_atoms_numbered(self.ui.FormSettingsViewCheckShowAtomNumber.isChecked())
 
@@ -1344,14 +1426,14 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_is_bcp_property_for_all(self.ui.is_show_props_for_cp_list.isChecked())
 
     def save_state_action_on_start(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsActionOnStart, self.action_on_start)
+        self.save_property(SETTINGS_ActionOnStart, self.action_on_start)
 
     def save_state_view_show_box(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowBox, self.ui.FormSettingsViewCheckShowBox.isChecked())
+        self.save_property(SETTINGS_ViewCheckShowBox, self.ui.FormSettingsViewCheckShowBox.isChecked())
         self.ui.openGLWidget.set_box_visible(self.ui.FormSettingsViewCheckShowBox.isChecked())
 
     def save_state_view_show_bonds(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewCheckShowBonds, self.ui.FormSettingsViewCheckShowBonds.isChecked())
+        self.save_property(SETTINGS_ViewCheckShowBonds, self.ui.FormSettingsViewCheckShowBonds.isChecked())
         self.ui.openGLWidget.set_bonds_visible(self.ui.FormSettingsViewCheckShowBonds.isChecked())
 
     def save_state_gl_cull_face(self):  # pragma: no cover
@@ -1359,18 +1441,18 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_gl_cull_face(self.ui.OpenGL_GL_CULL_FACE.isChecked())
 
     def save_state_colors_fixed(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsFixed, self.ui.FormSettingsColorsFixed.isChecked())
+        self.save_property(SETTINGS_ColorsFixed, self.ui.FormSettingsColorsFixed.isChecked())
 
     def save_state_view_spin_contour_width(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewSpinContourWidth, self.ui.FormSettingsViewSpinContourWidth.text())
+        self.save_property(SETTINGS_ViewSpinContourWidth, self.ui.FormSettingsViewSpinContourWidth.text())
         self.ui.openGLWidget.set_contour_width(self.ui.FormSettingsViewSpinContourWidth.value() / 1000)
         self.plot_contour()
 
     def save_state_colors_fixed_min(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsFixedMin, self.ui.FormSettingsColorsFixedMin.text())
+        self.save_property(SETTINGS_ColorsFixedMin, self.ui.FormSettingsColorsFixedMin.text())
 
     def save_state_view_spin_bond_width(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsViewSpinBondWidth, self.ui.FormSettingsViewSpinBondWidth.text())
+        self.save_property(SETTINGS_ViewSpinBondWidth, self.ui.FormSettingsViewSpinBondWidth.text())
         self.ui.openGLWidget.set_bond_width(self.ui.FormSettingsViewSpinBondWidth.value() * 0.005)
 
     def save_state_view_spin_bond_path_width(self):  # pragma: no cover
@@ -1378,23 +1460,23 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.set_width_of_bp(self.ui.bond_path_width.value())
 
     def save_state_colors_fixed_max(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsFixedMax, self.ui.FormSettingsColorsFixedMax.text())
+        self.save_property(SETTINGS_ColorsFixedMax, self.ui.FormSettingsColorsFixedMax.text())
 
     def save_state_colors_scale(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsScale, self.ui.FormSettingsColorsScale.currentText())
+        self.save_property(SETTINGS_ColorsScale, self.ui.FormSettingsColorsScale.currentText())
         self.colors_cash = {}
 
     def save_state_colors_scale_type(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsColorsScaleType, self.ui.FormSettingsColorsScaleType.currentText())
+        self.save_property(SETTINGS_ColorsScaleType, self.ui.FormSettingsColorsScaleType.currentText())
         self.colors_cash = {}
 
-    #def save_state_preferred_coordinates(self):  # pragma: no cover
-    #    self.save_property(SETTINGS_FormSettingsPreferredCoordinates,
+    # def save_state_preferred_coordinates(self):  # pragma: no cover
+    #    self.save_property(SETTINGS_Coordinates,
     #                       self.ui.FormSettingsPreferredCoordinates.currentText())
     #    self.coord_type = self.ui.FormSettingsPreferredCoordinates.currentText()
 
     def save_state_preferred_coordinates_style(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsPreferredCoordinatesStyle,
+        self.save_property(SETTINGS_CoordinatesStyle,
                            self.ui.PreferredCoordinatesTypeSimple.isChecked())
         if self.ui.PreferredCoordinatesTypeSimple.isChecked():
             self.ui.FormSettingsPreferredCoordinates.setEnabled(True)
@@ -1402,12 +1484,12 @@ class MainForm(QMainWindow):
             self.ui.FormSettingsPreferredCoordinates.setEnabled(False)
 
     def save_state_preferred_units(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsPreferredUnits,
+        self.save_property(SETTINGS_Units,
                            self.ui.FormSettingsPreferredUnits.currentText())
         self.units_type = self.ui.FormSettingsPreferredUnits.currentText()
 
     def save_state_preferred_lattice(self):  # pragma: no cover
-        self.save_property(SETTINGS_FormSettingsPreferredLattice, self.ui.FormSettingsPreferredLattice.currentText())
+        self.save_property(SETTINGS_Lattice, self.ui.FormSettingsPreferredLattice.currentText())
         self.lattice_type = self.ui.FormSettingsPreferredLattice.currentText()
 
     @staticmethod
@@ -1453,13 +1535,7 @@ class MainForm(QMainWindow):
             self.history_of_point_selection = []
             self.history_of_point_selection_xyz = []
             text = "Select any atom or critical point."
-            self.ui.selectedCP.setText("...")
-            self.ui.FormSelectedCP_f.setText("...")
-            self.ui.FormSelectedCP_g.setText("...")
-            self.ui.FormSelectedCP_lap.setText("...")
-            self.ui.selectedCP_bpLenLine.setText("...")
-            self.ui.selected_cp_title.setText("...")
-            self.ui.selectedCP_nuclei.setText("...")
+            self.selected_cp_clear()
         else:
             if selected_atom >= 0:
                 sel_atom = model.atoms[selected_atom]
@@ -1472,7 +1548,7 @@ class MainForm(QMainWindow):
 
             if len(self.history_of_point_selection) > 1:
                 text_sel = "\nHistory of points selection: " + str(np.array(self.history_of_point_selection)) + "\n"
-                text_sel += "Distance from " + self.history_of_point_selection[-1] + " to " +\
+                text_sel += "Distance from " + self.history_of_point_selection[-1] + " to " + \
                             self.history_of_point_selection[-2] + " : "
 
                 dist = model.point_point_distance(self.history_of_point_selection_xyz[-1],
@@ -1494,7 +1570,7 @@ class MainForm(QMainWindow):
                         text_sel += str(round(plane[0], 6)) + "x "
                         if plane[1] > 0:
                             text_sel += "+"
-                        text_sel +=  str(round(plane[1], 6)) + "y "
+                        text_sel += str(round(plane[1], 6)) + "y "
                         if plane[2] > 0:
                             text_sel += "+"
                         text_sel += str(round(plane[2], 6)) + "z "
@@ -1515,8 +1591,8 @@ class MainForm(QMainWindow):
                 text = "Selected critical point: " + str(selected_cp + 1) + " ("
                 cp = model.cps[selected_cp]
 
-                bond1 = cp.get_property("bond1")
-                bond2 = cp.get_property("bond2")
+                bond1 = cp.bonds.get("bond1")
+                bond2 = cp.bonds.get("bond2")
 
                 ind1 = cp.get_property("atom1")
                 ind2 = cp.get_property("atom2")
@@ -1531,10 +1607,10 @@ class MainForm(QMainWindow):
                         text += str(len(bond1) + len(bond2)) + " points\n"
                     if dist is not None:
                         dist_line = round(dist, 4)
-                        self.ui.selectedCP_bpLenLine.setText(str(dist_line) + " A")
+                        self.ui.selected_cp_bond_len.setText(str(dist_line) + " A")
                         self.ui.selectedCP_nuclei.setText(atom_to_atom)
                     else:
-                        self.ui.selectedCP_bpLenLine.setText("...")
+                        self.ui.selected_cp_bond_len.setText("...")
                         self.ui.selectedCP_nuclei.setText("...")
                 else:
                     text += ")\n"
@@ -1554,6 +1630,15 @@ class MainForm(QMainWindow):
                     text += str(key) + ": " + str(model.cps[selected_cp].get_property(key)) + "\n"
 
         self.ui.atom_and_cp_properties_text.setText(text + text_sel)
+
+    def selected_cp_clear(self):
+        self.ui.selectedCP.setText("...")
+        self.ui.FormSelectedCP_f.setText("...")
+        self.ui.FormSelectedCP_g.setText("...")
+        self.ui.FormSelectedCP_lap.setText("...")
+        self.ui.selected_cp_bond_len.setText("...")
+        self.ui.selected_cp_title.setText("...")
+        self.ui.selectedCP_nuclei.setText("...")
 
     def set_manual_colors_default(self):
         self.periodic_table.init_manual_colors()
@@ -1687,12 +1772,13 @@ class MainForm(QMainWindow):
         self.remove_cp_from_model(model, bcp_selected)
         self.plot_model(self.active_model)
         self.clear_cp_list()
+        self.selected_cp_clear()
 
     def leave_cp_in_model(self):
         model = self.models[self.active_model]
         new_cps = []
         sel_cps = self.selected_cp()
-        for cp  in model.cps:
+        for cp in model.cps:
             f = False
             for b in sel_cps:
                 if cp.to_string() == b.to_string():
@@ -1702,6 +1788,7 @@ class MainForm(QMainWindow):
         model.cps = new_cps
         self.ui.openGLWidget.selected_cp = -1
         self.clear_cp_list()
+        self.selected_cp_clear()
         self.plot_model(self.active_model)
 
     @staticmethod
@@ -1778,7 +1865,7 @@ class MainForm(QMainWindow):
         if self.ui.form_critic_prop_rdg.isChecked():
             text_prop += 'POINTPROP RDG\n'
 
-        #fname = name[0]
+        # fname = name[0]
         if len(fname) > 0:
             model = self.models[self.active_model]
 
@@ -1809,7 +1896,7 @@ class MainForm(QMainWindow):
         axescolor = self.change_color(self.ui.ColorAxes, SETTINGS_Color_Of_Axes)
         self.ui.openGLWidget.set_color_of_axes(axescolor)
 
-    def change_color(self, color_ui, var_property):   # pragma: no cover
+    def change_color(self, color_ui, var_property):  # pragma: no cover
         color = QColorDialog.getColor()
         color_ui.setStyleSheet(
             "background-color:rgb(" + str(color.getRgb()[0]) + "," + str(color.getRgb()[1]) + "," + str(
@@ -1834,42 +1921,42 @@ class MainForm(QMainWindow):
 
 
 SETTINGS_Folder_CP = 'home'
-SETTINGS_FormSettingsColorsScale = 'colors/ColorsScale'
-SETTINGS_FormSettingsColorsFixed = 'colors/ColorsFixed'
-SETTINGS_FormSettingsColorsFixedMin = 'colors/ColorsFixedMin'
-SETTINGS_FormSettingsColorsFixedMax = 'colors/ColorsFixedMax'
-SETTINGS_FormSettingsColorsScaleType = 'colors/ColorsScaleType'
-SETTINGS_FormSettingsViewCheckAtomSelection = 'view/CheckAtomSelection'
-SETTINGS_FormSettingsViewRadioColorBondsManual = 'view/BondsColorType'
-SETTINGS_FormSettingsViewCheckShowAtoms = 'view/CheckShowAtoms'
-SETTINGS_FormSettingsViewCheckShowAtomNumber = 'view/CheckShowAtomNumber'
-SETTINGS_FormSettingsViewCheckShowBox = 'view/CheckShowBox'
-SETTINGS_FormSettingsViewCheckShowAxes = 'view/CheckShowAxes'
-SETTINGS_FormSettingsViewCheckShowBonds = 'view/CheckShowBonds'
-SETTINGS_FormSettingsViewSpinBondWidth = 'view/SpinBondWidth'
-SETTINGS_bond_path_width = 'view/bond_path_width'
-SETTINGS_FormSettingsViewSpinContourWidth = 'view/SpinContourWidth'
-SETTINGS_GlCullFace = 'view/GlCullFace'
-SETTINGS_FormSettingsActionOnStart = 'action/OnStart'
+SETTINGS_ColorsScale = 'ColorsScale'
+SETTINGS_ColorsFixed = 'ColorsFixed'
+SETTINGS_ColorsFixedMin = 'ColorsFixedMin'
+SETTINGS_ColorsFixedMax = 'ColorsFixedMax'
+SETTINGS_ColorsScaleType = 'ColorsScaleType'
+SETTINGS_ViewCheckAtomSelection = 'CheckAtomSelection'
+SETTINGS_ViewRadioColorBondsManual = 'BondsColorType'
+SETTINGS_ViewCheckShowAtoms = 'CheckShowAtoms'
+SETTINGS_ViewCheckShowAtomNumber = 'CheckShowAtomNumber'
+SETTINGS_ViewCheckShowBox = 'CheckShowBox'
+SETTINGS_ViewCheckShowAxes = 'CheckShowAxes'
+SETTINGS_ViewCheckShowBonds = 'CheckShowBonds'
+SETTINGS_ViewSpinBondWidth = 'SpinBondWidth'
+SETTINGS_bond_path_width = 'bond_path_width'
+SETTINGS_ViewSpinContourWidth = 'SpinContourWidth'
+SETTINGS_GlCullFace = 'GlCullFace'
+SETTINGS_ActionOnStart = 'action/OnStart'
 SETTINGS_PropertyFontSize = 'property/fontsize'
 SETTINGS_PropertyShiftX = 'property/shiftx'
 SETTINGS_PropertyShiftY = 'property/shifty'
 SETTINGS_IS_ADD_TRANSLATED_ATOMS = 'atoms/addtranslated'
 SETTINGS_IS_SHOW_ONLY_CP_PROPS_FOR_LIST = 'cps/showPropsStyle'
 
-SETTINGS_FormSettingsPreferredCoordinatesStyle = 'model/FormSettingsPreferredCoordinatesStyle'
-SETTINGS_FormSettingsPreferredCoordinates = 'model/FormSettingsPreferredCoordinates'
-SETTINGS_FormSettingsPreferredUnits = 'model/FormSettingsPreferred/units'
-SETTINGS_FormSettingsPreferredLattice = 'model/FormSettingsPreferredLattice'
+SETTINGS_CoordinatesStyle = 'model/FormSettingsPreferredCoordinatesStyle'
+SETTINGS_Coordinates = 'model/FormSettingsPreferredCoordinates'
+SETTINGS_Units = 'model/FormSettingsPreferred/units'
+SETTINGS_Lattice = 'model/FormSettingsPreferredLattice'
 
 SETTINGS_Color_Of_Atoms_Scheme = 'colors/scheme'
-SETTINGS_Color_Of_Atoms = 'colors/atoms'
-SETTINGS_Color_Of_Bonds = 'colors/bonds'
-SETTINGS_Color_Of_Background = 'colors/background'
-SETTINGS_Color_Of_Box = 'colors/box'
-SETTINGS_Color_Of_Axes = 'colors/axes'
-SETTINGS_color_of_bcp = 'colors/bcp'
-SETTINGS_color_of_rcp = 'colors/rcp'
-SETTINGS_color_of_ccp = 'colors/ccp'
-SETTINGS_color_of_bp = 'colors/bp'
+SETTINGS_Color_Of_Atoms = 'colors_atoms'
+SETTINGS_Color_Of_Bonds = 'colors_bonds'
+SETTINGS_Color_Of_Background = 'colors_background'
+SETTINGS_Color_Of_Box = 'colors_box'
+SETTINGS_Color_Of_Axes = 'colors_axes'
+SETTINGS_color_of_bcp = 'colors_bcp'
+SETTINGS_color_of_rcp = 'colors_rcp'
+SETTINGS_color_of_ccp = 'colors_ccp'
+SETTINGS_color_of_bp = 'colors_bp'
 SETTINGS_perspective_angle = 'perspectiveangle'

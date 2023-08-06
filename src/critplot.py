@@ -20,7 +20,7 @@ is_with_figure = True
 
 ORGANIZATION_NAME = 'SUSU'
 ORGANIZATION_DOMAIN = 'susu.ru'
-APPLICATION_NAME = 'gui4dft'
+APPLICATION_NAME = 'CritPlot'
 
 QCoreApplication.setApplicationName(ORGANIZATION_NAME)
 QCoreApplication.setOrganizationDomain(ORGANIZATION_DOMAIN)

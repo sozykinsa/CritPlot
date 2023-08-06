@@ -57,7 +57,7 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Test with pytest
         run: |
-          python -m pytest tests --cov=src/core_gui_atomistic --cov-report=xml --cov-report=term-missing --ignore=tests/critplot
+          python -m pytest tests --cov=src/core_gui_atomistic --cov-report=xml --cov-report=term-missing --ignore=tests/critplot --ignore=tests/core_gui_atomistic_qt
 
   test-linux:
 
@@ -78,7 +78,7 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Test with pytest
       run: |
-        python -m pytest tests --cov=src/src_critplot --cov-report=xml --cov-report=term-missing --ignore=src/core_gui_atomistic --ignore=tests/critplot/opengl
+        python -m pytest tests --cov=src/src_critplot --cov-report=xml --cov-report=term-missing --ignore=tests/core_gui_atomistic_qt --ignore=tests/critplot/opengl
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -109,7 +109,7 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Test with pytest
       run: |
-        python -m pytest tests --color=yes --cov=src/src_critplot --cov-report=xml --cov-report=term-missing --ignore=tests/critplot/opengl
+        python -m pytest tests --ignore=src/core_gui_atomistic_qt --ignore=tests/critplot/opengl
 
   test-mac:
 
@@ -128,4 +128,4 @@ jobs:
             pip install -r requirements-dev.txt
     - name: Test with pytest
       run: |
-        python -m pytest tests --color=yes --cov=src/src_critplot --cov-report=xml --cov-report=term-missing --ignore=tests/critplot/opengl
+        python -m pytest tests --ignore=src/core_gui_atomistic_qt --ignore=tests/critplot/opengl

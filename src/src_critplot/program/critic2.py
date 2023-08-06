@@ -4,8 +4,11 @@ import copy
 import os
 import math
 import numpy as np
+import numpy.linalg
+
 from core_gui_atomistic import helpers
 from src_critplot.models.critical_point import CriticalPoint
+from core_gui_atomistic.atom import Atom
 from core_gui_atomistic.periodic_table import TPeriodTable
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
@@ -17,7 +20,7 @@ def structure_from_cro_file(filename):
     #cp  ncp   typ        position (cryst. coords.)            end1 (lvec)      end2 (lvec)
     1      1    n   0.41201875    0.19237040    0.32843532
     """
-    # print("structure_from_cro_file start")
+    #  print("structure_from_cro_file start")
     period_table = TPeriodTable()
     model = AtomicModelCP()
     if os.path.exists(filename) and filename.endswith("cro"):
@@ -58,42 +61,48 @@ def structure_from_cro_file(filename):
             347    108  r   0.51856128    0.51875294    0.44655967  359  ( 0  0  0 ) 359  ( 0  0  0 )
             362    116  c   0.51852061    0.51875000    0.63729618
             """
-            x, y, z = float(data[3]), float(data[4]), float(data[5])
+            xyz = np.array([data[3], data[4], data[5]], dtype=float)
             crit_info = crit_points[number]
-            # print(crit_info)
             if crit_info[3] == "nucleus":
                 let = crit_info[8].replace("_", "")
+                cp_type = "(3,-3)"
                 title = let + title_number
-                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
+                new_cp = init_crit_point(crit_info, let, cp_type, title, xyz)
+                new_atom = Atom([*xyz, let, period_table.get_charge_by_letter(let)])
                 model.add_atom(new_atom)
-                model.add_critical_point(new_atom)
+                # new_cp.let = "nn"
+                model.add_critical_point(new_cp)
 
             if crit_info[3] == "nnattr":
-                let = "nn"
+                let = "attr"
+                cp_type = "(3,-3)"
                 title = let + title_number
-                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
-                model.add_critical_point(new_atom)
+                new_cp = init_crit_point(crit_info, let, cp_type, title, xyz)
+                model.add_critical_point(new_cp)
 
             if crit_info[3] == "bond":
                 let = "xb"
+                cp_type = "(3,-1)"
                 title = let + title_number
-                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
-                add_atoms_to_cp(data, model, new_atom)
-                model.add_critical_point(new_atom)
+                new_cp = init_crit_point(crit_info, let, cp_type, title, xyz)
+                add_atoms_to_cp(data, model, new_cp)
+                model.add_critical_point(new_cp)
 
             if crit_info[3] == "ring":
                 let = "xr"
+                cp_type = "(3,+1)"
                 title = let + title_number
-                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
-                add_atoms_to_cp(data, model, new_atom)
-                model.add_critical_point(new_atom)
+                new_cp = init_crit_point(crit_info, let, cp_type, title, xyz)
+                add_atoms_to_cp(data, model, new_cp)
+                model.add_critical_point(new_cp)
 
             if crit_info[3] == "cage":
                 let = "xc"
+                cp_type = "(3,+3)"
                 title = let + title_number
-                new_atom = init_crit_point(crit_info, let, period_table, title, x, y, z)
-                add_atoms_to_cp(data, model, new_atom)
-                model.add_critical_point(new_atom)
+                new_cp = init_crit_point(crit_info, let, cp_type, title, xyz)
+                add_atoms_to_cp(data, model, new_cp)
+                model.add_critical_point(new_cp)
             str1 = f.readline()
 
         f.readline()
@@ -106,9 +115,9 @@ def structure_from_cro_file(filename):
             if (ind1 is not None) and (ind2 is not None):
                 trans1 = np.array(cp.get_property("atom1_translation"))
                 trans2 = np.array(cp.get_property("atom2_translation"))
-                p1 = CriticalPoint([*model.cps[ind1 - 1].xyz + trans1, "xz", 1])
-                p2 = CriticalPoint([*cp.xyz, "xz", 1])
-                p3 = CriticalPoint([*model.cps[ind2 - 1].xyz + trans2, "xz", 1])
+                p1 = CriticalPoint([model.cps[ind1 - 1].xyz + trans1, "xz", "bp"])
+                p2 = CriticalPoint([cp.xyz, "xz", "bp"])
+                p3 = CriticalPoint([model.cps[ind2 - 1].xyz + trans2, "xz", "bp"])
                 if (np.linalg.norm(trans1) > 0) and (ind1 < model.n_atoms()):
                     atom = copy.deepcopy(model.atoms[ind1 - 1])
                     atom.xyz += trans1
@@ -123,23 +132,27 @@ def structure_from_cro_file(filename):
                 model.add_bond_path_point([p2, p3])
                 atom_to_atom = model.cps[ind1 - 1].let + str(ind1) + "-" + model.cps[ind2 - 1].let + str(ind2)
                 cp.set_property("atom_to_atom", atom_to_atom)
-                cp_bp_len = model.point_point_distance(cp.xyz, model.cps[ind1 - 1].xyz) + \
-                            model.point_point_distance(model.cps[ind2 - 1].xyz, cp.xyz)
-                cp.set_property("cp_bp_len", cp_bp_len)
+                bond_len = np.linalg.norm(model.cps[ind2 - 1].xyz + trans2 - model.cps[ind1 - 1].xyz - trans1)
+                cp.set_property("cp_bp_len", bond_len)
         model.bond_path_points_optimize()
     return [model]
 
 
-def add_atoms_to_cp(data, model, new_atom):
+def add_atoms_to_cp(data, model, new_cp):
     if len(data) > 6:
-        new_atom.set_property("atom1", int(data[6]))
-        new_atom.set_property("atom2", int(data[10]))
-        translation1 = int(data[7]) * model.lat_vector1 + int(data[8]) * model.lat_vector2 + \
-                       int(data[9]) * model.lat_vector3
-        translation2 = int(data[11]) * model.lat_vector1 + int(data[12]) * model.lat_vector2 + \
-                       int(data[13]) * model.lat_vector3
-        new_atom.set_property("atom1_translation", translation1)
-        new_atom.set_property("atom2_translation", translation2)
+        atom1 = int(data[6])
+        atom2 = int(data[10])
+        if (atom1 <= len(model.atoms)) and (atom2 <= len(model.atoms)):
+            new_cp.set_property("atom1", atom1)
+            new_cp.set_property("atom2", atom2)
+            translation1 = int(data[7]) * model.lat_vector1 + int(data[8]) * model.lat_vector2 + \
+                           int(data[9]) * model.lat_vector3
+            translation2 = int(data[11]) * model.lat_vector1 + int(data[12]) * model.lat_vector2 + \
+                           int(data[13]) * model.lat_vector3
+            new_cp.set_property("atom1_translation", translation1)
+            new_cp.set_property("atom2_translation", translation2)
+        else:
+            print("strange critical point: ", new_cp.to_string())
 
 
 def get_critical_points_info(filename: str):
@@ -185,15 +198,14 @@ def get_critical_points_info(filename: str):
     return crit_points
 
 
-def init_crit_point(crit_info, let, period_table, title, x, y, z):
-    charge = period_table.get_charge_by_letter(let)
-    new_atom = CriticalPoint([x, y, z, let, charge])
-    new_atom.set_property("title", title)
-    new_atom.set_property("rho", crit_info[9])
-    new_atom.set_property("grad", crit_info[10])
-    new_atom.set_property("lap", crit_info[11])
-    new_atom.set_property("text", crit_info[12])
-    return new_atom
+def init_crit_point(crit_info, let, cp_type, title, xyz):
+    new_cp = CriticalPoint([xyz, let, cp_type])
+    new_cp.set_property("title", title)
+    new_cp.set_property("rho", crit_info[9])
+    new_cp.set_property("grad", crit_info[10])
+    new_cp.set_property("lap", crit_info[11])
+    new_cp.set_property("text", crit_info[12])
+    return new_cp
 
 
 def parse_bondpaths(filename: str, model: AtomicModelCP) -> List[AtomicModelCP]:

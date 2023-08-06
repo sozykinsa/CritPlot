@@ -18,12 +18,53 @@ class AtomicModelCP(AtomicModel):
         self.cps: List[CriticalPoint] = []
 
     def n_cps(self):
-        lets = ("xb", "xr", "xc", "nn")
+        return len(self.cps)
+
+    def n_bcp(self):
         n = 0
         for cp in self.cps:
-            if cp.let in lets:
+            if cp.cp_type == "(3,-1)":
                 n += 1
         return n
+
+    def n_ccp(self):
+        n = 0
+        for cp in self.cps:
+            if cp.cp_type == "(3,+3)":
+                n += 1
+        return n
+
+    def n_rcp(self):
+        n = 0
+        for cp in self.cps:
+            if cp.cp_type == "(3,+1)":
+                n += 1
+        return n
+
+    def n_ncp(self):
+        n = 0
+        for cp in self.cps:
+            if cp.cp_type == "(3,-3)":
+                n += 1
+        return n
+
+    def poincare_hoff_rule(self):
+        rule_text = str(self.n_ncp()) + "(3,-3) - " + str(self.n_bcp()) + "(3,-1) + " + str(self.n_rcp()) + \
+                    "(3,+1) - " + str(self.n_ccp()) + "(3,+3)"
+        rule_int = self.n_ncp() - self.n_bcp() + self.n_rcp() - self.n_ccp()
+        return rule_text, rule_int
+
+    def equivalent_titles(self, cp):
+        atom1 = cp.get_property("atom1")
+        atom2 = cp.get_property("atom2")
+        if (atom1 is not None) and (atom2 is not None):
+            let1 = self.atoms[atom1 - 1].let
+            let2 = self.atoms[atom2 - 1].let
+            title1 = let1 + "-" + let2
+            title2 = let2 + "-" + let1
+            return title1, title2
+        else:
+            return None, None
 
     def bond_path_points_optimize(self) -> None:
         """Remove redundant points from all bond paths."""
@@ -44,16 +85,43 @@ class AtomicModelCP(AtomicModel):
         bond = deepcopy(cp.bonds.get(b))
         if bond is None:
             return
-        i = 2
-        while (i < len(bond)) and (len(bond) > 1):
-            m = (bond[i].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y) * (bond[i - 2].z - bond[i - 1].z)
-            j = (bond[i].y - bond[i - 1].y) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].z - bond[i - 1].z)
-            k = (bond[i].z - bond[i - 1].z) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y)
-            i += 1
-            if (math.fabs(m - j) < 1e-6) and (math.fabs(m - k) < 1e-6):
-                bond.pop(i - 2)
-                i -= 1
+        # i = 2
+        # while (i < len(bond)) and (len(bond) > 1):
+        #     m = (bond[i].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y) * (bond[i - 2].z - bond[i - 1].z)
+        #     j = (bond[i].y - bond[i - 1].y) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].z - bond[i - 1].z)
+        #     k = (bond[i].z - bond[i - 1].z) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y)
+        #     i += 1
+        #     if (math.fabs(m - j) < 1e-6) and (math.fabs(m - k) < 1e-6):
+        #         bond.pop(i - 2)
+        #         i -= 1
+
+        if len(bond) > 2:
+            k = 3
+            i = 0
+            while (i < len(bond)) and (len(bond) > 1):
+                for j in range(1, k):
+                    if i + 1 < len(bond):
+                        bond.pop(i + 1)
+                for j in range(k):
+                    if i + 2 < len(bond):
+                        bond.pop(i + 2)
+                i += 2
         cp.bonds[b + "opt"] = bond
+
+    def get_cp_types(self):
+        cp_types = ["All"]
+        for cp in self.cps:
+            atom1 = cp.get_property("atom1")
+            atom2 = cp.get_property("atom2")
+            if not (atom1 is None) and not (atom2 is None) and cp.cp_type == "(3,-1)" and cp.is_visible:
+                if (atom1 > 0) and (atom1 <= self.n_atoms()) and (atom2 > 0) and (atom2 <= self.n_atoms()):
+                    atom1 = self.atoms[atom1 - 1].let
+                    atom2 = self.atoms[atom2 - 1].let
+                    str1 = atom1 + "-" + atom2
+                    str2 = atom2 + "-" + atom1
+                    if (str1 not in cp_types) and (str2 not in cp_types):
+                        cp_types.append(str1)
+        return cp_types
 
     def move(self, dl: np.ndarray):
         """Move model by the vector."""
@@ -92,17 +160,14 @@ class AtomicModelCP(AtomicModel):
 
                     ind1 = self.cps[i].get_property("atom1")
                     ind2 = self.cps[i].get_property("atom2")
-                    if (ind1 < len(self.atoms)) and (ind2 < len(self.atoms)):
-                        p1 = CriticalPoint([*self.atoms[ind1 - 1].xyz, "xz", 1])
-                        p2 = CriticalPoint([*self.cps[i].xyz, "xz", 1])
-                        p3 = CriticalPoint([*self.atoms[ind2 - 1].xyz, "xz", 1])
+                    if (ind1 <= len(self.atoms)) and (ind2 <= len(self.atoms)):
+                        p1 = CriticalPoint([self.atoms[ind1 - 1].xyz, "xz", "bp"])
+                        p2 = CriticalPoint([self.cps[i].xyz, "xz", "bp"])
+                        p3 = CriticalPoint([self.atoms[ind2 - 1].xyz, "xz", "bp"])
 
                         self.add_bond_path_point([p2, p1])
                         self.add_bond_path_point([p2, p3])
         self.bond_path_points_optimize()
-
-    def n_bcp(self):
-        return len(self.cps)
 
     def move_atoms_to_cell(self):
         a_inv = inv(self.lat_vectors)
