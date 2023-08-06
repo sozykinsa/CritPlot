@@ -1111,13 +1111,7 @@ class Ui_MainWindow(object):
         self.groupBox_4.setObjectName(u"groupBox_4")
         self.verticalLayout_7 = QVBoxLayout(self.groupBox_4)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.groupBox_49 = QGroupBox(self.groupBox_4)
-        self.groupBox_49.setObjectName(u"groupBox_49")
-        self.groupBox_49.setMinimumSize(QSize(0, 0))
-        self.groupBox_49.setSizeIncrement(QSize(0, 0))
-        self.verticalLayout_70 = QVBoxLayout(self.groupBox_49)
-        self.verticalLayout_70.setObjectName(u"verticalLayout_70")
-        self.frame_116 = QFrame(self.groupBox_49)
+        self.frame_116 = QFrame(self.groupBox_4)
         self.frame_116.setObjectName(u"frame_116")
         self.frame_116.setMinimumSize(QSize(0, 0))
         self.frame_116.setFrameShape(QFrame.NoFrame)
@@ -1141,8 +1135,17 @@ class Ui_MainWindow(object):
         self.horizontalLayout_50.addWidget(self.modify_center_to_zero)
 
 
-        self.verticalLayout_70.addWidget(self.frame_116)
+        self.verticalLayout_7.addWidget(self.frame_116)
 
+
+        self.verticalLayout_2.addWidget(self.groupBox_4)
+
+        self.groupBox_49 = QGroupBox(self.FormTabActions)
+        self.groupBox_49.setObjectName(u"groupBox_49")
+        self.groupBox_49.setMinimumSize(QSize(0, 0))
+        self.groupBox_49.setSizeIncrement(QSize(0, 0))
+        self.verticalLayout_70 = QVBoxLayout(self.groupBox_49)
+        self.verticalLayout_70.setObjectName(u"verticalLayout_70")
         self.frame_117 = QFrame(self.groupBox_49)
         self.frame_117.setObjectName(u"frame_117")
         self.frame_117.setMinimumSize(QSize(0, 0))
@@ -1222,10 +1225,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_70.addWidget(self.frame_170)
 
 
-        self.verticalLayout_7.addWidget(self.groupBox_49)
-
-
-        self.verticalLayout_2.addWidget(self.groupBox_4)
+        self.verticalLayout_2.addWidget(self.groupBox_49)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -2698,7 +2698,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 642, 765))
+        self.page_8.setGeometry(QRect(0, 0, 355, 426))
         self.verticalLayout_21 = QVBoxLayout(self.page_8)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.cps_rule = QLabel(self.page_8)
@@ -3084,13 +3084,13 @@ class Ui_MainWindow(object):
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Cell", None))
         self.FormModifyCellButton.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Transforms", None))
-        self.groupBox_49.setTitle(QCoreApplication.translate("MainWindow", u"Shift", None))
-        self.FormModifyGoPositive.setText(QCoreApplication.translate("MainWindow", u"Go to positive!", None))
-        self.FormModifyGoToCell.setText(QCoreApplication.translate("MainWindow", u"Go to cell", None))
+        self.FormModifyGoPositive.setText(QCoreApplication.translate("MainWindow", u"To positive", None))
+        self.FormModifyGoToCell.setText(QCoreApplication.translate("MainWindow", u"To cell", None))
         self.modify_center_to_zero.setText(QCoreApplication.translate("MainWindow", u"Center to zero", None))
-        self.x_circular_shift.setText(QCoreApplication.translate("MainWindow", u"x-circular shift", None))
-        self.y_circular_shift.setText(QCoreApplication.translate("MainWindow", u"y-circular shift", None))
-        self.z_circular_shift.setText(QCoreApplication.translate("MainWindow", u"z-circular shift", None))
+        self.groupBox_49.setTitle(QCoreApplication.translate("MainWindow", u"Circular shift", None))
+        self.x_circular_shift.setText(QCoreApplication.translate("MainWindow", u"x", None))
+        self.y_circular_shift.setText(QCoreApplication.translate("MainWindow", u"y", None))
+        self.z_circular_shift.setText(QCoreApplication.translate("MainWindow", u"z", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FormTabActions), QCoreApplication.translate("MainWindow", u"Modify", None))
         self.FormActionsPostButGetBonds.setText(QCoreApplication.translate("MainWindow", u"Get bonds", None))
         self.FormActionsPostLabelMeanBond.setText("")

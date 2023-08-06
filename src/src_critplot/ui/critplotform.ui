@@ -1982,244 +1982,244 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
-            <widget class="QGroupBox" name="groupBox_49">
+            <widget class="QFrame" name="frame_116">
              <property name="minimumSize">
               <size>
                <width>0</width>
                <height>0</height>
               </size>
              </property>
-             <property name="sizeIncrement">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_50">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="FormModifyGoPositive">
+                <property name="text">
+                 <string>To positive</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="FormModifyGoToCell">
+                <property name="text">
+                 <string>To cell</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="modify_center_to_zero">
+                <property name="text">
+                 <string>Center to zero</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_49">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="sizeIncrement">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Circular shift</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_70">
+           <item>
+            <widget class="QFrame" name="frame_117">
+             <property name="minimumSize">
               <size>
                <width>0</width>
                <height>0</height>
               </size>
              </property>
-             <property name="title">
-              <string>Shift</string>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_70">
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_117">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
               <item>
-               <widget class="QFrame" name="frame_116">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
+               <widget class="QDoubleSpinBox" name="x_circular_shift_step">
+                <property name="minimum">
+                 <double>-99.989999999999995</double>
                 </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_50">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QPushButton" name="FormModifyGoPositive">
-                   <property name="text">
-                    <string>Go to positive!</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="FormModifyGoToCell">
-                   <property name="text">
-                    <string>Go to cell</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="modify_center_to_zero">
-                   <property name="text">
-                    <string>Center to zero</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="frame_117">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
+               <widget class="QPushButton" name="x_circular_shift">
+                <property name="text">
+                 <string>x</string>
                 </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_117">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="x_circular_shift_step">
-                   <property name="minimum">
-                    <double>-99.989999999999995</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="x_circular_shift">
-                   <property name="text">
-                    <string>x-circular shift</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="horizontalSpacer_100">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>157</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="frame_118">
-                <property name="minimumSize">
+               <spacer name="horizontalSpacer_100">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
                  <size>
-                  <width>0</width>
-                  <height>0</height>
+                  <width>157</width>
+                  <height>20</height>
                  </size>
                 </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_118">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_165">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QDoubleSpinBox" name="y_circular_shift_step">
+                <property name="minimum">
+                 <double>-99.989999999999995</double>
                 </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_165">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="y_circular_shift_step">
-                   <property name="minimum">
-                    <double>-99.989999999999995</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="y_circular_shift">
-                   <property name="text">
-                    <string>y-circular shift</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="horizontalSpacer_117">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="frame_170">
-                <property name="minimumSize">
+               <widget class="QPushButton" name="y_circular_shift">
+                <property name="text">
+                 <string>y</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_117">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
                  <size>
-                  <width>0</width>
-                  <height>0</height>
+                  <width>40</width>
+                  <height>20</height>
                  </size>
                 </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_170">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_166">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QDoubleSpinBox" name="z_circular_shift_step">
+                <property name="minimum">
+                 <double>-99.989999999999995</double>
                 </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_166">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="z_circular_shift_step">
-                   <property name="minimum">
-                    <double>-99.989999999999995</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="z_circular_shift">
-                   <property name="text">
-                    <string>z-circular shift</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="horizontalSpacer_118">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
                </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="z_circular_shift">
+                <property name="text">
+                 <string>z</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_118">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -4981,8 +4981,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>642</width>
-         <height>765</height>
+         <width>355</width>
+         <height>426</height>
         </rect>
        </property>
        <attribute name="label">
