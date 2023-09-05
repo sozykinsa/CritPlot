@@ -160,21 +160,33 @@ class AtomicModel(object):
         indexes -
         is_only_charge_correct - check the charge for correctness
         """
-        if indexes[0] == 0:
-            ani_file.readline()
+        str2 = ani_file.readline()
+        row = str2.split()
+        if len(row) > 0:
+            if not row[0].isnumeric():
+                str2 = ani_file.readline()
+        else:
+            str2 = ani_file.readline()
         atoms = []
         mendeley = TPeriodTable()
         reg = re.compile('[^a-zA-Z ]')
         for i1 in range(0, number_of_atoms):
-            str1 = helpers.spacedel(ani_file.readline())
+            str1 = helpers.spacedel(str2)
             s = str1.split(' ')
             d1 = float(s[indexes[1]])
             d2 = float(s[indexes[2]])
             d3 = float(s[indexes[3]])
-            c = reg.sub('', s[indexes[0]])
-            charge = mendeley.get_charge_by_letter(c)
+            c = s[indexes[0]]
+            if c.isnumeric():
+                charge = int(c)
+                c = mendeley.get_let(charge)
+            else:
+                c = reg.sub('', s[indexes[0]])
+                charge = mendeley.get_charge_by_letter(c)
             if (charge > 0) or is_allow_charge_incorrect:
                 atoms.append([d1, d2, d3, c, charge])
+            if i1 < number_of_atoms -1:
+                str2 = ani_file.readline()
         new_model = AtomicModel(atoms)
         new_model.set_lat_vectors_default()
         return new_model
@@ -828,6 +840,14 @@ class AtomicModel(object):
                 data += str1 + str2 + "\n"
             data += ' $END'
         return data
+
+    def coords_to_ang(self):
+        for at in self.atoms:
+            at.xyz /= 0.52917720859
+
+    def coords_to_bohr(self):
+        for at in self.atoms:
+            at.xyz *= 0.52917720859
 
     def xyz_string(self, i, units="Ang"):
         mult = 1.0
