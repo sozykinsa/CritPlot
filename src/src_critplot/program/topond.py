@@ -5,7 +5,6 @@ import numpy as np
 from core_gui_atomistic import helpers
 from core_gui_atomistic.periodic_table import TPeriodTable
 from core_gui_atomistic.atom import Atom
-from core_gui_atomistic.atomic_model import AtomicModel
 from src_critplot.models.critical_point import CriticalPoint
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
@@ -59,7 +58,7 @@ def get_atoms(filename):
     return model
 
 
-def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = False):
+def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations=False):
     """Get critical points data."""
     if os.path.exists(filename):
         file1 = open(filename)
@@ -70,10 +69,16 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
             if (not row) or (row.find("CP N.  X") >= 0):
                 return
             title = row.split("CP N.")[1].split()[0]
+            n_brackets = row.count("(")
             row = row.replace("(", "")
             row = row.replace(")", "")
             row1 = row.split()
+
             row1.insert(10, "(")
+            if n_brackets == 1:
+                row1.insert(11, "0")
+                row1.insert(12, "0")
+                row1.insert(13, "0")
             row1.insert(14, ")")
 
             file1.readline()
@@ -102,7 +107,15 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
                 CP TYPE                        :  (3,-1)
                 COORD(AU)  (X  Y  Z)           : -2.5571E-16 -4.5448E+00 -4.5448E+00
                 COORD FRACT. CONV. CELL        : -2.8133E-17  5.0000E-01  5.0000E-01
-                PROPERTIES (RHO,GRHO,LAP)      :  1.6510E-03  2.5625E-19  8.5997E-03                
+                PROPERTIES (RHO,GRHO,LAP)      :  1.6510E-03  2.5625E-19  8.5997E-03   
+                
+                variant # 3
+                CP N.      1  NON-EQUIV. ATOM      1 SI ---      2 O      DISTANCE (ANG)     1.687
+                *********
+
+                CP TYPE                        :  (3,-1)
+                COORD(AU)  (X  Y  Z)           :  1.9421E+00 -2.4949E-01  9.4204E+00
+                PROPERTIES (RHO,GRHO,LAP)      :  1.2029E-01  7.3282E-16  7.1917E-01                            
                 """
                 # print("bcp (3,-1) ----->")
                 text = "Type : (3,-1)\n"
@@ -160,7 +173,6 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
                 let = "xc"
                 cp, row = parse_cp_point(file1, let, cp_type, text, title)
                 model.add_critical_point(cp)
-                # add_assotiated_atom_from_row(cp, model, row1)
             else:
                 row = file1.readline()
             while (row.find("NUMBER OF UNIQUE CRI. POINT FOUND") < 0) and \
@@ -183,7 +195,7 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
                 for i in range(n_cp):
                     file1.readline()
                     row1 = file1.readline()
-                    if len(row1) < 4:
+                    if len(row1) < 2:
                         row1 = file1.readline().split()
                         row2 = file1.readline().split()
                         atom1, atom2 = int(row1[2]), int(row2[2])
@@ -201,13 +213,16 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
                                 if not (f1 or (atom1_old == atom2) and (atom2_old == atom1)):
                                     cp.set_property("atom1", atom1)
                                     cp.set_property("atom2", atom2)
-
-                                    translation1 = int(row1[3]) * model.lat_vector1 + \
-                                                   int(row1[4]) * model.lat_vector2 + \
-                                                   int(row1[5]) * model.lat_vector3
-                                    translation2 = int(row2[3]) * model.lat_vector1 + \
-                                                   int(row2[4]) * model.lat_vector2 + \
-                                                   int(row2[5]) * model.lat_vector3
+                                    translation1 = np.zeros(3)
+                                    translation2 = np.zeros(3)
+                                    if len(row1) > 9:
+                                        translation1 = int(row1[3]) * model.lat_vector1 + \
+                                                       int(row1[4]) * model.lat_vector2 + \
+                                                       int(row1[5]) * model.lat_vector3
+                                    if len(row2) > 9:
+                                        translation2 = int(row2[3]) * model.lat_vector1 + \
+                                                       int(row2[4]) * model.lat_vector2 + \
+                                                       int(row2[5]) * model.lat_vector3
                                     cp.set_property("atom1_translation", translation1)
                                     cp.set_property("atom2_translation", translation2)
 
@@ -230,6 +245,7 @@ def parse_cp_data(filename: str, model: AtomicModelCP, is_add_translations = Fal
                                 print("strange critical point: ", cp.to_string())
                         for j in range(3):
                             file1.readline()
+
                     else:
                         for j in range(4):
                             file1.readline()
@@ -278,9 +294,12 @@ def parse_cp_point(file1, let, cp_type, text, title):
     xyz = np.array(row.split(":")[1].split(), dtype=float) * 0.52917720859
     cp = CriticalPoint([xyz, let, cp_type])
     cp.set_property("title", title)
-    text += helpers.spacedel(file1.readline()) + "\n"
-    """COORD FRACT. CONV. CELL        :  2.5000E-01  2.5000E-01 -2.0484E-17"""
-    row = helpers.spacedel(file1.readline()) + "\n"
+    tmp_row = file1.readline()
+    if tmp_row.find("COORD FRACT.") >= 0:
+        text += helpers.spacedel(tmp_row) + "\n"
+        """COORD FRACT. CONV. CELL        :  2.5000E-01  2.5000E-01 -2.0484E-17"""
+        tmp_row = file1.readline()
+    row = helpers.spacedel(tmp_row) + "\n"
     """PROPERTIES (RHO,GRHO,LAP)      :  3.1585E-03  2.9929E-18  1.3881E-02"""
     data = row.split(":")[1].split()
     cp.set_property("rho", data[0])
@@ -336,6 +355,9 @@ def atomic_data_from_output(filename, is_add_translations = False):
         # print("lat_vectors: ", lat_vectors)
         model = get_atoms(filename)
         # print("atoms: ",  len(model.atoms))
-        model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
+        if lat_vectors is not None:
+            model.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
+        else:
+            model.set_lat_vectors_default()
         parse_cp_data(filename, model, is_add_translations)
     return [model]
