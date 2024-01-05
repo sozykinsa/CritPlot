@@ -264,10 +264,14 @@ class GuiOpenGLCP(GuiOpenGLBase):
         old_selected_cp = self.selected_cp
 
         cps_ind, cps_visible = self.cps_visible_list()
+        if len(cps_ind) > 0:
+            cp_ind, cp_min_r = self.nearest_point(self.scale_factor, cps_visible, point)
+            cp_ind = cps_ind[cp_ind]
+        else:
+            cp_ind = -1
+            cp_min_r = 10000
 
         atom_ind, atom_min_r = self.nearest_point(self.scale_factor, self.main_model.atoms, point)
-        cp_ind, cp_min_r = self.nearest_point(self.scale_factor, cps_visible, point)
-        cp_ind = cps_ind[cp_ind]
 
         if cp_min_r < atom_min_r:
             if cp_min_r < 1.4:
