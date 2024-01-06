@@ -1,5 +1,5 @@
 from src.src_critplot.utils.import_export import ImporterExporter
-from core_gui_atomistic import helpers
+from core_atomistic import helpers
 
 
 def test_check_format(tests_path):

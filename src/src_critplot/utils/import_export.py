@@ -2,7 +2,7 @@
 
 import os
 from copy import deepcopy
-from core_gui_atomistic import helpers
+from core_atomistic import helpers
 from src_critplot.program.topond import atomic_data_from_output
 from src_critplot.program.critic2 import structure_from_cro_file
 from src_critplot.utils.critplot_project_file import CritPlotProjectFile

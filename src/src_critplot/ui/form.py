@@ -13,8 +13,8 @@ from qtpy.QtGui import *
 from qtpy.QtWidgets import *
 
 from src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
-from core_gui_atomistic_qt.pyqtgraphwidget import PyqtGraphWidget
-from core_gui_atomistic_qt.pyqtgraphwidgetimage import PyqtGraphWidgetImage
+from core_atomistic_qt.pyqtgraphwidget import PyqtGraphWidget
+from core_atomistic_qt.pyqtgraphwidgetimage import PyqtGraphWidgetImage
 
 
 class Ui_MainWindow(object):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from core_gui_atomistic.atom import Atom
+from core_atomistic.atom import Atom
 
 
 class CriticalPoint(Atom):

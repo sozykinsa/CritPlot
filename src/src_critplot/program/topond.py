@@ -2,9 +2,9 @@
 import copy
 import os
 import numpy as np
-from core_gui_atomistic import helpers
-from core_gui_atomistic.periodic_table import TPeriodTable
-from core_gui_atomistic.atom import Atom
+from core_atomistic import helpers
+from core_atomistic.periodic_table import TPeriodTable
+from core_atomistic.atom import Atom
 from src_critplot.models.critical_point import CriticalPoint
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 

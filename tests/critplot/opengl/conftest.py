@@ -1,8 +1,16 @@
 from src.src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
 from src.src_critplot.qtbased.mainform import MainForm
-from PySide2.QtCore import QCoreApplication, Qt
+from qtpy.QtCore import QCoreApplication, Qt
+from qtpy.QtWidgets import QApplication
 
 import pytest
+
+
+@pytest.fixture
+def qsapp(qapp_session) -> QApplication:
+    yield qapp_session
+    qapp_session.processEvents()
+    qapp_session.closeAllWindows()
 
 
 @pytest.fixture
@@ -14,6 +22,11 @@ def get_guiopengl_widget(qsapp):
         return widget
 
     return factory_function
+
+
+@pytest.fixture(scope='session')
+def qapp_session(qapp):
+    return qapp
 
 
 @pytest.fixture

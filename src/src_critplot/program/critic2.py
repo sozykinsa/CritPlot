@@ -6,10 +6,10 @@ import math
 import numpy as np
 import numpy.linalg
 
-from core_gui_atomistic import helpers
+from core_atomistic import helpers
 from src_critplot.models.critical_point import CriticalPoint
-from core_gui_atomistic.atom import Atom
-from core_gui_atomistic.periodic_table import TPeriodTable
+from core_atomistic.atom import Atom
+from core_atomistic.periodic_table import TPeriodTable
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 

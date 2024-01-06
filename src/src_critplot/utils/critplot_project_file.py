@@ -1,5 +1,5 @@
 import os
-from core_gui_atomistic.project_file import ProjectFile
+from core_atomistic.project_file import ProjectFile
 from src_critplot.models.critical_point import CriticalPoint
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 

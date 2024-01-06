@@ -11,9 +11,9 @@ import sys
 from pathlib import Path
 from copy import deepcopy
 import numpy as np
-from core_gui_atomistic import helpers
-from core_gui_atomistic.atom import Atom
-from core_gui_atomistic.periodic_table import TPeriodTable
+from core_atomistic import helpers
+from core_atomistic.atom import Atom
+from core_atomistic.periodic_table import TPeriodTable
 from qtpy.QtCore import QSettings, Qt, QSize
 from qtpy.QtGui import QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QMessageBox, QColorDialog
