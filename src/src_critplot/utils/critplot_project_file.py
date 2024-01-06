@@ -1,14 +1,14 @@
 import os
-from core_gui_atomistic.gui4dft_project_file import GUI4dftProjectFile
+from core_gui_atomistic.project_file import ProjectFile
 from src_critplot.models.critical_point import CriticalPoint
 from src_critplot.models.atomic_model_cp import AtomicModelCP
 
 
-class CritPlotProjectFile(GUI4dftProjectFile):
+class CritPlotProjectFile(ProjectFile):
 
     @staticmethod
     def project_file_writer(model):
-        text = GUI4dftProjectFile.project_file_writer(model)
+        text = ProjectFile.project_file_writer(model)
         try:
             cps = model.cps
             text += "%critical points\n"
@@ -24,7 +24,7 @@ class CritPlotProjectFile(GUI4dftProjectFile):
     def project_file_reader(file_name):
         model = None
         if os.path.exists(file_name):
-            atomic_model = GUI4dftProjectFile.project_file_reader(file_name)
+            atomic_model = ProjectFile.project_file_reader(file_name)
             model = AtomicModelCP(atomic_model[0])
             f = open(file_name)
             row = f.readline()

@@ -7,7 +7,7 @@
 CritPlot - graphical user interface for Critic2 and TOPOND programs. It is a cross-platform program. 
 
 ## Install
-CritPlot program is written in Python 3 (version >= 3.8). It has some dependencies. To install the necessary modules, run in the terminal (in the <critplot path>):
+CritPlot program is written in Python 3 (version >= 3.9). It has some dependencies. To install the necessary modules, run in the terminal (in the <critplot path>):
 
 pip3 install -r ./requirements.txt
 
