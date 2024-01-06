@@ -1,6 +1,7 @@
 # Default ignored files
 .idea/
 src/__pycache__/
+/tests/opengl/.pytest_cache/
 tests/.coverage
 tests_core/.coverage
 .coverage
