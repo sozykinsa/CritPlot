@@ -2,7 +2,7 @@ from qtpy.QtCore import QCoreApplication, Qt
 from qtpy.QtWidgets import QApplication
 from qtbased.guiopengl_cp import GuiOpenGLCP
 from qtbased.mainform import MainForm
-from src.models.atomic_model_cp import AtomicModelCP
+from src.models.cp_model import AtomicModelCP
 
 import pytest
 

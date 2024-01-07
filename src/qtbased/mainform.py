@@ -11,17 +11,20 @@ import sys
 from pathlib import Path
 from copy import deepcopy
 import numpy as np
-from src_core_atomistic import helpers
-from src_core_atomistic.atom import Atom
-from src_core_atomistic.periodic_table import TPeriodTable
+
+from core_atomistic.atom import Atom
+from core_atomistic.periodic_table import TPeriodTable
+from core_atomistic import helpers
+
 from qtpy.QtCore import QSettings, Qt, QSize
 from qtpy.QtGui import QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QMessageBox, QColorDialog
 from qtpy.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem
 
-from utils.import_export import ImporterExporter
-from program import critic2
+from programs.io import ImporterExporter
+from programs import critic2
 from qtbased.image3dexporter import Image3Dexporter
+
 from ui.about import Ui_DialogAbout as Ui_about
 from ui.form import Ui_MainWindow as Ui_form
 

@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
+from typing import List
 import copy
 import os
 import numpy as np
-from src_core_atomistic import helpers
-from src_core_atomistic.periodic_table import TPeriodTable
-from src_core_atomistic.atom import Atom
-from models.critical_point import CriticalPoint
-from models.atomic_model_cp import AtomicModelCP
+from core_atomistic import helpers
+from core_atomistic.periodic_table import TPeriodTable
+from core_atomistic.atom import Atom
+from models.cp import CriticalPoint
+from models.cp_model import AtomicModelCP
+
+
+class TopondModelCP(AtomicModelCP):
+    def __init__(self, new_atoms: List[Atom] = []):
+        super().__init__(new_atoms)
+        self.cps: List[CriticalPoint] = []
+        self.model_type = "topond"
 
 
 def number_of_atoms_from_outp(filename):
@@ -287,6 +295,17 @@ def add_assotiated_atom_from_row(cp, model, row1):
     model.add_critical_point(cp)
 
 
+def add_associated_atoms(cp, model, row1):
+    ind1, ind2 = int(row1[5]), int(row1[8])
+    cp.set_property("atom1", ind1)
+    cp.set_property("atom2", ind2)
+    translation1 = np.zeros(3, dtype=float)
+    translation2 = int(row1[11]) * model.lat_vector1 + int(row1[12]) * model.lat_vector2 + \
+                   int(row1[13]) * model.lat_vector3
+    cp.set_property("atom1_translation", translation1)
+    cp.set_property("atom2_translation", translation2)
+
+
 def parse_cp_point(file1, let, cp_type, text, title):
     row = file1.readline()
     text += helpers.spacedel(row) + "\n"
@@ -334,17 +353,6 @@ def parse_cp_point(file1, let, cp_type, text, title):
             text += helpers.spacedel(row) + "\n"
     cp.set_property("text", text)
     return cp, row
-
-
-def add_associated_atoms(cp, model, row1):
-    ind1, ind2 = int(row1[5]), int(row1[8])
-    cp.set_property("atom1", ind1)
-    cp.set_property("atom2", ind2)
-    translation1 = np.zeros(3, dtype=float)
-    translation2 = int(row1[11]) * model.lat_vector1 + int(row1[12]) * model.lat_vector2 + \
-                   int(row1[13]) * model.lat_vector3
-    cp.set_property("atom1_translation", translation1)
-    cp.set_property("atom2_translation", translation2)
 
 
 def atomic_data_from_output(filename, is_add_translations = False):

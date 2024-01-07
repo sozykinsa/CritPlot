@@ -1,5 +1,5 @@
 from pathlib import Path
-from src_core_atomistic.periodic_table import TPeriodTable
+from core_atomistic.periodic_table import TPeriodTable
 
 import pytest
 

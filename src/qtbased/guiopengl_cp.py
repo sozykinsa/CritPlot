@@ -5,9 +5,9 @@ from typing import Callable
 import OpenGL.GL as gl
 import OpenGL.GLU as glu
 import numpy as np
-from src_core_atomistic_qt.opengl_base import GuiOpenGLBase
-from src_core_atomistic.helpers import is_number
-from models.atomic_model_cp import AtomicModelCP
+from core_atomistic_qt.opengl_base import GuiOpenGLBase
+from core_atomistic.helpers import is_number
+from models.cp_model import AtomicModelCP
 
 
 class GuiOpenGLCP(GuiOpenGLBase):

@@ -1,5 +1,5 @@
-from utils.import_export import ImporterExporter
-from src_core_atomistic import helpers
+from programs.io import ImporterExporter
+from core_atomistic import helpers
 
 
 def test_check_format(tests_path):

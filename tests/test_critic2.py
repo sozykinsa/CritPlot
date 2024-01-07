@@ -1,5 +1,5 @@
-from utils.import_export import ImporterExporter
-from models.atomic_model_cp import AtomicModelCP
+from programs.io import ImporterExporter
+from models.cp_model import AtomicModelCP
 
 
 def test_atoms_of_bond_path(tests_path):

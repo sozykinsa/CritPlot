@@ -1,7 +1,7 @@
 import os
-from src_core_atomistic.project_file import ProjectFile
-from models.critical_point import CriticalPoint
-from models.atomic_model_cp import AtomicModelCP
+from core_atomistic.project_file import ProjectFile
+from models.cp import CriticalPoint
+from models.cp_model import AtomicModelCP
 
 
 class CritPlotProjectFile(ProjectFile):

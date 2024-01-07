@@ -1,6 +1,6 @@
-from models.atomic_model_cp import AtomicModelCP
-from program.topond import atomic_data_from_output
-from program.critic2 import structure_from_cro_file, parse_bondpaths
+from models.cp_model import AtomicModelCP
+from programs.topond import atomic_data_from_output
+from programs.critic2 import structure_from_cro_file, parse_bondpaths
 
 
 def test_critical_points(tests_path):

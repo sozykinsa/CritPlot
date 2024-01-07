@@ -2,11 +2,11 @@
 
 import os
 from copy import deepcopy
-from src_core_atomistic import helpers
-from program.topond import atomic_data_from_output
-from program.critic2 import structure_from_cro_file
-from utils.critplot_project_file import CritPlotProjectFile
-from models.atomic_model_cp import AtomicModelCP
+from core_atomistic import helpers
+from programs.topond import atomic_data_from_output
+from programs.critic2 import structure_from_cro_file
+from programs.cp_project_file import CritPlotProjectFile
+from models.cp_model import AtomicModelCP
 
 
 class ImporterExporter(object):

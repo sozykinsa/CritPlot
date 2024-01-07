@@ -6,11 +6,18 @@ import math
 import numpy as np
 import numpy.linalg
 
-from src_core_atomistic import helpers
-from models.critical_point import CriticalPoint
-from src_core_atomistic.atom import Atom
-from src_core_atomistic.periodic_table import TPeriodTable
-from models.atomic_model_cp import AtomicModelCP
+from core_atomistic.atom import Atom
+from core_atomistic.periodic_table import TPeriodTable
+from core_atomistic import helpers
+from models.cp import CriticalPoint
+from models.cp_model import AtomicModelCP
+
+
+class Critic2ModelCP(AtomicModelCP):
+    def __init__(self, new_atoms: List[Atom] = []):
+        super().__init__(new_atoms)
+        self.cps: List[CriticalPoint] = []
+        self.model_type = "critic2"
 
 
 def structure_from_cro_file(filename):

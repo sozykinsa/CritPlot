@@ -1,9 +1,9 @@
 from pathlib import Path
 import pytest
 
-from src_core_atomistic.periodic_table import TPeriodTable
-from src_core_atomistic_qt.qt_graph import PyqtGraphWidget
-from src_core_atomistic_qt.qt_image import PyqtGraphWidgetImage
+from core_atomistic.periodic_table import TPeriodTable
+from core_atomistic_qt.qt_graph import PyqtGraphWidget
+from core_atomistic_qt.qt_image import PyqtGraphWidgetImage
 from qtpy.QtWidgets import QApplication
 
 

@@ -1,4 +1,4 @@
-from models.atomic_model_cp import AtomicModelCP
+from models.cp_model import AtomicModelCP
 
 
 def test_guiopengl(guiopengl_widget):

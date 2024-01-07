@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-# Python 3
 from typing import List
 
 import math
 import numpy as np
 from copy import deepcopy
 from numpy.linalg import inv
-from models.critical_point import CriticalPoint
-from src_core_atomistic.atom import Atom
-from src_core_atomistic.atomic_model import AtomicModel
-from src_core_atomistic import helpers
+
+from core_atomistic.atom import Atom
+from core_atomistic.atomic_model import AtomicModel
+from core_atomistic import helpers
+
+from models.cp import CriticalPoint
 
 
 class AtomicModelCP(AtomicModel):
@@ -85,15 +86,6 @@ class AtomicModelCP(AtomicModel):
         bond = deepcopy(cp.bonds.get(b))
         if bond is None:
             return
-        # i = 2
-        # while (i < len(bond)) and (len(bond) > 1):
-        #     m = (bond[i].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y) * (bond[i - 2].z - bond[i - 1].z)
-        #     j = (bond[i].y - bond[i - 1].y) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].z - bond[i - 1].z)
-        #     k = (bond[i].z - bond[i - 1].z) * (bond[i - 2].x - bond[i - 1].x) * (bond[i - 2].y - bond[i - 1].y)
-        #     i += 1
-        #     if (math.fabs(m - j) < 1e-6) and (math.fabs(m - k) < 1e-6):
-        #         bond.pop(i - 2)
-        #         i -= 1
 
         if len(bond) > 2:
             k = 3

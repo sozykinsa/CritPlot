@@ -45,8 +45,8 @@ class Ui_DialogAbout(object):
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">CritPlot, the Critic2 and TOPOND visualisation tool <br />was writen by Sergey Sozykin from South Ural State University, </p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Chelabinsk, Russia </p>\n"
-"<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The latest version of the program is available at GITHUB<br /> https://github.com/sozykinsa/CritPlot</p>\n"
+"<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The latest version of the programs is available at GITHUB<br /> https://github.com/sozykinsa/CritPlot</p>\n"
 ""
-                        "<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">You can ask questions about the program by e-mail:<br /> sozykinsa@susu.ru</p></body></html>", None))
+                        "<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">You can ask questions about the programs by e-mail:<br /> sozykinsa@susu.ru</p></body></html>", None))
     # retranslateUi
 
