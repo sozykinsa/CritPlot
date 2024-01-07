@@ -1871,12 +1871,10 @@ class MainForm(QMainWindow):
 
     def change_color(self, color_ui, var_property):  # pragma: no cover
         color = QColorDialog.getColor()
-        color_ui.setStyleSheet(
-            "background-color:rgb(" + str(color.getRgb()[0]) + "," + str(color.getRgb()[1]) + "," + str(
-                color.getRgb()[2]) + ")")
+        color_str = str(color.getRgb()[0]) + "," + str(color.getRgb()[1]) + "," + str(color.getRgb()[2])
+        color_ui.setStyleSheet("background-color:rgb(" + color_str + ")")
         new_color = [color.getRgbF()[0], color.getRgbF()[1], color.getRgbF()[2]]
-        self.save_property(var_property,
-                           str(color.getRgb()[0]) + " " + str(color.getRgb()[1]) + " " + str(color.getRgb()[2]))
+        self.save_property(var_property, color_str)
         return new_color
 
     def bond_len_correct(self, d):

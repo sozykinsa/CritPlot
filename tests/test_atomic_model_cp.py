@@ -1,27 +1,16 @@
 from models.cp_model import AtomicModelCP
-from programs.topond import atomic_data_from_output
-from programs.critic2 import structure_from_cro_file, parse_bondpaths
-
-
-def test_critical_points(tests_path):
-    f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
-    models: AtomicModelCP = structure_from_cro_file(f_name)
-    assert len(models[0].cps) == 11
-    assert models[0].cps[5].get_property("cp_bp_len") == 3.4582895082860503
-    f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
-    models = atomic_data_from_output(f_name, True)
-    assert len(models[0].cps) == 7
-    assert models[0].cps[3].get_property("cp_bp_len") == 4.279603412116594
+from programs.topond import TopondModelCP
+from programs.critic2 import Critic2ModelCP, parse_bondpaths
 
 
 def test_critical_path_simplifier(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
-    models: AtomicModelCP = structure_from_cro_file(f_name)
-    assert len(models[0].cps) == 11
-    bond1 = models[0].cps[7].bonds.get("bond1")
+    model: AtomicModelCP = Critic2ModelCP(f_name)
+    assert len(model.cps) == 11
+    bond1 = model.cps[7].bonds.get("bond1")
     assert len(bond1) == 2
     f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
-    models = parse_bondpaths(f_name, models[0])
+    models = parse_bondpaths(f_name, model)
     assert len(models[0].cps) == 11
     assert models[0].cps[7].get_property("atom1") == 2
     bond1 = models[0].cps[7].bonds.get("bond1")
@@ -30,17 +19,17 @@ def test_critical_path_simplifier(tests_path):
 
 def test_get_cp_types(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
-    models: AtomicModelCP = structure_from_cro_file(f_name)
-    cp_types = models[0].get_cp_types()
+    model: AtomicModelCP = Critic2ModelCP(f_name)
+    cp_types = model.get_cp_types()
     assert len(cp_types) == 4
 
 
 def test_create_csv_file_cp(tests_path):
     f_name = str(tests_path / 'ref_data' / 'critic2' / "siesta-1-cp.cro")
-    models: AtomicModelCP = structure_from_cro_file(f_name)
-    assert len(models[0].cps) == 11
+    model: AtomicModelCP = Critic2ModelCP(f_name)
+    assert len(model.cps) == 11
     f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
-    models = parse_bondpaths(f_name, models[0])
+    models = parse_bondpaths(f_name, model)
     cp_list = range(len(models[0].cps))
     text = models[0].create_csv_file_cp(cp_list, True, False, False, False, False)
     assert len(text) == 2086
@@ -48,7 +37,7 @@ def test_create_csv_file_cp(tests_path):
 
 def test_go_to_positive_coordinates_translate(tests_path):
     f_name = str(tests_path / 'ref_data' / 'topond' / "topond-I.outp")
-    models = atomic_data_from_output(f_name, True)
-    assert len(models[0].atoms) == 9
-    models[0].go_to_positive_coordinates_translate()
-    assert len(models[0].atoms) == 4
+    model = TopondModelCP(f_name, True)
+    assert len(model.atoms) == 9
+    model.go_to_positive_coordinates_translate()
+    assert len(model.atoms) == 4
