@@ -44,4 +44,4 @@ class CritPlotProjectFile(ProjectFile):
                         row = f.readline()
                 row = f.readline()
             f.close()
-        return [model]
+        return model

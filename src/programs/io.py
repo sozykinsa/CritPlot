@@ -3,8 +3,8 @@
 import os
 from copy import deepcopy
 from core_atomistic import helpers
-from programs.topond import atomic_data_from_output
-from programs.critic2 import structure_from_cro_file
+from programs.topond import TopondModelCP
+from programs.critic2 import Critic2ModelCP
 from programs.cp_project_file import CritPlotProjectFile
 from models.cp_model import AtomicModelCP
 
@@ -14,21 +14,21 @@ class ImporterExporter(object):
     @staticmethod
     def import_from_file(filename: str, is_add_translations = False):
         """import file"""
-        models = []
+        model: AtomicModelCP = None
         is_critic_open = False
         if os.path.exists(filename):
             file_format = helpers.check_format(filename)
             print("format: ", file_format)
             if file_format == "topond_out":
-                models = atomic_data_from_output(filename, is_add_translations)
+                model = TopondModelCP(filename, is_add_translations)
             elif file_format == "critic_cro":
-                models = structure_from_cro_file(filename)
+                model = Critic2ModelCP(filename)
                 is_critic_open = True
             elif file_format == "project":
-                models = CritPlotProjectFile.project_file_reader(filename)
+                model = CritPlotProjectFile.project_file_reader(filename)
             else:
                 print("Wrong format")
-        return models, is_critic_open
+        return [model], is_critic_open
 
     @staticmethod
     def model_for_export(model: AtomicModelCP):
