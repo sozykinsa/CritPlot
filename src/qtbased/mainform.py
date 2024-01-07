@@ -1338,13 +1338,13 @@ class MainForm(QMainWindow):
         try:
             if not name:
                 format_str = "PNG files (*.png);;JPG files (*.jpg);;BMP files (*.bmp)"
-                fname = self.get_file_name_from_save_dialog(format_str)
-                if fname:
+                f_name = self.get_file_name_from_save_dialog(format_str)
+                if f_name:
                     new_window = Image3Dexporter(5 * self.ui.openGLWidget.width(), 5 * self.ui.openGLWidget.height(), 5)
                     new_window.ui.openGLWidget.copy_state(self.ui.openGLWidget)
-                    new_window.ui.openGLWidget.image3d_to_file(fname)
+                    new_window.ui.openGLWidget.image3d_to_file(f_name)
                     new_window.destroy()
-                    self.work_dir = os.path.dirname(fname)
+                    self.work_dir = os.path.dirname(f_name)
                     self.save_active_folder()
         except Exception as excep:
             self.show_error(excep)
@@ -1397,13 +1397,11 @@ class MainForm(QMainWindow):
         self.save_property(SETTINGS_Folder_CP, self.work_dir)
 
     def save_state_view_show_axes(self):  # pragma: no cover
-        self.save_property(SETTINGS_ViewCheckShowAxes,
-                           self.ui.FormSettingsViewCheckShowAxes.isChecked())
+        self.save_property(SETTINGS_ViewCheckShowAxes, self.ui.FormSettingsViewCheckShowAxes.isChecked())
         self.ui.openGLWidget.set_axes_visible(self.ui.FormSettingsViewCheckShowAxes.isChecked())
 
     def save_state_view_atom_selection(self):  # pragma: no cover
-        self.save_property(SETTINGS_ViewCheckAtomSelection,
-                           self.ui.FormSettingsViewCheckAtomSelection.isChecked())
+        self.save_property(SETTINGS_ViewCheckAtomSelection, self.ui.FormSettingsViewCheckAtomSelection.isChecked())
 
     def save_state_view_bond_color(self):  # pragma: no cover
         self.save_property(SETTINGS_ViewRadioColorBondsManual,
@@ -1446,11 +1444,6 @@ class MainForm(QMainWindow):
     def save_state_colors_fixed(self):  # pragma: no cover
         self.save_property(SETTINGS_ColorsFixed, self.ui.FormSettingsColorsFixed.isChecked())
 
-    def save_state_view_spin_contour_width(self):  # pragma: no cover
-        self.save_property(SETTINGS_ViewSpinContourWidth, self.ui.FormSettingsViewSpinContourWidth.text())
-        self.ui.openGLWidget.set_contour_width(self.ui.FormSettingsViewSpinContourWidth.value() / 1000)
-        self.plot_contour()
-
     def save_state_colors_fixed_min(self):  # pragma: no cover
         self.save_property(SETTINGS_ColorsFixedMin, self.ui.FormSettingsColorsFixedMin.text())
 
@@ -1472,28 +1465,6 @@ class MainForm(QMainWindow):
     def save_state_colors_scale_type(self):  # pragma: no cover
         self.save_property(SETTINGS_ColorsScaleType, self.ui.FormSettingsColorsScaleType.currentText())
         self.colors_cash = {}
-
-    # def save_state_preferred_coordinates(self):  # pragma: no cover
-    #    self.save_property(SETTINGS_Coordinates,
-    #                       self.ui.FormSettingsPreferredCoordinates.currentText())
-    #    self.coord_type = self.ui.FormSettingsPreferredCoordinates.currentText()
-
-    def save_state_preferred_coordinates_style(self):  # pragma: no cover
-        self.save_property(SETTINGS_CoordinatesStyle,
-                           self.ui.PreferredCoordinatesTypeSimple.isChecked())
-        if self.ui.PreferredCoordinatesTypeSimple.isChecked():
-            self.ui.FormSettingsPreferredCoordinates.setEnabled(True)
-        else:
-            self.ui.FormSettingsPreferredCoordinates.setEnabled(False)
-
-    def save_state_preferred_units(self):  # pragma: no cover
-        self.save_property(SETTINGS_Units,
-                           self.ui.FormSettingsPreferredUnits.currentText())
-        self.units_type = self.ui.FormSettingsPreferredUnits.currentText()
-
-    def save_state_preferred_lattice(self):  # pragma: no cover
-        self.save_property(SETTINGS_Lattice, self.ui.FormSettingsPreferredLattice.currentText())
-        self.lattice_type = self.ui.FormSettingsPreferredLattice.currentText()
 
     @staticmethod
     def save_property(var_property, value):  # pragma: no cover
@@ -1816,11 +1787,11 @@ class MainForm(QMainWindow):
         """ Create critic2 xyz file (with critical points)"""
         format_str = "xyz files (*.xyz)"
         f_name = self.get_file_name_from_save_dialog(format_str)
+        is_with_selected = self.ui.radio_with_cp.isChecked()
         if f_name:
             model = self.models[self.active_model]
             bcp = deepcopy(model.cps)
             bcp_selected = self.selected_cp()
-            is_with_selected = self.ui.radio_with_cp.isChecked()
             text = critic2.create_critic2_xyz_file(bcp, bcp_selected, is_with_selected, model)
             helpers.write_text_to_file(f_name, text)
 
@@ -1868,7 +1839,6 @@ class MainForm(QMainWindow):
         if self.ui.form_critic_prop_rdg.isChecked():
             text_prop += 'POINTPROP RDG\n'
 
-        # fname = name[0]
         if len(fname) > 0:
             model = self.models[self.active_model]
 
@@ -1912,14 +1882,7 @@ class MainForm(QMainWindow):
     def bond_len_correct(self, d):
         let1 = self.ui.FormAtomsList1.currentText()
         let2 = self.ui.FormAtomsList2.currentText()
-        ch1 = self.periodic_table.get_charge_by_letter(let1)
-        ch2 = self.periodic_table.get_charge_by_letter(let2)
-        self.periodic_table.Bonds[ch1][ch2] = d
-        self.periodic_table.Bonds[ch2][ch1] = d
-        self.ui.openGLWidget.main_model.set_mendeley(self.periodic_table)
-        self.ui.openGLWidget.main_model.find_bonds_fast()
-        self.ui.openGLWidget.add_all_elements()
-        self.ui.openGLWidget.update()
+        self.ui.openGLWidget.bond_len_correct(let1, let2, d)
         print(let1, "-", let2, ": ", d)
 
 
