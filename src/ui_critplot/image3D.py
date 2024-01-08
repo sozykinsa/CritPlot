@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'image3D.ui'
+## Form generated from reading UI file 'image3D.ui_critplot'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##

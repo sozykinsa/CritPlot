@@ -206,175 +206,36 @@ class Critic2ModelCP(AtomicModelCP):
         new_cp.set_property("text", crit_info[12])
         return new_cp
 
+    def parse_bondpaths(self, filename: str) -> None:
+        """Import bond paths from *.xyz file.
+        filename - name of *.xyz file
+        """
+        if os.path.exists(filename):
+            f = open(filename)
+            number_of_atoms = int(math.fabs(int(f.readline())))
+            new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f, is_allow_charge_incorrect=True)
+            self.delete_all_bond_paths()
 
-def parse_bondpaths(filename: str, model: AtomicModelCP) -> List[AtomicModelCP]:
-    """Import bond paths from *.xyz file.
-    filename - name of file
-    model - AtomicModelCP to add bondpaths from xyz file
-    """
-    molecules = []
-    if os.path.exists(filename):
-        f = open(filename)
-        number_of_atoms = int(math.fabs(int(f.readline())))
-        new_model = AtomicModelCP.atoms_from_xyz_structure(number_of_atoms, f, is_allow_charge_incorrect=True)
-        model.delete_all_bond_paths()
+            xz_points = []
 
-        xz_points = []
+            for atom in new_model.atoms:
+                if atom.let.lower() == "xz":
+                    xz_points.append(atom)
 
-        for atom in new_model.atoms:
-            if atom.let.lower() == "xz":
-                xz_points.append(atom)
+            points = []
 
-        points = []
-
-        for i in range(0, len(xz_points)):
-            if len(points) == 0:
-                points.append(xz_points[i])
-            else:
-                d = math.dist(points[-1].xyz, xz_points[i].xyz)
-                if d < 0.09:
+            for i in range(0, len(xz_points)):
+                if len(points) == 0:
                     points.append(xz_points[i])
                 else:
-                    model.add_bond_path_point(points)
-                    points = [xz_points[i]]
+                    d = math.dist(points[-1].xyz, xz_points[i].xyz)
+                    if d < 0.09:
+                        points.append(xz_points[i])
+                    else:
+                        self.add_bond_path_point(points)
+                        points = [xz_points[i]]
 
-        if len(points) > 0:
-            model.add_bond_path_point(points)
+            if len(points) > 0:
+                self.add_bond_path_point(points)
 
-        model.bond_path_points_optimize()
-        new_model = model
-    molecules.append(new_model)
-    return molecules
-
-
-def model_to_critic_xyz_file(model, cps):
-    """Returns data for *.xyz file with CP and BCP.
-    model
-    cps
-    """
-    text = ""
-
-    n_atoms = model.n_atoms()
-    for i in range(0, n_atoms):
-        text += model.atoms[i].to_string() + "\n"
-
-    n_cp = len(cps)
-    for cp in cps:
-        text += cp.to_string() + "\n"
-
-    n_bcp = 0
-    for cp in cps:
-        bond1 = cp.bonds.get("bond1")
-        bond2 = cp.bonds.get("bond2")
-
-        for i in range(0, len(bond1)):
-            n_bcp += 1
-            text += bond1[i].to_string() + "\n"
-
-        for i in range(0, len(bond2)):
-            n_bcp += 1
-            text += bond2[i].to_string() + "\n"
-
-    header = "   " + str(n_atoms + n_cp + n_bcp) + "\n\n"
-    return header + text
-
-
-def create_critic2_xyz_file(bcp, bcp_seleсted, is_with_selected, model):
-    if is_with_selected:
-        text = model_to_critic_xyz_file(model, bcp_seleсted)
-    else:
-        for b in bcp_seleсted:
-            for cp in bcp:
-                if cp.to_string() == b.to_string():
-                    bcp.remove(cp)
-        text = model_to_critic_xyz_file(model, bcp)
-    return text
-
-
-def create_cri_file(cp_list, extra_points, is_form_bp, model, text_prop):
-    sys_coord = np.array([model.lat_vector1, model.lat_vector2, model.lat_vector3])
-    obr = np.linalg.inv(sys_coord).transpose()
-    text = ""
-    te = ""
-    lines = ""
-    textl = "crystal model.BADER.cube\n"
-    textl += "WRITE model.xyz\n"
-    textl += "load model.BADER.cube\n"
-    textl += "load model.VT.DN.cube\n"
-    textl += "load model.VT.UP.cube\n"
-    textl += 'LOAD AS "-$2-$3"\n'
-    textl += 'LOAD AS LAP 1\n'
-    textl += "REFERENCE 1\n"
-
-    for ind in cp_list:
-        cp = model.cps[ind]
-        text += "Bond Critical Point: " + str(ind) + "  :  "
-        ind1 = cp.get_property("atom1")
-        ind2 = cp.get_property("atom2")
-        atom1 = model.atoms[ind1].let + str(ind1 + 1)
-        atom2 = model.atoms[ind2].let + str(ind2 + 1)
-        title = atom1 + "-" + atom2
-        text += title + "\n"
-
-        if is_form_bp:
-            """ bond path """
-            bond1 = cp.get_property("bond1")
-            bond2 = cp.get_property("bond2")
-
-            path_low = []
-            for i in range(0, len(bond1)):
-                index = len(bond1) - i
-                coord = np.array([bond1[index - 1].x, bond1[index - 1].y, bond1[index - 1].z])
-                res = obr.dot(coord)
-                path_low.append(np.array([float(res[0]), float(res[1]), float(res[2])]))
-
-            from_to = "{0:14.10} {1:14.10} {2:14.10} {3:14.10} {4:14.10} {5:14.10} ".format(path_low[0][0],
-                                                                                            path_low[0][1],
-                                                                                            path_low[0][2],
-                                                                                            path_low[-1][0],
-                                                                                            path_low[-1][1],
-                                                                                            path_low[-1][2])
-
-            lines += "# " + title + "\n"
-            lines += "REFERENCE 1\n"
-            lines += "LINE " + from_to + " 100 FILE ./lines/lines-" + title + "-00-charge.txt\n"
-            lines += "REFERENCE 4\n"
-            lines += "LINE " + from_to + " 100 FILE ./lines/lines-" + title + "-00-totpot.txt\n"
-            lines += "REFERENCE 5\n"
-            lines += "LINE " + from_to + " 100 FILE ./lines/lines-" + title + "-00-elpot.txt\n"
-
-            first = "{0:14.10} {1:14.10} {2:14.10} ".format(path_low[-1][0], path_low[-1][1], path_low[-1][2])
-
-            for i in range(1, len(bond2)):
-                coord = np.array([bond2[i].x, bond2[i].y, bond2[i].z])
-                res = obr.dot(coord)
-                path_low.append(np.array([float(res[0]), float(res[1]), float(res[2])]))
-
-            last = "{0:14.10} {1:14.10} {2:14.10} ".format(path_low[-1][0], path_low[-1][1], path_low[-1][2])
-            lines += "REFERENCE 1\n"
-            lines += "LINE " + first + last + " 100 FILE ./lines/lines-" + title + "-01-charge.txt\n"
-            lines += "REFERENCE 4\n"
-            lines += "LINE " + first + last + " 100 FILE ./lines/lines-" + title + "-01-totpot.txt\n"
-            lines += "REFERENCE 5\n"
-            lines += "LINE " + first + last + " 100 FILE ./lines/lines-" + title + "-01-elpot.txt\n"
-
-            path_fine = [path_low[0]]
-            for i in range(1, len(path_low)):
-                dv = (path_low[i] - path_low[i - 1]) / extra_points
-                for j in range(0, extra_points):
-                    path_fine.append(path_fine[-1] + dv)
-
-            for i in range(0, len(path_fine)):
-                text += "{0:20.16f} {1:20.16f} {2:20.16f}\n".format(path_fine[i][0], path_fine[i][1], path_fine[i][2])
-                te += "{0:20.16f} {1:20.16f} {2:20.16f}\n".format(path_fine[i][0], path_fine[i][1], path_fine[i][2])
-        else:
-            """ critical points only """
-            res = obr.dot(np.array([cp.x, cp.y, cp.z]))
-            text += "{0:20.16f} {1:20.16f} {2:20.16f}\n".format(float(res[0]), float(res[1]), float(res[2]))
-            te += "{0:20.16f} {1:20.16f} {2:20.16f}\n".format(float(res[0]), float(res[1]), float(res[2]))
-    textl += "# bond path information\n" + text_prop
-    textl += 'POINTPROP elpot "$4"\n'
-    textl += 'POINTPROP lapl "$5"\n'
-    textl += "POINT ./POINTS.txt\n"
-    lines += "UNLOAD ALL\nEND"
-    return textl, lines, te, text
+            self.bond_path_points_optimize()

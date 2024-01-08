@@ -309,3 +309,46 @@ class AtomicModelCP(AtomicModel):
             else:
                 i += 4
         return title
+
+    def create_critic2_xyz(self, bcp, bcp_seleсted, is_with_selected):
+        if is_with_selected:
+            text = self.model_to_critic_xyz_file(bcp_seleсted)
+        else:
+            for b in bcp_seleсted:
+                for cp in bcp:
+                    if cp.to_string() == b.to_string():
+                        bcp.remove(cp)
+            text = self.model_to_critic_xyz_file(bcp)
+        return text
+
+    def model_to_critic_xyz_file(self, cps):
+        """Returns data for *.xyz file with CP and BCP.
+        model
+        cps
+        """
+        text = ""
+
+        n_atoms = self.n_atoms()
+        for i in range(0, n_atoms):
+            text += self.atoms[i].to_string() + "\n"
+
+        n_cp = len(cps)
+        for cp in cps:
+            text += cp.to_string() + "\n"
+
+        n_bcp = 0
+        for cp in cps:
+            bond1 = cp.bonds.get("bond1")
+            bond2 = cp.bonds.get("bond2")
+
+            for i in range(0, len(bond1)):
+                n_bcp += 1
+                text += bond1[i].to_string() + "\n"
+
+            for i in range(0, len(bond2)):
+                n_bcp += 1
+                text += bond2[i].to_string() + "\n"
+
+        header = "   " + str(n_atoms + n_cp + n_bcp) + "\n\n"
+        return header + text
+

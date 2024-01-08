@@ -12,21 +12,22 @@ from pathlib import Path
 from copy import deepcopy
 import numpy as np
 
-from core_atomistic.atom import Atom
-from core_atomistic.periodic_table import TPeriodTable
-from core_atomistic import helpers
-
 from qtpy.QtCore import QSettings, Qt, QSize
 from qtpy.QtGui import QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QMessageBox, QColorDialog
 from qtpy.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem
 
-from programs.io import ImporterExporter
-from programs import critic2
 from qtbased.image3dexporter import Image3Dexporter
 
-from ui.about import Ui_DialogAbout as Ui_about
-from ui.form import Ui_MainWindow as Ui_form
+from core_atomistic.periodic_table import TPeriodTable
+from core_atomistic import helpers
+
+from programs.postprocessing import poincare_hoff_rule
+from programs.preprocessing import create_cri_file
+from programs.io import ImporterExporter
+
+from ui_critplot.about import Ui_DialogAbout as Ui_about
+from ui_critplot.form import Ui_MainWindow as Ui_form
 
 sys.path.append('')
 
@@ -180,8 +181,7 @@ class MainForm(QMainWindow):
 
         model = QStandardItemModel()
         model.appendRow(QStandardItem("select"))
-        mendeley = TPeriodTable()
-        atoms_list = mendeley.get_all_letters()
+        atoms_list = self.periodic_table.get_all_letters()
         for i in range(1, len(atoms_list)):
             model.appendRow(QStandardItem(atoms_list[i]))
         self.ui.FormActionsPreComboAtomsList.setModel(model)
@@ -357,7 +357,7 @@ class MainForm(QMainWindow):
             if os.path.exists(f_name):
                 self.work_dir = os.path.dirname(f_name)
                 model = self.models[-1]
-                critic2.parse_bondpaths(f_name, model)
+                model.parse_bondpaths(f_name)
                 self.plot_last_model()
         except Exception as exs:
             self.show_error(exs)
@@ -385,7 +385,7 @@ class MainForm(QMainWindow):
         if len(self.models) == 0:
             return
         charge, let, position = self.selected_atom_from_form()
-        self.models[self.active_model].add_atom(Atom((position[0], position[1], position[2], let, charge)))
+        self.models[self.active_model].add_atom_with_data(position, charge)
         self.model_to_screen(self.active_model)
 
     def atom_delete(self):
@@ -404,8 +404,9 @@ class MainForm(QMainWindow):
         if self.ui.openGLWidget.selected_atom < 0:
             return
         charge, let, position = self.selected_atom_from_form()
-        self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom] = Atom((position[0], position[1],
-                                                                                         position[2], let, charge))
+        self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].xyz = position
+        self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].charge = charge
+        self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].let = let
         self.model_to_screen(self.active_model)
 
     def selected_atom_from_form(self):
@@ -422,8 +423,7 @@ class MainForm(QMainWindow):
         let2 = self.ui.FormAtomsList2.currentIndex()
 
         if not ((let1 == 0) or (let2 == 0)):
-            mendeley = TPeriodTable()
-            bond = mendeley.Bonds[let1][let2]
+            bond = self.periodic_table.Bonds[let1][let2]
         else:
             bond = 0
         self.ui.FormBondLenSpinBox.setValue(bond)
@@ -679,8 +679,7 @@ class MainForm(QMainWindow):
 
     def poincare_hoff_rule(self):
         model = self.ui.openGLWidget.get_model()
-        rule_text, rule_int = model.poincare_hoff_rule()
-        self.ui.cps_rule.setText("Poincare-Hoff rule " + rule_text + "=" + str(rule_int))
+        self.ui.cps_rule.setText(poincare_hoff_rule(model))
 
     def default_histogram_text(self):
         if self.ui.bonds_histogram.isChecked():
@@ -778,9 +777,8 @@ class MainForm(QMainWindow):
             c2 = 0
         else:
             bonds_category = bonds_category.split('-')
-            mendeley = TPeriodTable()
-            c1 = mendeley.get_charge_by_letter(bonds_category[0])
-            c2 = mendeley.get_charge_by_letter(bonds_category[1])
+            c1 = self.periodic_table.get_charge_by_letter(bonds_category[0])
+            c2 = self.periodic_table.get_charge_by_letter(bonds_category[1])
         return c1, c2
 
     def get_bonds(self):
@@ -1792,7 +1790,7 @@ class MainForm(QMainWindow):
             model = self.models[self.active_model]
             bcp = deepcopy(model.cps)
             bcp_selected = self.selected_cp()
-            text = critic2.create_critic2_xyz_file(bcp, bcp_selected, is_with_selected, model)
+            text = model.create_critic2_xyz(bcp, bcp_selected, is_with_selected)
             helpers.write_text_to_file(f_name, text)
 
     def export_cp_to_csv(self):
@@ -1849,7 +1847,7 @@ class MainForm(QMainWindow):
                 for i in range(0, self.ui.FormCPlist.count()):
                     ind = int(self.ui.FormCPlist.item(i).text())
                     cp_list.append(ind)
-            textl, lines, te, text = critic2.create_cri_file(cp_list, extra_points, is_form_bp, model, text_prop)
+            textl, lines, te, text = create_cri_file(cp_list, extra_points, is_form_bp, model, text_prop)
 
             helpers.write_text_to_file(fname, textl + lines)
 

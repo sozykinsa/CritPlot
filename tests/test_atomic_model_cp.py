@@ -1,6 +1,6 @@
 from models.cp_model import AtomicModelCP
 from programs.topond import TopondModelCP
-from programs.critic2 import Critic2ModelCP, parse_bondpaths
+from programs.critic2 import Critic2ModelCP
 
 
 def test_critical_path_simplifier(tests_path):
@@ -10,10 +10,10 @@ def test_critical_path_simplifier(tests_path):
     bond1 = model.cps[7].bonds.get("bond1")
     assert len(bond1) == 2
     f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
-    models = parse_bondpaths(f_name, model)
-    assert len(models[0].cps) == 11
-    assert models[0].cps[7].get_property("atom1") == 2
-    bond1 = models[0].cps[7].bonds.get("bond1")
+    model.parse_bondpaths(f_name)
+    assert len(model.cps) == 11
+    assert model.cps[7].get_property("atom1") == 2
+    bond1 = model.cps[7].bonds.get("bond1")
     assert len(bond1) == 44
 
 
@@ -29,9 +29,9 @@ def test_create_csv_file_cp(tests_path):
     model: AtomicModelCP = Critic2ModelCP(f_name)
     assert len(model.cps) == 11
     f_name = str(tests_path / 'ref_data' / 'critic2' / "cp-file.xyz")
-    models = parse_bondpaths(f_name, model)
-    cp_list = range(len(models[0].cps))
-    text = models[0].create_csv_file_cp(cp_list, True, False, False, False, False)
+    model.parse_bondpaths(f_name)
+    cp_list = range(len(model.cps))
+    text = model.create_csv_file_cp(cp_list, True, False, False, False, False)
     assert len(text) == 2086
 
 

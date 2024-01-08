@@ -1,16 +1,10 @@
-from core_atomistic.project_file import ProjectFile
 
 
 @staticmethod
-def project_file_writer(model):
-        text = ProjectFile.project_file_writer(model)
-        try:
-            cps = model.cps
-            text += "%critical points\n"
-            for point in cps:
-                text += point.to_string() + "\n"
-            text += "%end critical points\n"
-        except:
-            pass
-
-        return text
+def poincare_hoff_rule(model):
+    rule_text, rule_int = model.poincare_hoff_rule()
+    if rule_int == 1:
+        text = " is true!"
+    else:
+        text = " is not followed (" + str(rule_int) + ")"
+    return "Poincare-Hoff rule " + rule_text + "= 1" + text

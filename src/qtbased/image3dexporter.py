@@ -2,7 +2,7 @@
 
 from qtpy.QtWidgets import QMainWindow
 from qtpy.QtCore import QSize
-from ui.image3D import Ui_MainWindow as Ui_image3D
+from ui_critplot.image3D import Ui_MainWindow as Ui_image3D
 
 
 class Image3Dexporter(QMainWindow):

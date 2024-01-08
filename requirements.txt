@@ -1,6 +1,6 @@
 pyopengl
 pyside6
-qtpy==2.4.1
+qtpy
 ase
 numpy
 scipy
