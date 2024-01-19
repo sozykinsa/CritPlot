@@ -1,4 +1,4 @@
-from programs.io import ImporterExporter
+from interface.io import ImporterExporter
 from core_atomistic import helpers
 
 

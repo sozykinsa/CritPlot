@@ -5,7 +5,7 @@ from copy import deepcopy
 from core_atomistic import helpers
 from programs.topond import TopondModelCP
 from programs.critic2 import Critic2ModelCP
-from programs.cp_project_file import CritPlotProjectFile
+from interface.cp_project_file import CritPlotProjectFile
 from models.cp_model import AtomicModelCP
 
 

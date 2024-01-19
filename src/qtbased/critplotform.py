@@ -22,9 +22,7 @@ from qtbased.image3dexporter import Image3Dexporter
 from core_atomistic.periodic_table import TPeriodTable
 from core_atomistic import helpers
 
-from programs.postprocessing import poincare_hoff_rule
-from programs.preprocessing import create_cri_file
-from programs.io import ImporterExporter
+from interface.io import ImporterExporter
 
 from ui_critplot.about import Ui_DialogAbout as Ui_about
 from ui_critplot.form import Ui_MainWindow as Ui_form
@@ -679,7 +677,12 @@ class MainForm(QMainWindow):
 
     def poincare_hoff_rule(self):
         model = self.ui.openGLWidget.get_model()
-        self.ui.cps_rule.setText(poincare_hoff_rule(model))
+        rule_text, rule_int = model.poincare_hoff_rule()
+        if rule_int == 1:
+            text = " is true!"
+        else:
+            text = " is not followed (" + str(rule_int) + ")"
+        self.ui.cps_rule.setText("Poincare-Hoff rule " + rule_text + "= 1" + text)
 
     def default_histogram_text(self):
         if self.ui.bonds_histogram.isChecked():
@@ -1295,27 +1298,25 @@ class MainForm(QMainWindow):
         b = []
 
         f1 = self.ui.bonds_histogram.isChecked()
+        f2 = self.ui.bp_len_histogram.isChecked()
+        f3 = self.ui.bcp_rho_histogram.isChecked()
+
         if f1:
             c1, c2 = self.fill_bonds_charges()
             bonds, bonds_mean, bonds_err = self.ui.openGLWidget.main_model.get_bonds_for_charges(c1, c2)
             for bond in bonds:
                 b.append(bond[2])
 
-        if self.ui.bp_len_histogram.isChecked():
+        if f2 or f3:
             model = self.ui.openGLWidget.get_model()
             if not (model is None):
                 for cp in model.cps:
-                    if (cp.let == "xb") and (cp.get_property("cp_bp_len") is not None):
+                    if f2 and (cp.let == "xb") and (cp.get_property("cp_bp_len") is not None):
                         b.append(round(cp.get_property("cp_bp_len"), 4))
-
-        if self.ui.bcp_rho_histogram.isChecked():
-            model = self.ui.openGLWidget.get_model()
-            if not (model is None):
-                for cp in model.cps:
-                    if cp.let == "xb":
+                    if f3 and (cp.let == "xb"):
                         b.append(float(cp.get_property("rho")))
 
-        if f1 or self.ui.bp_len_histogram.isChecked() or self.ui.bcp_rho_histogram.isChecked():
+        if f1 or f2 or f3:
             num_bins = self.ui.FormActionsPostPlotBondsHistogramN.value()
             x_title = self.ui.histogram_x_label.text()
             y_title = self.ui.histogram_y_label.text()
@@ -1847,7 +1848,7 @@ class MainForm(QMainWindow):
                 for i in range(0, self.ui.FormCPlist.count()):
                     ind = int(self.ui.FormCPlist.item(i).text())
                     cp_list.append(ind)
-            textl, lines, te, text = create_cri_file(cp_list, extra_points, is_form_bp, model, text_prop)
+            textl, lines, te, text = model.create_cri_file(cp_list, extra_points, is_form_bp, text_prop)
 
             helpers.write_text_to_file(fname, textl + lines)
 
