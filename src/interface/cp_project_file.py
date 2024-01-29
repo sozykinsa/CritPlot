@@ -39,7 +39,6 @@ class CritPlotProjectFile(ProjectFile):
                     while row.find("%end critical points") < 0:
                         coords = row.split("properties:")[0]
                         props = row.split("properties:")
-                        bonds = row.split("bonds:")
                         row = coords.split()
                         if row[0] == "xb":
                             let = "xb"

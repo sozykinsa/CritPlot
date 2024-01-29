@@ -479,6 +479,7 @@ class MainForm(QMainWindow):
     #        i -= 1
 
     def color_to_ui(self, color_ui, state_color):
+        state_color = state_color.replace(',', ' ')
         r = state_color.split()[0]
         g = state_color.split()[1]
         b = state_color.split()[2]
@@ -846,6 +847,7 @@ class MainForm(QMainWindow):
 
     @staticmethod
     def get_color_from_setting(strcolor: str):
+        strcolor = strcolor.replace(',', ' ')
         r = strcolor.split()[0]
         g = strcolor.split()[1]
         b = strcolor.split()[2]

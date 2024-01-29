@@ -32,7 +32,6 @@ class CriticalPoint(Atom):
     @staticmethod
     def dictionary_to_str(my_dict):
         text = ""
-        print(my_dict)
         for key, value in my_dict.items():
             if str(key) != "text":
                 text += " property: " + str(key) + " value: " + str(value)
