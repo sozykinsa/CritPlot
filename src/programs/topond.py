@@ -44,7 +44,6 @@ class TopondModelCP(AtomicModelCP):
 
     def parse_cp_data(self, filename: str, is_add_translations=False):
         """Get critical points data."""
-        print("start atoms: ", len(self.atoms))
         if os.path.exists(filename):
             file1 = open(filename)
             row = file1.readline()
@@ -263,7 +262,6 @@ class TopondModelCP(AtomicModelCP):
                     bond_len = np.linalg.norm(self.atoms[ind2 - 1].xyz + trans2 - self.atoms[ind1 - 1].xyz - trans1)
                     cp.set_property("cp_bp_len", bond_len)
             self.bond_path_points_optimize()
-            print("finish atoms: ", len(self.atoms))
 
     def add_assotiated_atom_from_row(self, cp, row1):
         if len(row1) > 8:

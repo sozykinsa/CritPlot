@@ -1060,7 +1060,8 @@ class MainForm(QMainWindow):
             os.execl(sys.executable, '"' + sys.executable + '"', *sys.argv)
         self.ui.Form3Dand2DTabs.setCurrentIndex(0)
         if not file_name:
-            name_filter = "All supported files (*.cro *.outp);;Critic2 output (*.cro);;TOPOND output (*.outp)"
+            name_filter = "All supported files (*.cro *.outp *.data);;Critic2 output (*.cro)"
+            name_filter += ";;TOPOND output (*.outp);;CritPlot project file (*.data)"
             file_name = self.get_file_name_from_open_dialog(name_filter)
         if os.path.exists(file_name):
             self.filename = file_name
