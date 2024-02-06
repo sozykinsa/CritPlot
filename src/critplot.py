@@ -12,7 +12,7 @@ from PySide2.QtCore import QCoreApplication, Qt
 from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import QApplication
 
-from src_critplot.qtbased.mainform import MainForm
+from qtbased.critplotform import MainForm
 
 sys.path.append('.')
 

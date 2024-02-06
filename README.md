@@ -7,11 +7,11 @@
 CritPlot - graphical user interface for Critic2 and TOPOND programs. It is a cross-platform program. 
 
 ## Install
-CritPlot program is written in Python 3 (version >= 3.8). It has some dependencies. To install the necessary modules, run in the terminal (command line):
+CritPlot program is written in Python 3 (version >= 3.9). It has some dependencies. To install the necessary modules, run in the terminal (in the critplot_path):
 
 pip3 install -r ./requirements.txt
 
-To run the program, type (in the <critplot path>/src):
+To run the program, type (in the critplot_path/src):
 
 python3 critplot.py
 
@@ -19,8 +19,6 @@ python3 critplot.py
 
 Some operating systems may require additional packages to be installed:
 
+Ubuntu 22.04: sudo apt-get install -y libxcb-cursor-dev
+
 Xubuntu: sudo apt-get install qtbase5-dev
-
-You have to set the variable QT_API:
-
-export QT_API=pyside2 (in linux, or https://www.architectryan.com/2018/08/31/how-to-change-environment-variables-on-windows-10/ in Windows)

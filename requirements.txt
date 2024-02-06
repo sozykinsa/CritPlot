@@ -1,9 +1,8 @@
 pyopengl
-pyside2
+pyside6
 qtpy
 ase
 numpy
 scipy
 matplotlib
 pyqtgraph
-scikit-image
