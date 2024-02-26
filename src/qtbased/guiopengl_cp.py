@@ -276,17 +276,17 @@ class GuiOpenGLCP(GuiOpenGLBase):
         if cp_min_r < atom_min_r:
             if cp_min_r < 1.4:
                 if self.selected_cp == cp_ind:
-                    if self.selected_cp > 0:
+                    if self.selected_cp >= 0:
                         self.main_model.cps[self.selected_cp].set_selected(False)
                         self.selected_cp = -1
                 else:
-                    if self.selected_cp > 0:
+                    if self.selected_cp >= 0:
                         self.main_model.cps[self.selected_cp].set_selected(False)
                     self.selected_cp = cp_ind
-                    if self.selected_atom > 0:
+                    if self.selected_atom >= 0:
                         self.main_model.atoms[self.selected_atom].set_selected(False)
                         self.selected_atom = -1
-                    if self.selected_cp > 0:
+                    if self.selected_cp >= 0:
                         self.main_model.cps[self.selected_cp].set_selected(True)
         else:
             self.update_selected_atom(atom_ind, atom_min_r)
