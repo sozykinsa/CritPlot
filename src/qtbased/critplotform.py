@@ -426,10 +426,10 @@ class MainForm(QMainWindow):
             bond = 0
         self.ui.FormBondLenSpinBox.setValue(bond)
 
-    def clear_form_isosurface_data2_n(self):
-        self.ui.FormActionsPostLabelSurfaceNx.setText("")
-        self.ui.FormActionsPostLabelSurfaceNy.setText("")
-        self.ui.FormActionsPostLabelSurfaceNz.setText("")
+    # def clear_form_isosurface_data2_n(self):
+    #     self.ui.FormActionsPostLabelSurfaceNx.setText("")
+    #     self.ui.FormActionsPostLabelSurfaceNy.setText("")
+    #     self.ui.FormActionsPostLabelSurfaceNz.setText("")
 
     def change_fragment1_status_by_x(self):
         x_min = self.ui.xminborder.value()
@@ -466,17 +466,6 @@ class MainForm(QMainWindow):
     def fragment1_post_actions(self):
         self.ui.openGLWidget.atoms_of_selected_fragment_to_form()
         self.ui.openGLWidget.update_view()
-
-    # @staticmethod
-    # def clear_qtree_widget(tree):
-    #    iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
-    #    while iterator.value():
-    #        iterator.value().takeChildren()
-    #        iterator += 1
-    #    i = tree.topLevelItemCount()
-    #    while i > -1:
-    #        tree.takeTopLevelItem(i)
-    #        i -= 1
 
     def color_to_ui(self, color_ui, state_color):
         state_color = state_color.replace(',', ' ')
@@ -812,13 +801,13 @@ class MainForm(QMainWindow):
         bond = round(self.ui.openGLWidget.main_model.atom_atom_distance(i - 1, j - 1), 4)
         self.ui.PropertyAtomAtomDistance.setText(str(bond) + " A")
 
-    def get_colors_list(self, minv, maxv, values, cmap, color_scale):
-        n = len(values)
-        colors = []
-        for i in range(0, n):
-            value = values[i]
-            colors.append(self.get_color(cmap, minv, maxv, value, color_scale))
-        return colors
+    # def get_colors_list(self, minv, maxv, values, cmap, color_scale):
+    #     n = len(values)
+    #     colors = []
+    #     for i in range(0, n):
+    #         value = values[i]
+    #         colors.append(self.get_color(cmap, minv, maxv, value, color_scale))
+    #     return colors
 
     def set_2d_graph_styles(self):
         color_r = self.ui.Form2DFontColorR.value()
@@ -1059,7 +1048,8 @@ class MainForm(QMainWindow):
         if len(self.models) > 0:  # pragma: no cover
             self.action_on_start = 'Open'
             self.save_state_action_on_start()
-            os.execl(sys.executable, '"' + sys.executable + '"', *sys.argv)
+            # os.execl(sys.executable, '"' + sys.executable + '"', *sys.argv)
+            os.execlp('python3', 'python3', *sys.argv)
         self.ui.Form3Dand2DTabs.setCurrentIndex(0)
         if not file_name:
             name_filter = "All supported files (*.cro *.outp *.data);;Critic2 output (*.cro)"
@@ -1430,6 +1420,13 @@ class MainForm(QMainWindow):
 
     def save_state_action_on_start(self):  # pragma: no cover
         self.save_property(SETTINGS_ActionOnStart, self.action_on_start)
+
+    def save_state_to_run(self):
+        self.save_property(SETTINGS_Executable, self.executable)
+        self.save_property(SETTINGS_Argv, self.argv)
+        print("Saving: \n")
+        print(self.executable)
+        print(self.argv)
 
     def save_state_view_show_box(self):  # pragma: no cover
         self.save_property(SETTINGS_ViewCheckShowBox, self.ui.FormSettingsViewCheckShowBox.isChecked())
@@ -1904,6 +1901,8 @@ SETTINGS_bond_path_width = 'bond_path_width'
 SETTINGS_ViewSpinContourWidth = 'SpinContourWidth'
 SETTINGS_GlCullFace = 'GlCullFace'
 SETTINGS_ActionOnStart = 'action/OnStart'
+SETTINGS_Executable = ''
+SETTINGS_Argv = ''
 SETTINGS_PropertyFontSize = 'property/fontsize'
 SETTINGS_PropertyShiftX = 'property/shiftx'
 SETTINGS_PropertyShiftY = 'property/shifty'
