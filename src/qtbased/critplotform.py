@@ -1048,8 +1048,10 @@ class MainForm(QMainWindow):
         if len(self.models) > 0:  # pragma: no cover
             self.action_on_start = 'Open'
             self.save_state_action_on_start()
-            # os.execl(sys.executable, '"' + sys.executable + '"', *sys.argv)
-            os.execlp('python3', 'python3', *sys.argv)
+            if sys.platform.startswith('win'):
+                os.execlp('python', 'python', *sys.argv)
+            else:
+                os.execlp('python3', 'python3', *sys.argv)
         self.ui.Form3Dand2DTabs.setCurrentIndex(0)
         if not file_name:
             name_filter = "All supported files (*.cro *.outp *.data);;Critic2 output (*.cro)"
