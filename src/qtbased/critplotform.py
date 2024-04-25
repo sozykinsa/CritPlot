@@ -165,6 +165,12 @@ class MainForm(QMainWindow):
         self.ui.FormActionsPreButDeleteAtom.clicked.connect(self.atom_delete)
         self.ui.FormActionsPreButModifyAtom.clicked.connect(self.atom_modify)
         self.ui.FormActionsPreButAddAtom.clicked.connect(self.atom_add)
+        self.ui.atom_translation_1_plus.clicked.connect(self.atom_translation_1_plus)
+        self.ui.atom_translation_1_minus.clicked.connect(self.atom_translation_1_minus)
+        self.ui.atom_translation_2_plus.clicked.connect(self.atom_translation_2_plus)
+        self.ui.atom_translation_2_minus.clicked.connect(self.atom_translation_2_minus)
+        self.ui.atom_translation_3_plus.clicked.connect(self.atom_translation_3_plus)
+        self.ui.atom_translation_3_minus.clicked.connect(self.atom_translation_3_minus)
 
         self.ui.add_xyz_critic_data.clicked.connect(self.add_critic2_xyz_file)
         self.ui.FormCreateCriFile.clicked.connect(self.create_cri_file)
@@ -405,6 +411,43 @@ class MainForm(QMainWindow):
         self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].xyz = position
         self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].charge = charge
         self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].let = let
+        self.model_to_screen(self.active_model)
+
+    def atom_translation_1_plus(self):
+        self.translate_atom_or_cp(1, 0, 0)
+
+    def atom_translation_1_minus(self):
+        self.translate_atom_or_cp(-1, 0, 0)
+
+    def atom_translation_2_plus(self):
+        self.translate_atom_or_cp(0, 1, 0)
+
+    def atom_translation_2_minus(self):
+        self.translate_atom_or_cp(0, -1, 0)
+
+    def atom_translation_3_plus(self):
+        self.translate_atom_or_cp(0, 0, 1)
+
+    def atom_translation_3_minus(self):
+        self.translate_atom_or_cp(0, 0, -1)
+
+
+    def translate_atom_or_cp(self, xp, yp, zp):
+        if len(self.models) == 0:
+            return
+        if (self.ui.openGLWidget.selected_atom < 0) and (self.ui.openGLWidget.selected_cp < 0):
+            return
+        if (self.ui.openGLWidget.selected_atom >= 0):
+            charge, let, position = self.selected_atom_from_form()
+            atom = self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom]
+            atom.xyz += xp * self.models[self.active_model].lat_vector1 + \
+                        yp * self.models[self.active_model].lat_vector2 + \
+                        zp * self.models[self.active_model].lat_vector3
+        if (self.ui.openGLWidget.selected_cp >= 0):
+            cp = self.models[self.active_model].cps[self.ui.openGLWidget.selected_cp]
+            self.models[self.active_model].move_cp(cp, xp * self.models[self.active_model].lat_vector1 +
+                                                   yp * self.models[self.active_model].lat_vector2 +
+                                                   zp * self.models[self.active_model].lat_vector3)
         self.model_to_screen(self.active_model)
 
     def selected_atom_from_form(self):

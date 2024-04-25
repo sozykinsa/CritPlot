@@ -1487,144 +1487,184 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QFrame" name="frame_28">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>150</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>150</height>
-              </size>
-             </property>
+            <widget class="QFrame" name="frame_22">
              <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+              <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <widget class="QLabel" name="label_8">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>10</y>
-                <width>83</width>
-                <height>26</height>
-               </rect>
+             <layout class="QHBoxLayout" name="horizontalLayout_26">
+              <property name="topMargin">
+               <number>0</number>
               </property>
-              <property name="text">
-               <string>Element</string>
+              <property name="bottomMargin">
+               <number>0</number>
               </property>
-             </widget>
-             <widget class="QComboBox" name="FormActionsPreComboAtomsList">
-              <property name="geometry">
-               <rect>
-                <x>90</x>
-                <y>10</y>
-                <width>231</width>
-                <height>22</height>
-               </rect>
+              <item>
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>Element</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="FormActionsPreComboAtomsList"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_23">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_27">
+              <property name="topMargin">
+               <number>0</number>
               </property>
-             </widget>
-             <widget class="QDoubleSpinBox" name="FormActionsPreSpinAtomsCoordX">
-              <property name="geometry">
-               <rect>
-                <x>40</x>
-                <y>50</y>
-                <width>111</width>
-                <height>24</height>
-               </rect>
+              <property name="bottomMargin">
+               <number>0</number>
               </property>
-              <property name="decimals">
-               <number>5</number>
+              <item>
+               <widget class="QLabel" name="label_24">
+                <property name="text">
+                 <string>X</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="FormActionsPreSpinAtomsCoordX">
+                <property name="decimals">
+                 <number>5</number>
+                </property>
+                <property name="minimum">
+                 <double>-999.990000000000009</double>
+                </property>
+                <property name="maximum">
+                 <double>999.990000000000009</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>235</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_24">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_29">
+              <property name="topMargin">
+               <number>0</number>
               </property>
-              <property name="minimum">
-               <double>-999.990000000000009</double>
+              <property name="bottomMargin">
+               <number>0</number>
               </property>
-              <property name="maximum">
-               <double>999.990000000000009</double>
+              <item>
+               <widget class="QLabel" name="label_25">
+                <property name="text">
+                 <string>Y</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="FormActionsPreSpinAtomsCoordY">
+                <property name="decimals">
+                 <number>5</number>
+                </property>
+                <property name="minimum">
+                 <double>-999.990000000000009</double>
+                </property>
+                <property name="maximum">
+                 <double>999.990000000000009</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_20">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_25">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_28">
+              <property name="topMargin">
+               <number>0</number>
               </property>
-             </widget>
-             <widget class="QLabel" name="label_24">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>50</y>
-                <width>31</width>
-                <height>26</height>
-               </rect>
+              <property name="bottomMargin">
+               <number>0</number>
               </property>
-              <property name="text">
-               <string>X</string>
-              </property>
-             </widget>
-             <widget class="QDoubleSpinBox" name="FormActionsPreSpinAtomsCoordY">
-              <property name="geometry">
-               <rect>
-                <x>40</x>
-                <y>80</y>
-                <width>111</width>
-                <height>24</height>
-               </rect>
-              </property>
-              <property name="decimals">
-               <number>5</number>
-              </property>
-              <property name="minimum">
-               <double>-999.990000000000009</double>
-              </property>
-              <property name="maximum">
-               <double>999.990000000000009</double>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_25">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>80</y>
-                <width>21</width>
-                <height>26</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Y</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_26">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>110</y>
-                <width>21</width>
-                <height>26</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Z</string>
-              </property>
-             </widget>
-             <widget class="QDoubleSpinBox" name="FormActionsPreSpinAtomsCoordZ">
-              <property name="geometry">
-               <rect>
-                <x>40</x>
-                <y>110</y>
-                <width>111</width>
-                <height>24</height>
-               </rect>
-              </property>
-              <property name="decimals">
-               <number>5</number>
-              </property>
-              <property name="minimum">
-               <double>-999.990000000000009</double>
-              </property>
-              <property name="maximum">
-               <double>999.990000000000009</double>
-              </property>
-             </widget>
+              <item>
+               <widget class="QLabel" name="label_26">
+                <property name="text">
+                 <string>Z</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="FormActionsPreSpinAtomsCoordZ">
+                <property name="decimals">
+                 <number>5</number>
+                </property>
+                <property name="minimum">
+                 <double>-999.990000000000009</double>
+                </property>
+                <property name="maximum">
+                 <double>999.990000000000009</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_21">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
@@ -1672,6 +1712,102 @@
                <widget class="QPushButton" name="FormActionsPreButAddAtom">
                 <property name="text">
                  <string>Add</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_20">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_23">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_19">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_22">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="atom_translation_1_plus">
+                <property name="text">
+                 <string>+ Translation 1</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="atom_translation_2_plus">
+                <property name="text">
+                 <string>+ Translation 2</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="atom_translation_3_plus">
+                <property name="text">
+                 <string>+ Translation 3</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_21">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_24">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="atom_translation_1_minus">
+                <property name="text">
+                 <string>- Translation 1</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="atom_translation_2_minus">
+                <property name="text">
+                 <string>- Translation 2</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="atom_translation_3_minus">
+                <property name="text">
+                 <string>- Translation 3</string>
                 </property>
                </widget>
               </item>
@@ -4981,8 +5117,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>355</width>
-         <height>426</height>
+         <width>642</width>
+         <height>765</height>
         </rect>
        </property>
        <attribute name="label">

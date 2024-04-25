@@ -119,12 +119,15 @@ class AtomicModelCP(AtomicModel):
         """Move model by the vector."""
         super().move(dl)
         for cp in self.cps:
-            cp.xyz += dl
-            self.move_bond_path(dl, cp.bonds.get("bond1"))
-            self.move_bond_path(dl, cp.bonds.get("bond2"))
-            self.move_bond_path(dl, cp.bonds.get("bond1opt"))
-            self.move_bond_path(dl, cp.bonds.get("bond2opt"))
+            self.move_cp(cp, dl)
         return self.atoms
+
+    def move_cp(self, cp, dl):
+        cp.xyz += dl
+        self.move_bond_path(dl, cp.bonds.get("bond1"))
+        self.move_bond_path(dl, cp.bonds.get("bond2"))
+        self.move_bond_path(dl, cp.bonds.get("bond1opt"))
+        self.move_bond_path(dl, cp.bonds.get("bond2opt"))
 
     @staticmethod
     def move_bond_path(dl, bond):
