@@ -562,6 +562,10 @@ class AtomicModel(object):
         """The length of the molecule along the Z axis."""
         return self.max_z() - self.min_z()
 
+    def set_cluster(self, cluster, k):
+        for atom in cluster:
+            self.atoms[atom].cluster = k
+
     def sort_atoms_by_type(self):
         for i in range(0, self.n_atoms()):
             for j in range(0, self.n_atoms() - i - 1):

@@ -431,19 +431,17 @@ class MainForm(QMainWindow):
     def atom_translation_3_minus(self):
         self.translate_atom_or_cp(0, 0, -1)
 
-
     def translate_atom_or_cp(self, xp, yp, zp):
         if len(self.models) == 0:
             return
         if (self.ui.openGLWidget.selected_atom < 0) and (self.ui.openGLWidget.selected_cp < 0):
             return
-        if (self.ui.openGLWidget.selected_atom >= 0):
-            charge, let, position = self.selected_atom_from_form()
+        if self.ui.openGLWidget.selected_atom >= 0:
             atom = self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom]
             atom.xyz += xp * self.models[self.active_model].lat_vector1 + \
                         yp * self.models[self.active_model].lat_vector2 + \
                         zp * self.models[self.active_model].lat_vector3
-        if (self.ui.openGLWidget.selected_cp >= 0):
+        if self.ui.openGLWidget.selected_cp >= 0:
             cp = self.models[self.active_model].cps[self.ui.openGLWidget.selected_cp]
             self.models[self.active_model].move_cp(cp, xp * self.models[self.active_model].lat_vector1 +
                                                    yp * self.models[self.active_model].lat_vector2 +
@@ -1916,9 +1914,10 @@ class MainForm(QMainWindow):
     def change_color(self, color_ui, var_property):  # pragma: no cover
         color = QColorDialog.getColor()
         color_str = str(color.getRgb()[0]) + "," + str(color.getRgb()[1]) + "," + str(color.getRgb()[2])
+        color_str_prop = str(color.getRgb()[0]) + " " + str(color.getRgb()[1]) + " " + str(color.getRgb()[2])
         color_ui.setStyleSheet("background-color:rgb(" + color_str + ")")
         new_color = [color.getRgbF()[0], color.getRgbF()[1], color.getRgbF()[2]]
-        self.save_property(var_property, color_str)
+        self.save_property(var_property, color_str_prop )
         return new_color
 
     def bond_len_correct(self, d):

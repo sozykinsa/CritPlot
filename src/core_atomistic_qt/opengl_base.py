@@ -20,6 +20,9 @@ class GuiOpenGLBase(QOpenGLWidget):
         self.main_model = None
         self.perspective_angle: int = 35
         self.background_color = np.array((1.0, 1.0, 1.0), dtype=float)
+        self.periodic_table = TPeriodTable()
+        self.color_of_atoms = self.periodic_table.get_all_colors()
+        self.color_of_bonds_by_atoms: bool = True
         self.is_check_atom_selection: bool = False
         self.quality: int = 1
         # opengl lists
@@ -864,7 +867,6 @@ class GuiOpenGLBase(QOpenGLWidget):
         ch2 = self.main_model.mendeley.get_charge_by_letter(let2)
         self.main_model.mendeley.Bonds[ch1][ch2] = d
         self.main_model.mendeley.Bonds[ch2][ch1] = d
-        #self.main_model.set_mendeley(self.periodic_table)
         self.main_model.find_bonds_fast()
         self.add_all_elements()
         self.update()
