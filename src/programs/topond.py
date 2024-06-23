@@ -332,6 +332,11 @@ class TopondModelCP(AtomicModelCP):
         cp.set_property("lap", data[2])
         text += "lap : " + data[2] + "\n"
         row = file1.readline()
+        if row.find("RHOA,SPIN DENSITY") >= 0:
+            """RHOA,SPIN DENSITY                 :  1.0000E+00  0.0000E+00"""
+            text += "RHOA : " + row.split()[3] + "\n"
+            text += "SPIN DENSITY : " + row.split()[4] + "\n"
+            row = file1.readline()
         if len(row) > 1:
             if let in ["xb", "xr", "xc"]:
                 """KINETIC ENERGY DENSITIES (G,K) :  2.4448E-03 -1.0254E-03"""
@@ -357,5 +362,3 @@ class TopondModelCP(AtomicModelCP):
                 text += helpers.spacedel(row) + "\n"
         cp.set_property("text", text)
         return cp, row
-
-
