@@ -1028,7 +1028,7 @@ class Ui_MainWindow(object):
 
         self.frame_19 = QFrame(self.groupBox_2)
         self.frame_19.setObjectName(u"frame_19")
-        self.frame_19.setFrameShape(QFrame.StyledPanel)
+        self.frame_19.setFrameShape(QFrame.NoFrame)
         self.frame_19.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_22 = QHBoxLayout(self.frame_19)
         self.horizontalLayout_22.setObjectName(u"horizontalLayout_22")
@@ -1053,7 +1053,7 @@ class Ui_MainWindow(object):
 
         self.frame_21 = QFrame(self.groupBox_2)
         self.frame_21.setObjectName(u"frame_21")
-        self.frame_21.setFrameShape(QFrame.StyledPanel)
+        self.frame_21.setFrameShape(QFrame.NoFrame)
         self.frame_21.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_24 = QHBoxLayout(self.frame_21)
         self.horizontalLayout_24.setObjectName(u"horizontalLayout_24")
@@ -1470,26 +1470,6 @@ class Ui_MainWindow(object):
         self.tab.setObjectName(u"tab")
         self.verticalLayout_15 = QVBoxLayout(self.tab)
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
-        self.frame_36 = QFrame(self.tab)
-        self.frame_36.setObjectName(u"frame_36")
-        self.frame_36.setFrameShape(QFrame.NoFrame)
-        self.frame_36.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_177 = QHBoxLayout(self.frame_36)
-        self.horizontalLayout_177.setObjectName(u"horizontalLayout_177")
-        self.horizontalLayout_177.setContentsMargins(0, -1, 0, -1)
-        self.ColorAtomsProperty = QCheckBox(self.frame_36)
-        self.ColorAtomsProperty.setObjectName(u"ColorAtomsProperty")
-
-        self.horizontalLayout_177.addWidget(self.ColorAtomsProperty)
-
-        self.PropertyForColorOfAtom = QComboBox(self.frame_36)
-        self.PropertyForColorOfAtom.setObjectName(u"PropertyForColorOfAtom")
-
-        self.horizontalLayout_177.addWidget(self.PropertyForColorOfAtom)
-
-
-        self.verticalLayout_15.addWidget(self.frame_36)
-
         self.ActivateFragmentSelectionModeCheckBox = QCheckBox(self.tab)
         self.ActivateFragmentSelectionModeCheckBox.setObjectName(u"ActivateFragmentSelectionModeCheckBox")
 
@@ -2829,7 +2809,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 642, 765))
+        self.page_8.setGeometry(QRect(0, 0, 355, 426))
         self.verticalLayout_21 = QVBoxLayout(self.page_8)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.cps_rule = QLabel(self.page_8)
@@ -3236,7 +3216,6 @@ class Ui_MainWindow(object):
         self.label_62.setText(QCoreApplication.translate("MainWindow", u":", None))
         self.PropertyAtomAtomDistanceGet.setText(QCoreApplication.translate("MainWindow", u"Get", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("MainWindow", u"Bonds", None))
-        self.ColorAtomsProperty.setText(QCoreApplication.translate("MainWindow", u"Color atoms with property", None))
         self.ActivateFragmentSelectionModeCheckBox.setText(QCoreApplication.translate("MainWindow", u"Activate fragment selection mode", None))
         self.groupBox_21.setTitle(QCoreApplication.translate("MainWindow", u"Visual effect for selected fragment", None))
         self.label_52.setText(QCoreApplication.translate("MainWindow", u"Transparency", None))

@@ -87,8 +87,6 @@ class MainForm(QMainWindow):
         self.ui.actionManual.triggered.connect(self.menu_manual)
 
         self.ui.FormModelComboModels.currentIndexChanged.connect(self.model_to_screen)
-        self.ui.PropertyForColorOfAtom.currentIndexChanged.connect(self.color_atoms_with_property)
-        self.ui.ColorAtomsProperty.stateChanged.connect(self.color_atoms_with_property)
         self.ui.PropertyForBCPtext.currentIndexChanged.connect(self.show_cp_property)
         self.ui.show_bcp_text.stateChanged.connect(self.show_cp_property)
         self.ui.property_precision.valueChanged.connect(self.cp_property_precision_changed)
@@ -1175,17 +1173,6 @@ class MainForm(QMainWindow):
                 if str(key) not in standart_prop:
                     bcp_prop_type.appendRow(QStandardItem(str(key)))
             self.ui.PropertyForBCPtext.setModel(bcp_prop_type)
-
-    def color_atoms_with_property(self):  # pragma: no cover
-        if self.ui.ColorAtomsProperty.isChecked():
-            prop = self.ui.PropertyForColorOfAtom.currentText()
-            if len(prop) > 0:
-                self.ui.openGLWidget.color_atoms_with_property(prop)
-            else:
-                self.ui.openGLWidget.color_atoms_with_property()
-        else:
-            self.ui.openGLWidget.color_atoms_with_property()
-        self.ui.openGLWidget.update()
 
     def cp_property_precision_changed(self):  # pragma: no cover
         self.ui.openGLWidget.property_precision_changed(self.ui.property_precision.value())
