@@ -1159,13 +1159,6 @@ class MainForm(QMainWindow):
     def show_property_enabling(self):  # pragma: no cover
         standart_prop = ["bond1", "bond2", "bond1opt", "bond2opt", "atom1", "atom2"]
         standart_prop.extend(["text", "atom1_translation", "atom2_translation"])
-        if self.ui.openGLWidget.main_model.n_atoms() > 0:
-            atom = self.ui.openGLWidget.main_model.atoms[0]
-            atom_prop_type = QStandardItemModel()
-            for key in atom.properties:
-                if str(key) not in standart_prop:
-                    atom_prop_type.appendRow(QStandardItem(str(key)))
-            self.ui.PropertyForColorOfAtom.setModel(atom_prop_type)
         if len(self.ui.openGLWidget.main_model.cps) > 0:
             bcp = self.ui.openGLWidget.main_model.cps[0]
             bcp_prop_type = QStandardItemModel()
@@ -1308,7 +1301,7 @@ class MainForm(QMainWindow):
                                                       view_bonds, bonds_color, bond_width, color_of_bonds_by_atoms,
                                                       view_axes, axes_color)
         self.ui.openGLWidget.set_cp_parameters(self.ui.show_bcp_text.isChecked())
-        self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
+        self.ui.openGLWidget.set_width_of_bp(self.ui.bond_path_width.value())
         self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
         self.ui.AtomsInSelectedFragment.clear()
 

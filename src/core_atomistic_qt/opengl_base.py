@@ -680,7 +680,8 @@ class GuiOpenGLBase(QOpenGLWidget):
                         fl = False
                 if fl:
                     used_space.append([pos_x, pos_y])
-                    painter.drawText(int(pos_x - self.property_x_shift), int(pos_y - self.property_y_shift), st)
+                    painter.drawText(int(pos_x - self.quality * self.property_x_shift),
+                                     int(pos_y - self.quality * self.property_y_shift), st)
         painter.end()
 
     @staticmethod

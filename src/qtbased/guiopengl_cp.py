@@ -86,6 +86,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
     def init_params(self, ogl_model) -> None:
         super().init_params(ogl_model)
         self.selected_cp = ogl_model.selected_cp
+        self.width_of_bp = ogl_model.width_of_bp
         self.is_bcp_property_visible = ogl_model.is_bcp_property_visible
         self.is_bcp_property_for_all = ogl_model.is_bcp_property_for_all
         self.bcp_property = ogl_model.bcp_property
