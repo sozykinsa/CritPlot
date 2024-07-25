@@ -12,10 +12,10 @@ from pathlib import Path
 from copy import deepcopy
 import numpy as np
 
-from qtpy.QtCore import QSettings, Qt, QSize
-from qtpy.QtGui import QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel
-from qtpy.QtWidgets import QListWidgetItem, QAction, QDialog, QFileDialog, QMessageBox, QColorDialog
-from qtpy.QtWidgets import QMainWindow, QShortcut, QTableWidgetItem
+from PySide6.QtCore import QSettings, Qt, QSize
+from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel, QShortcut
+from PySide6.QtWidgets import QListWidgetItem, QDialog, QFileDialog, QMessageBox, QColorDialog
+from PySide6.QtWidgets import QMainWindow, QTableWidgetItem
 
 from qtbased.image3dexporter import Image3Dexporter
 
