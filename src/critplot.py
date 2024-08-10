@@ -8,15 +8,15 @@ except Exception as e:
 import sys
 from pathlib import Path
 import platform
-from qtpy import PYSIDE_VERSION
-from qtpy import PYQT_VERSION
 
-from PySide6.QtCore import QCoreApplication, Qt
-from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication
+from qtpy.QtCore import QCoreApplication, Qt
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QApplication
 
 from qtbased.critplotform import MainForm
 
+from qtpy import PYSIDE_VERSION
+from qtpy import PYQT_VERSION
 print("Python version: ", platform.python_version())
 if PYSIDE_VERSION is not None:
     print("PySide version: ", PYSIDE_VERSION)

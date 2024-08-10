@@ -12,10 +12,10 @@ from pathlib import Path
 from copy import deepcopy
 import numpy as np
 
-from PySide6.QtCore import QSettings, Qt, QSize
-from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel, QShortcut
-from PySide6.QtWidgets import QListWidgetItem, QDialog, QFileDialog, QMessageBox, QColorDialog
-from PySide6.QtWidgets import QMainWindow, QTableWidgetItem
+from qtpy.QtCore import QSettings, Qt, QSize
+from qtpy.QtGui import QAction, QColor, QIcon, QKeySequence, QStandardItem, QStandardItemModel, QShortcut
+from qtpy.QtWidgets import QListWidgetItem, QDialog, QFileDialog, QMessageBox, QColorDialog
+from qtpy.QtWidgets import QMainWindow, QTableWidgetItem
 
 from qtbased.image3dexporter import Image3Dexporter
 
@@ -25,7 +25,11 @@ from core_atomistic import helpers
 from interface.io import ImporterExporter
 
 from ui_critplot.about import Ui_DialogAbout as Ui_about
-from ui_critplot.form import Ui_MainWindow as Ui_form
+if sys.platform.startswith('win'):
+    #  sys.platform.startswith('linux') or sys.platform.startswith('cygwin')
+    from ui_critplot.form_win import Ui_MainWindow as Ui_form
+else:
+    from ui_critplot.form import Ui_MainWindow as Ui_form
 
 sys.path.append('')
 
