@@ -415,11 +415,11 @@ class Ui_MainWindow(object):
 
         self.frame_16 = QFrame(self.groupBox_5)
         self.frame_16.setObjectName(u"frame_16")
-        self.frame_16.setFrameShape(QFrame.StyledPanel)
+        self.frame_16.setFrameShape(QFrame.NoFrame)
         self.frame_16.setFrameShadow(QFrame.Raised)
         self.verticalLayout_26 = QVBoxLayout(self.frame_16)
         self.verticalLayout_26.setObjectName(u"verticalLayout_26")
-        self.verticalLayout_26.setContentsMargins(-1, -1, 0, -1)
+        self.verticalLayout_26.setContentsMargins(0, 0, 0, 0)
         self.add_cp_to_list = QPushButton(self.frame_16)
         self.add_cp_to_list.setObjectName(u"add_cp_to_list")
 
@@ -1016,17 +1016,13 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.frame_29)
 
-        self.frame_20 = QFrame(self.groupBox_2)
-        self.frame_20.setObjectName(u"frame_20")
-        self.frame_20.setFrameShape(QFrame.StyledPanel)
-        self.frame_20.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_23 = QHBoxLayout(self.frame_20)
-        self.horizontalLayout_23.setObjectName(u"horizontalLayout_23")
-        self.horizontalLayout_23.setContentsMargins(-1, 0, -1, 0)
-
-        self.verticalLayout_5.addWidget(self.frame_20)
-
-        self.frame_19 = QFrame(self.groupBox_2)
+        self.groupBox_18 = QGroupBox(self.groupBox_2)
+        self.groupBox_18.setObjectName(u"groupBox_18")
+        self.groupBox_18.setMinimumSize(QSize(0, 0))
+        self.verticalLayout_28 = QVBoxLayout(self.groupBox_18)
+        self.verticalLayout_28.setObjectName(u"verticalLayout_28")
+        self.verticalLayout_28.setContentsMargins(-1, 0, -1, 0)
+        self.frame_19 = QFrame(self.groupBox_18)
         self.frame_19.setObjectName(u"frame_19")
         self.frame_19.setFrameShape(QFrame.NoFrame)
         self.frame_19.setFrameShadow(QFrame.Raised)
@@ -1049,9 +1045,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_22.addWidget(self.atom_translation_3_plus)
 
 
-        self.verticalLayout_5.addWidget(self.frame_19)
+        self.verticalLayout_28.addWidget(self.frame_19)
 
-        self.frame_21 = QFrame(self.groupBox_2)
+        self.frame_21 = QFrame(self.groupBox_18)
         self.frame_21.setObjectName(u"frame_21")
         self.frame_21.setFrameShape(QFrame.NoFrame)
         self.frame_21.setFrameShadow(QFrame.Raised)
@@ -1074,7 +1070,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_24.addWidget(self.atom_translation_3_minus)
 
 
-        self.verticalLayout_5.addWidget(self.frame_21)
+        self.verticalLayout_28.addWidget(self.frame_21)
+
+
+        self.verticalLayout_5.addWidget(self.groupBox_18)
 
 
         self.verticalLayout_2.addWidget(self.groupBox_2)
@@ -1890,34 +1889,23 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addWidget(self.show_bond_path)
 
+        self.show_bp_if_avail = QRadioButton(self.frame_4)
+        self.show_bp_if_avail.setObjectName(u"show_bp_if_avail")
+        self.show_bp_if_avail.setChecked(True)
+
+        self.horizontalLayout_8.addWidget(self.show_bp_if_avail)
+
         self.horizontalSpacer_7 = QSpacerItem(281, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer_7)
 
-
-        self.verticalLayout_18.addWidget(self.frame_4)
-
-        self.frame_17 = QFrame(self.groupBox_11)
-        self.frame_17.setObjectName(u"frame_17")
-        self.frame_17.setMinimumSize(QSize(0, 0))
-        self.frame_17.setFrameShape(QFrame.StyledPanel)
-        self.frame_17.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_14 = QHBoxLayout(self.frame_17)
-        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
-        self.horizontalLayout_14.setContentsMargins(0, 0, 0, 0)
-        self.show_bp_if_avail = QRadioButton(self.frame_17)
-        self.show_bp_if_avail.setObjectName(u"show_bp_if_avail")
-        self.show_bp_if_avail.setChecked(True)
-
-        self.horizontalLayout_14.addWidget(self.show_bp_if_avail)
-
-        self.radioButton_2 = QRadioButton(self.frame_17)
+        self.radioButton_2 = QRadioButton(self.frame_4)
         self.radioButton_2.setObjectName(u"radioButton_2")
 
-        self.horizontalLayout_14.addWidget(self.radioButton_2)
+        self.horizontalLayout_8.addWidget(self.radioButton_2)
 
 
-        self.verticalLayout_18.addWidget(self.frame_17)
+        self.verticalLayout_18.addWidget(self.frame_4)
 
         self.frame_69 = QFrame(self.groupBox_11)
         self.frame_69.setObjectName(u"frame_69")
@@ -1950,7 +1938,7 @@ class Ui_MainWindow(object):
 
         self.frame_160 = QFrame(self.groupBox_11)
         self.frame_160.setObjectName(u"frame_160")
-        self.frame_160.setFrameShape(QFrame.StyledPanel)
+        self.frame_160.setFrameShape(QFrame.NoFrame)
         self.frame_160.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_178 = QHBoxLayout(self.frame_160)
         self.horizontalLayout_178.setObjectName(u"horizontalLayout_178")
@@ -2029,7 +2017,7 @@ class Ui_MainWindow(object):
         self.frame_164 = QFrame(self.groupBox_29)
         self.frame_164.setObjectName(u"frame_164")
         self.frame_164.setMinimumSize(QSize(0, 0))
-        self.frame_164.setFrameShape(QFrame.StyledPanel)
+        self.frame_164.setFrameShape(QFrame.NoFrame)
         self.frame_164.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_180 = QHBoxLayout(self.frame_164)
         self.horizontalLayout_180.setObjectName(u"horizontalLayout_180")
@@ -2809,7 +2797,7 @@ class Ui_MainWindow(object):
         self.Form3Dand2DTabs.addItem(self.page_7, u"3D View")
         self.page_8 = QWidget()
         self.page_8.setObjectName(u"page_8")
-        self.page_8.setGeometry(QRect(0, 0, 355, 426))
+        self.page_8.setGeometry(QRect(0, 0, 642, 765))
         self.verticalLayout_21 = QVBoxLayout(self.page_8)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
         self.cps_rule = QLabel(self.page_8)
@@ -3190,6 +3178,7 @@ class Ui_MainWindow(object):
         self.FormActionsPreButDeleteAtom.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
         self.FormActionsPreButModifyAtom.setText(QCoreApplication.translate("MainWindow", u"Modify", None))
         self.FormActionsPreButAddAtom.setText(QCoreApplication.translate("MainWindow", u"Add", None))
+        self.groupBox_18.setTitle(QCoreApplication.translate("MainWindow", u"Translation", None))
         self.atom_translation_1_plus.setText(QCoreApplication.translate("MainWindow", u"+ Translation 1", None))
         self.atom_translation_2_plus.setText(QCoreApplication.translate("MainWindow", u"+ Translation 2", None))
         self.atom_translation_3_plus.setText(QCoreApplication.translate("MainWindow", u"+ Translation 3", None))
@@ -3253,7 +3242,7 @@ class Ui_MainWindow(object):
         self.groupBox_11.setTitle(QCoreApplication.translate("MainWindow", u"Bond path", None))
         self.show_bond_path.setText(QCoreApplication.translate("MainWindow", u"Show", None))
         self.show_bp_if_avail.setText(QCoreApplication.translate("MainWindow", u"bond path (if available)", None))
-        self.radioButton_2.setText(QCoreApplication.translate("MainWindow", u"only atom-atom lines", None))
+        self.radioButton_2.setText(QCoreApplication.translate("MainWindow", u"only lines", None))
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"Width", None))
         self.show_bcp_text.setText(QCoreApplication.translate("MainWindow", u"BCP property", None))
         self.groupBox_34.setTitle(QCoreApplication.translate("MainWindow", u"OpenGl", None))

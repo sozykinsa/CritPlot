@@ -129,6 +129,10 @@ class AtomicModelCP(AtomicModel):
         self.move_bond_path(dl, cp.bonds.get("bond1opt"))
         self.move_bond_path(dl, cp.bonds.get("bond2opt"))
 
+    def translate_cp(self, selected_cp, step_x, step_y, step_z):
+        cp = self.cps[selected_cp]
+        self.move_cp(cp, step_x * self.lat_vector1 + step_y * self.lat_vector2 + step_z * self.lat_vector3)
+
     @staticmethod
     def move_bond_path(dl, bond):
         if bond:

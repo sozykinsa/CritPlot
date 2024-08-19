@@ -646,13 +646,22 @@
            <item>
             <widget class="QFrame" name="frame_16">
              <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
+              <enum>QFrame::NoFrame</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_26">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
               <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item>
@@ -1719,32 +1728,17 @@
             </widget>
            </item>
            <item>
-            <widget class="QFrame" name="frame_20">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
+            <widget class="QGroupBox" name="groupBox_18">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
              </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
+             <property name="title">
+              <string>Translation</string>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_23">
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="frame_19">
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_22">
+             <layout class="QVBoxLayout" name="verticalLayout_28">
               <property name="topMargin">
                <number>0</number>
               </property>
@@ -1752,63 +1746,81 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="atom_translation_1_plus">
-                <property name="text">
-                 <string>+ Translation 1</string>
+               <widget class="QFrame" name="frame_19">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
                 </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_22">
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPushButton" name="atom_translation_1_plus">
+                   <property name="text">
+                    <string>+ Translation 1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="atom_translation_2_plus">
+                   <property name="text">
+                    <string>+ Translation 2</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="atom_translation_3_plus">
+                   <property name="text">
+                    <string>+ Translation 3</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="atom_translation_2_plus">
-                <property name="text">
-                 <string>+ Translation 2</string>
+               <widget class="QFrame" name="frame_21">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="atom_translation_3_plus">
-                <property name="text">
-                 <string>+ Translation 3</string>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
                 </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="frame_21">
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_24">
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QPushButton" name="atom_translation_1_minus">
-                <property name="text">
-                 <string>- Translation 1</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="atom_translation_2_minus">
-                <property name="text">
-                 <string>- Translation 2</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="atom_translation_3_minus">
-                <property name="text">
-                 <string>- Translation 3</string>
-                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_24">
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPushButton" name="atom_translation_1_minus">
+                   <property name="text">
+                    <string>- Translation 1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="atom_translation_2_minus">
+                   <property name="text">
+                    <string>- Translation 2</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="atom_translation_3_minus">
+                   <property name="text">
+                    <string>- Translation 3</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -3323,6 +3335,16 @@
                    </widget>
                   </item>
                   <item>
+                   <widget class="QRadioButton" name="show_bp_if_avail">
+                    <property name="text">
+                     <string>bond path (if available)</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
                    <spacer name="horizontalSpacer_7">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
@@ -3335,50 +3357,10 @@
                     </property>
                    </spacer>
                   </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="frame_17">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_14">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QRadioButton" name="show_bp_if_avail">
-                    <property name="text">
-                     <string>bond path (if available)</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
                   <item>
                    <widget class="QRadioButton" name="radioButton_2">
                     <property name="text">
-                     <string>only atom-atom lines</string>
+                     <string>only lines</string>
                     </property>
                    </widget>
                   </item>
@@ -3463,7 +3445,7 @@
                <item>
                 <widget class="QFrame" name="frame_160">
                  <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
+                  <enum>QFrame::NoFrame</enum>
                  </property>
                  <property name="frameShadow">
                   <enum>QFrame::Raised</enum>
@@ -3602,7 +3584,7 @@
                   </size>
                  </property>
                  <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
+                  <enum>QFrame::NoFrame</enum>
                  </property>
                  <property name="frameShadow">
                   <enum>QFrame::Raised</enum>
@@ -5089,8 +5071,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>355</width>
-         <height>426</height>
+         <width>642</width>
+         <height>765</height>
         </rect>
        </property>
        <attribute name="label">

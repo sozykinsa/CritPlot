@@ -57,7 +57,7 @@ class MainForm(QMainWindow):
 
         self.shortcut = QShortcut(QKeySequence("Ctrl+D"), self)
         self.shortcut.activated.connect(self.atom_delete)
-        self.active_model: int = -1
+        self.active_model_id: int = -1
         self.perspective_angle: int = 45
 
         self.state_Color_Of_Atoms = None
@@ -391,18 +391,18 @@ class MainForm(QMainWindow):
         if len(self.models) == 0:
             return
         charge, let, position = self.selected_atom_from_form()
-        self.models[self.active_model].add_atom_with_data(position, charge)
-        self.model_to_screen(self.active_model)
+        self.models[self.active_model_id].add_atom_with_data(position, charge)
+        self.model_to_screen(self.active_model_id)
 
     def atom_delete(self):
         if len(self.models) == 0:
             return
         if self.ui.openGLWidget.selected_atom < 0:
             return
-        self.models[self.active_model].delete_atom(self.ui.openGLWidget.selected_atom)
+        self.models[self.active_model_id].delete_atom(self.ui.openGLWidget.selected_atom)
         self.history_of_point_selection = []
         self.history_of_point_selection_xyz = []
-        self.model_to_screen(self.active_model)
+        self.model_to_screen(self.active_model_id)
 
     def atom_modify(self):
         if len(self.models) == 0:
@@ -410,10 +410,10 @@ class MainForm(QMainWindow):
         if self.ui.openGLWidget.selected_atom < 0:
             return
         charge, let, position = self.selected_atom_from_form()
-        self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].xyz = position
-        self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].charge = charge
-        self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom].let = let
-        self.model_to_screen(self.active_model)
+        self.models[self.active_model_id].atoms[self.ui.openGLWidget.selected_atom].xyz = position
+        self.models[self.active_model_id].atoms[self.ui.openGLWidget.selected_atom].charge = charge
+        self.models[self.active_model_id].atoms[self.ui.openGLWidget.selected_atom].let = let
+        self.model_to_screen(self.active_model_id)
 
     def atom_translation_1_plus(self):
         self.translate_atom_or_cp(1, 0, 0)
@@ -439,16 +439,18 @@ class MainForm(QMainWindow):
         if (self.ui.openGLWidget.selected_atom < 0) and (self.ui.openGLWidget.selected_cp < 0):
             return
         if self.ui.openGLWidget.selected_atom >= 0:
-            atom = self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom]
-            atom.xyz += xp * self.models[self.active_model].lat_vector1 + \
-                        yp * self.models[self.active_model].lat_vector2 + \
-                        zp * self.models[self.active_model].lat_vector3
+            self.models[self.active_model_id].translate_atom(self.ui.openGLWidget.selected_atom, xp, yp, zp)
+            # atom = self.models[self.active_model].atoms[self.ui.openGLWidget.selected_atom]
+            # atom.xyz += xp * self.models[self.active_model].lat_vector1 + \
+            #             yp * self.models[self.active_model].lat_vector2 + \
+            #             zp * self.models[self.active_model].lat_vector3
         if self.ui.openGLWidget.selected_cp >= 0:
-            cp = self.models[self.active_model].cps[self.ui.openGLWidget.selected_cp]
-            self.models[self.active_model].move_cp(cp, xp * self.models[self.active_model].lat_vector1 +
-                                                   yp * self.models[self.active_model].lat_vector2 +
-                                                   zp * self.models[self.active_model].lat_vector3)
-        self.model_to_screen(self.active_model)
+            self.models[self.active_model_id].translate_cp(self.ui.openGLWidget.selected_cp, xp, yp, zp)
+            # cp = self.models[self.active_model].cps[self.ui.openGLWidget.selected_cp]
+            # self.models[self.active_model].move_cp(cp, xp * self.models[self.active_model].lat_vector1 +
+            #                                        yp * self.models[self.active_model].lat_vector2 +
+            #                                        zp * self.models[self.active_model].lat_vector3)
+        self.model_to_screen(self.active_model_id)
 
     def selected_atom_from_form(self):
         charge = self.ui.FormActionsPreComboAtomsList.currentIndex()
@@ -1081,7 +1083,7 @@ class MainForm(QMainWindow):
                 if not file_name:
                     return
 
-                ImporterExporter.export_to_file(self.models[self.active_model], file_name)
+                ImporterExporter.export_to_file(self.models[self.active_model_id], file_name)
                 self.work_dir = os.path.dirname(file_name)
                 self.save_active_folder()
             except Exception as e:
@@ -1213,7 +1215,7 @@ class MainForm(QMainWindow):
     def model_x_circular_shift(self):
         if self.ui.openGLWidget.main_model.n_atoms() == 0:
             return
-        model = self.models[self.active_model]
+        model = self.models[self.active_model_id]
         step = self.ui.x_circular_shift_step.value()
         if step < 0:
             step = np.linalg.norm(model.lat_vector1) + step
@@ -1224,7 +1226,7 @@ class MainForm(QMainWindow):
     def model_y_circular_shift(self):
         if self.ui.openGLWidget.main_model.n_atoms() == 0:
             return
-        model = self.models[self.active_model]
+        model = self.models[self.active_model_id]
         step = self.ui.y_circular_shift_step.value()
         if step < 0:
             step = np.linalg.norm(model.lat_vector2) + step
@@ -1235,7 +1237,7 @@ class MainForm(QMainWindow):
     def model_z_circular_shift(self):
         if self.ui.openGLWidget.main_model.n_atoms() == 0:
             return
-        model = self.models[self.active_model]
+        model = self.models[self.active_model_id]
         step = self.ui.z_circular_shift_step.value()
         if step < 0:
             step = np.linalg.norm(model.lat_vector3) + step
@@ -1282,7 +1284,7 @@ class MainForm(QMainWindow):
             return
         if self.models[value].n_atoms() == 0:
             return
-        self.active_model = value
+        self.active_model_id = value
         self.ui.Form3Dand2DTabs.setCurrentIndex(0)
         view_atoms = self.ui.FormSettingsViewCheckShowAtoms.isChecked()
         view_atom_numbers = self.ui.FormSettingsViewCheckShowAtomNumber.isChecked()
@@ -1306,7 +1308,7 @@ class MainForm(QMainWindow):
                                                       view_axes, axes_color)
         self.ui.openGLWidget.set_cp_parameters(self.ui.show_bcp_text.isChecked())
         self.ui.openGLWidget.set_width_of_bp(self.ui.bond_path_width.value())
-        self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model])
+        self.ui.openGLWidget.set_atomic_structure(self.models[self.active_model_id])
         self.ui.AtomsInSelectedFragment.clear()
 
         self.show_property_enabling()
@@ -1528,7 +1530,7 @@ class MainForm(QMainWindow):
     def selected_atom_changed(self, selected):
         selected_atom = selected[0]
         selected_cp = selected[1]
-        model = self.models[self.active_model]
+        model = self.models[self.active_model_id]
         text = ""
         text_sel = ""
         if (selected_atom == -1) and (selected_cp == -1):
@@ -1579,7 +1581,7 @@ class MainForm(QMainWindow):
                         str(round(plane[3], 6)) + "= 0\n"
 
             if selected_atom >= 0:
-                model = self.models[self.active_model]
+                model = self.models[self.active_model_id]
                 text += "Selected atom: " + str(selected_atom + 1) + "\n"
                 atom = model.atoms[selected_atom]
                 text += "Element: " + atom.let + "\n"
@@ -1587,7 +1589,7 @@ class MainForm(QMainWindow):
                     text += str(key) + ": " + str(atom.properties[key]) + "\n"
 
             if selected_cp >= 0:
-                model = self.models[self.active_model]
+                model = self.models[self.active_model_id]
                 text = "Selected critical point: " + str(selected_cp + 1) + " ("
                 cp = model.cps[selected_cp]
 
@@ -1757,9 +1759,10 @@ class MainForm(QMainWindow):
 
     def delete_cp_from_list(self):  # pragma: no cover
         item_row = self.ui.FormCPlist.currentRow()
-        self.cp_deactivate(self.ui.FormCPlist.item(item_row).text())
-        self.ui.FormCPlist.takeItem(item_row)
-        self.ui.openGLWidget.update()
+        if item_row >= 0:
+            self.cp_deactivate(self.ui.FormCPlist.item(item_row).text())
+            self.ui.FormCPlist.takeItem(item_row)
+            self.ui.openGLWidget.update()
 
     def clear_cp_list(self):  # pragma: no cover
         for i in range(0, self.ui.FormCPlist.count()):
@@ -1767,15 +1770,15 @@ class MainForm(QMainWindow):
         self.ui.FormCPlist.clear()
 
     def delete_cp_from_model(self):
-        model = self.models[self.active_model]
+        model = self.models[self.active_model_id]
         bcp_selected = self.selected_cp()
         self.remove_cp_from_model(model, bcp_selected)
-        self.plot_model(self.active_model)
+        self.plot_model(self.active_model_id)
         self.clear_cp_list()
         self.selected_cp_clear()
 
     def leave_cp_in_model(self):
-        model = self.models[self.active_model]
+        model = self.models[self.active_model_id]
         new_cps = []
         sel_cps = self.selected_cp()
         for cp in model.cps:
@@ -1789,7 +1792,7 @@ class MainForm(QMainWindow):
         self.ui.openGLWidget.selected_cp = -1
         self.clear_cp_list()
         self.selected_cp_clear()
-        self.plot_model(self.active_model)
+        self.plot_model(self.active_model_id)
 
     @staticmethod
     def remove_cp_from_model(model, crit_points):
@@ -1803,7 +1806,7 @@ class MainForm(QMainWindow):
     def selected_cp(self):
         bcp_selected = []
         if len(self.models) > 0:
-            model = self.models[self.active_model]
+            model = self.models[self.active_model_id]
             for i in range(0, self.ui.FormCPlist.count()):
                 ind = int(self.ui.FormCPlist.item(i).text())
                 bcp_selected.append(model.cps[ind - 1])
@@ -1815,7 +1818,7 @@ class MainForm(QMainWindow):
         f_name = self.get_file_name_from_save_dialog(format_str)
         is_with_selected = self.ui.radio_with_cp.isChecked()
         if f_name:
-            model = self.models[self.active_model]
+            model = self.models[self.active_model_id]
             bcp = deepcopy(model.cps)
             bcp_selected = self.selected_cp()
             text = model.create_critic2_xyz(bcp, bcp_selected, is_with_selected)
@@ -1826,7 +1829,7 @@ class MainForm(QMainWindow):
         f_name = self.get_file_name_from_save_dialog(format_str)
 
         if f_name is not None:
-            model = self.models[self.active_model]
+            model = self.models[self.active_model_id]
 
             cp_list = []
             if self.ui.form_critic_list.isChecked():
@@ -1866,7 +1869,7 @@ class MainForm(QMainWindow):
             text_prop += 'POINTPROP RDG\n'
 
         if len(fname) > 0:
-            model = self.models[self.active_model]
+            model = self.models[self.active_model_id]
 
             cp_list = []
             if self.ui.form_critic_all_cp.isChecked():
