@@ -246,7 +246,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
                             fl = (self.is_show_bcp and (at.let == "xb")) or (self.is_show_ccp and (at.let == "xc")) or \
                                 (self.is_show_rcp and (at.let == "xr")) or (self.is_show_nna and (at.let == "nn")) or \
                                 (self.is_show_ncp and (at.let == "A"))
-                            if fl:
+                            if fl and self.main_model.cps[i].is_visible:
                                 text_to_render.append([*(self.scale_factor * at.xyz), at.visible_property])
                     else:
                         for i in range(0, len(self.main_model.cps)):

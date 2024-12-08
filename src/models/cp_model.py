@@ -201,7 +201,7 @@ class AtomicModelCP(AtomicModel):
     def convert_from_direct_to_cart(self):
         super().convert_from_direct_to_cart()
         for cp in self.cps:
-            cp.xyz = np.dot(self.lat_vectors, cp.xyz)
+            cp.xyz = np.dot(cp.xyz, self.lat_vectors)
 
     def add_critical_point(self, cp):
         self.cps.append(deepcopy(cp))

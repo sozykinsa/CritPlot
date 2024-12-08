@@ -194,7 +194,7 @@ class Critic2ModelCP(AtomicModelCP):
                 cp.set_property("atom1_translation", translation1)
                 cp.set_property("atom2_translation", translation2)
             else:
-                print("strange critical point: ", cp.to_string())
+                print("strange critical point: ", cp.to_string(), atom1, atom2)
 
     @staticmethod
     def init_crit_point(crit_info, let, cp_type, title, xyz):
