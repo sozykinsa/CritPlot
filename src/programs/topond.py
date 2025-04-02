@@ -157,6 +157,14 @@ class TopondModelCP(AtomicModelCP):
                     let = "xc"
                     cp, row = self.parse_cp_point(file1, let, cp_type, text, title)
                     self.add_critical_point(cp)
+                elif data == "DEGENE":
+                    """ CP TYPE                        :  DEGENE """
+                    text = "Type : DEGENE\n"
+                    cp_type = "DEGENE"
+                    title = "d" + title
+                    let = "dg"
+                    cp, row = self.parse_cp_point(file1, let, cp_type, text, title)
+                    self.add_critical_point(cp)
                 else:
                     row = file1.readline()
                 while (row.find("NUMBER OF UNIQUE CRI. POINT FOUND") < 0) and \
@@ -165,7 +173,6 @@ class TopondModelCP(AtomicModelCP):
                 if ((row.find("NUMBER OF UNIQUE CRI. POINT FOUND") > 0) or
                         (row.find("NUMBER OF CRITICAL POINTS FOUND") > 0)):
                     """ correction """
-                    # print("start correction")
                     n_cp = int(helpers.spacedel(row.split(":")[1]))
                     row = file1.readline()
                     while len(row) < 10:
