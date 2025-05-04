@@ -7,7 +7,7 @@ import OpenGL.GLU as glu
 import numpy as np
 from core_atomistic_qt.opengl_base import GuiOpenGLBase
 from core_atomistic.helpers import is_number
-from models.cp_model import AtomicModelCP
+from src_critplot.models.cp_model import AtomicModelCP
 
 
 class GuiOpenGLCP(GuiOpenGLBase):
@@ -86,6 +86,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
     def init_params(self, ogl_model) -> None:
         super().init_params(ogl_model)
         self.selected_cp = ogl_model.selected_cp
+        self.width_of_bp = ogl_model.width_of_bp
         self.is_bcp_property_visible = ogl_model.is_bcp_property_visible
         self.is_bcp_property_for_all = ogl_model.is_bcp_property_for_all
         self.bcp_property = ogl_model.bcp_property
@@ -245,7 +246,7 @@ class GuiOpenGLCP(GuiOpenGLBase):
                             fl = (self.is_show_bcp and (at.let == "xb")) or (self.is_show_ccp and (at.let == "xc")) or \
                                 (self.is_show_rcp and (at.let == "xr")) or (self.is_show_nna and (at.let == "nn")) or \
                                 (self.is_show_ncp and (at.let == "A"))
-                            if fl:
+                            if fl and self.main_model.cps[i].is_visible:
                                 text_to_render.append([*(self.scale_factor * at.xyz), at.visible_property])
                     else:
                         for i in range(0, len(self.main_model.cps)):
@@ -276,17 +277,17 @@ class GuiOpenGLCP(GuiOpenGLBase):
         if cp_min_r < atom_min_r:
             if cp_min_r < 1.4:
                 if self.selected_cp == cp_ind:
-                    if self.selected_cp > 0:
+                    if self.selected_cp >= 0:
                         self.main_model.cps[self.selected_cp].set_selected(False)
                         self.selected_cp = -1
                 else:
-                    if self.selected_cp > 0:
+                    if self.selected_cp >= 0:
                         self.main_model.cps[self.selected_cp].set_selected(False)
                     self.selected_cp = cp_ind
-                    if self.selected_atom > 0:
+                    if self.selected_atom >= 0:
                         self.main_model.atoms[self.selected_atom].set_selected(False)
                         self.selected_atom = -1
-                    if self.selected_cp > 0:
+                    if self.selected_cp >= 0:
                         self.main_model.cps[self.selected_cp].set_selected(True)
         else:
             self.update_selected_atom(atom_ind, atom_min_r)

@@ -1,8 +1,8 @@
 from qtpy.QtCore import QCoreApplication, Qt
 from qtpy.QtWidgets import QApplication
-from qtbased.guiopengl_cp import GuiOpenGLCP
-from qtbased.critplotform import MainForm
-from src.models.cp_model import AtomicModelCP
+from src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
+from src_critplot.qtbased.critplotform import MainForm
+from src_critplot.models.cp_model import AtomicModelCP
 
 import pytest
 

@@ -6,8 +6,8 @@ import numpy as np
 from core_atomistic import helpers
 from core_atomistic.periodic_table import TPeriodTable
 from core_atomistic.atom import Atom
-from models.cp import CriticalPoint
-from models.cp_model import AtomicModelCP
+from src_critplot.models.cp import CriticalPoint
+from src_critplot.models.cp_model import AtomicModelCP
 
 
 class TopondModelCP(AtomicModelCP):
@@ -21,7 +21,7 @@ class TopondModelCP(AtomicModelCP):
             lat_vectors = self.get_cell(filename)
             self.add_atoms(filename)
             if lat_vectors is not None:
-                self.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
+                self.set_lat_vectors([lat_vectors[0], lat_vectors[1], lat_vectors[2]])
             else:
                 self.set_lat_vectors_default()
             self.parse_cp_data(filename, is_add_translations)
@@ -157,6 +157,14 @@ class TopondModelCP(AtomicModelCP):
                     let = "xc"
                     cp, row = self.parse_cp_point(file1, let, cp_type, text, title)
                     self.add_critical_point(cp)
+                elif data == "DEGENE":
+                    """ CP TYPE                        :  DEGENE """
+                    text = "Type : DEGENE\n"
+                    cp_type = "DEGENE"
+                    title = "d" + title
+                    let = "dg"
+                    cp, row = self.parse_cp_point(file1, let, cp_type, text, title)
+                    self.add_critical_point(cp)
                 else:
                     row = file1.readline()
                 while (row.find("NUMBER OF UNIQUE CRI. POINT FOUND") < 0) and \
@@ -165,7 +173,6 @@ class TopondModelCP(AtomicModelCP):
                 if ((row.find("NUMBER OF UNIQUE CRI. POINT FOUND") > 0) or
                         (row.find("NUMBER OF CRITICAL POINTS FOUND") > 0)):
                     """ correction """
-                    # print("start correction")
                     n_cp = int(helpers.spacedel(row.split(":")[1]))
                     row = file1.readline()
                     while len(row) < 10:
@@ -332,6 +339,11 @@ class TopondModelCP(AtomicModelCP):
         cp.set_property("lap", data[2])
         text += "lap : " + data[2] + "\n"
         row = file1.readline()
+        if row.find("RHOA,SPIN DENSITY") >= 0:
+            """RHOA,SPIN DENSITY                 :  1.0000E+00  0.0000E+00"""
+            text += "RHOA : " + row.split()[3] + "\n"
+            text += "SPIN DENSITY : " + row.split()[4] + "\n"
+            row = file1.readline()
         if len(row) > 1:
             if let in ["xb", "xr", "xc"]:
                 """KINETIC ENERGY DENSITIES (G,K) :  2.4448E-03 -1.0254E-03"""
@@ -357,5 +369,3 @@ class TopondModelCP(AtomicModelCP):
                 text += helpers.spacedel(row) + "\n"
         cp.set_property("text", text)
         return cp, row
-
-

@@ -10,7 +10,7 @@ from core_atomistic.atom import Atom
 from core_atomistic.atomic_model import AtomicModel
 from core_atomistic import helpers
 
-from models.cp import CriticalPoint
+from src_critplot.models.cp import CriticalPoint
 
 
 class AtomicModelCP(AtomicModel):
@@ -119,12 +119,19 @@ class AtomicModelCP(AtomicModel):
         """Move model by the vector."""
         super().move(dl)
         for cp in self.cps:
-            cp.xyz += dl
-            self.move_bond_path(dl, cp.bonds.get("bond1"))
-            self.move_bond_path(dl, cp.bonds.get("bond2"))
-            self.move_bond_path(dl, cp.bonds.get("bond1opt"))
-            self.move_bond_path(dl, cp.bonds.get("bond2opt"))
+            self.move_cp(cp, dl)
         return self.atoms
+
+    def move_cp(self, cp, dl):
+        cp.xyz += dl
+        self.move_bond_path(dl, cp.bonds.get("bond1"))
+        self.move_bond_path(dl, cp.bonds.get("bond2"))
+        self.move_bond_path(dl, cp.bonds.get("bond1opt"))
+        self.move_bond_path(dl, cp.bonds.get("bond2opt"))
+
+    def translate_cp(self, selected_cp, step_x, step_y, step_z):
+        cp = self.cps[selected_cp]
+        self.move_cp(cp, step_x * self.lat_vector1 + step_y * self.lat_vector2 + step_z * self.lat_vector3)
 
     @staticmethod
     def move_bond_path(dl, bond):
@@ -194,7 +201,7 @@ class AtomicModelCP(AtomicModel):
     def convert_from_direct_to_cart(self):
         super().convert_from_direct_to_cart()
         for cp in self.cps:
-            cp.xyz = np.dot(self.lat_vectors, cp.xyz)
+            cp.xyz = np.dot(cp.xyz, self.lat_vectors)
 
     def add_critical_point(self, cp):
         self.cps.append(deepcopy(cp))

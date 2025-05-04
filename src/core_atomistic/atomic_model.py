@@ -25,6 +25,7 @@ class AtomicModel(object):
         self.atoms: List[Atom] = []
         self.bonds = []
         self.bonds_per = []  # for exact calculation in form
+        self.dynamic_bonds: bool = True
 
         self.name = ""
         self.lat_vectors = 100 * np.eye(3)
@@ -45,13 +46,14 @@ class AtomicModel(object):
     def __getitem__(self, i):
         return self.atoms[i]
 
-    def add_atom_with_data(self, xyz: np.ndarray, charge: int, tag: str = "") -> None:
+    def add_atom_with_data(self, xyz: np.ndarray, charge: int, let: str = "", tag: str = "") -> None:
         """
         xyz: coords
         charge: atomic number
         tag: additional information
         """
-        let = self.mendeley.get_let(charge)
+        if let == "":
+            let = self.mendeley.get_let(charge)
         atom = Atom([*xyz, let, charge])
         atom.tag = tag
         self.atoms.append(atom)
@@ -129,7 +131,7 @@ class AtomicModel(object):
     def twist_z(self, alpha):
         cm = self.center_mass()
         self.move(-cm)
-        z0 = self.minZ()
+        z0 = self.min_z()
         z1 = np.linalg.norm(self.lat_vector3)
 
         for i in range(0, len(self.atoms)):
@@ -181,15 +183,17 @@ class AtomicModel(object):
                 str2 = ani_file.readline()
         else:
             str2 = ani_file.readline()
-        atoms = []
+        new_model = AtomicModel()
         mendeley = TPeriodTable()
         reg = re.compile('[^a-zA-Z ]')
         for i1 in range(0, number_of_atoms):
             str1 = helpers.spacedel(str2)
             s = str1.split(' ')
-            d1 = float(s[indexes[1]])
-            d2 = float(s[indexes[2]])
-            d3 = float(s[indexes[3]])
+            xyz = np.array([s[indexes[1]], s[indexes[2]], s[indexes[3]]], dtype=float)
+            if max(indexes) < len(s) - 1:
+                tag = s[max(indexes) + 1]
+            else:
+                tag = ""
             c = s[indexes[0]]
             if c.isnumeric():
                 charge = int(c)
@@ -198,10 +202,9 @@ class AtomicModel(object):
                 c = reg.sub('', s[indexes[0]])
                 charge = mendeley.get_charge_by_letter(c)
             if (charge > 0) or is_allow_charge_incorrect:
-                atoms.append([d1, d2, d3, c, charge])
+                new_model.add_atom_with_data(xyz, charge, let=c, tag=tag)
             if i1 < number_of_atoms -1:
                 str2 = ani_file.readline()
-        new_model = AtomicModel(atoms)
         new_model.set_lat_vectors_default()
         return new_model
 
@@ -238,7 +241,8 @@ class AtomicModel(object):
         gam = self.get_angle_gamma()
         return a, b, c, al, bet, gam
 
-    def set_lat_vectors(self, v1, v2, v3):
+    def set_lat_vectors(self, vectors):
+        v1, v2, v3 = vectors[0], vectors[1], vectors[2]
         if (len(v1) == 3) and (len(v2) == 3) and (len(v3) == 3):
             self.lat_vector1 = np.array(v1)
             self.lat_vector2 = np.array(v2)
@@ -272,7 +276,7 @@ class AtomicModel(object):
         dist = 10000
         if min_dist > 0:
             model = AtomicModel(self.atoms)
-            model.set_lat_vectors(self.lat_vector1, self.lat_vector2, self.lat_vector3)
+            model.set_lat_vectors([self.lat_vector1, self.lat_vector2, self.lat_vector3])
             model.add_atom(atom)
             for ind in range(0, len(self.atoms)):
                 r = model.atom_atom_distance(ind, -1)  # len(model.atoms) - 1)
@@ -394,6 +398,12 @@ class AtomicModel(object):
         self.rotate_y(betta)
         self.rotate_z(gamma)
 
+    def sub_model(self, inds):
+        new_model_atoms = []
+        for i in inds:
+            new_model_atoms.append(self.atoms[i])
+        return AtomicModel(new_model_atoms)
+
     def projection_to_cylinder(self, atomslist, radius):
         """This method returns projections on cylinder with radius for atom at."""
         row = []
@@ -489,7 +499,7 @@ class AtomicModel(object):
         cif_text += "\n\n\n\n#End data_GUI4dft_Data\n\n\n"
         return cif_text
 
-    def minX(self):
+    def min_x(self):
         """Minimum X-coordinate."""
         minx = self.atoms[0].x
         for atom in self.atoms:
@@ -497,7 +507,7 @@ class AtomicModel(object):
                 minx = atom.x
         return float(minx)
 
-    def maxX(self):
+    def max_x(self):
         """Maximum X-coordinate."""
         maxx = self.atoms[0].x
         for atom in self.atoms:
@@ -507,9 +517,9 @@ class AtomicModel(object):
 
     def size_x(self):
         """The length of the molecule along the X axis."""
-        return self.maxX() - self.minX()
+        return self.max_x() - self.min_x()
 
-    def minY(self):
+    def min_y(self):
         """Minimum Y-coordinate."""
         miny = self.atoms[0].y
 
@@ -518,7 +528,7 @@ class AtomicModel(object):
                 miny = atom.y
         return float(miny)
 
-    def maxY(self):
+    def max_y(self):
         """Maximum Y-coordinate."""
         maxy = self.atoms[0].y
 
@@ -529,9 +539,9 @@ class AtomicModel(object):
 
     def size_y(self):
         """The length of the molecule along the Y axis."""
-        return self.maxY() - self.minY()
+        return self.max_y() - self.min_y()
 
-    def minZ(self):
+    def min_z(self):
         """Minimum Z-coordinate."""
         minz = self.atoms[0].z
 
@@ -540,7 +550,7 @@ class AtomicModel(object):
                 minz = atom.z
         return float(minz)
 
-    def maxZ(self):
+    def max_z(self):
         """Maximum Z-coordinate."""
         maxz = self.atoms[0].z
 
@@ -551,7 +561,11 @@ class AtomicModel(object):
 
     def size_z(self):
         """The length of the molecule along the Z axis."""
-        return self.maxZ() - self.minZ()
+        return self.max_z() - self.min_z()
+
+    def set_cluster(self, cluster, k):
+        for atom in cluster:
+            self.atoms[atom].cluster = k
 
     def sort_atoms_by_type(self):
         for i in range(0, self.n_atoms()):
@@ -583,16 +597,10 @@ class AtomicModel(object):
 
     def point_point_distance(self, pos1, pos2):
         delta_pos = pos2 - pos1
-        ro = norm(delta_pos)
         values = [-1, 0, 1]
-        for i in values:
-            for j in values:
-                for k in values:
-                    if abs(i) + abs(j) + abs(k) != 0:
-                        ro1 = norm(delta_pos + i * self.lat_vector1 + j * self.lat_vector2 + k * self.lat_vector3)
-                        if ro1 < ro:
-                            ro = ro1
-        return ro
+        ros = [[[norm(delta_pos + i * self.lat_vector1 + j * self.lat_vector2 + k * self.lat_vector3)
+                 for i in values] for j in values] for k in values]
+        return np.array(ros).min()
 
     def move_object_to_cell(self, arr, a_inv):
         for at in arr:
@@ -624,6 +632,39 @@ class AtomicModel(object):
             neighbo.append(neighbor[i][0])
         return neighbo
 
+    def find_clusters(self):
+        clusters = [] # list of lists
+        inds = range(0, len(self.atoms)) # list of indices of atoms in model
+        bonds = deepcopy(self.bonds)
+        while len(bonds) > 0:
+            cluster = [bonds[0][0], bonds[0][1]]
+            bonds.remove(bonds[0])
+            len_cluster = 2
+            len_cluster_old = 0
+            while (len_cluster_old!= len_cluster) and (len(bonds) > 0):
+                for ind in cluster:
+                    for bond in bonds:
+                        if (bond[0] == ind) or (bond[1] == ind):
+                            if bond[0] not in cluster:
+                                cluster.append(bond[0])
+                            if bond[1] not in cluster:
+                                cluster.append(bond[1])
+                            bonds.remove(bond) # remove bond from list
+                len_cluster_old = len_cluster # update length of cluster
+                len_cluster = len(cluster)
+            clusters.append(cluster)
+        return clusters
+
+    def find_clusters_by_tag(self):
+        clusters = []
+        tags = np.array(self.get_tags(), dtype=int)
+        size = max(tags)
+        for i in range(0, size):
+            clusters.append([])
+        for i in range(0, len(self.atoms)):
+            clusters[tags[i] - 1].append(i)
+        return clusters
+
     def find_bonds_exact(self):
         """The method returns list of bonds of the molecule."""
         if self.bonds_per:
@@ -638,13 +679,14 @@ class AtomicModel(object):
         return self.bonds_per
 
     def find_bonds_fast(self):
+        """The method returns list of bonds of the molecule."""
+        if not (self.dynamic_bonds or len(self.bonds) == 0):
+            return
+
         self.bonds = []
         for i in range(0, len(self.atoms)):
             for j in range(i + 1, len(self.atoms)):
-                rx2 = math.pow(self.atoms[i].x - self.atoms[j].x, 2)
-                ry2 = math.pow(self.atoms[i].y - self.atoms[j].y, 2)
-                rz2 = math.pow(self.atoms[i].z - self.atoms[j].z, 2)
-                r = math.sqrt(rx2 + ry2 + rz2)
+                r = norm(self.atoms[i].xyz - self.atoms[j].xyz)
                 r_tab = self.mendeley.Bonds[self.atoms[i].charge][self.atoms[j].charge]
                 if (r > 1e-4) and (r < 1.2 * r_tab):
                     self.bonds.append([i, j])
@@ -731,7 +773,7 @@ class AtomicModel(object):
                         for atom in copy_of_model.atoms:
                             new_at_list.append(atom)
         new_model = AtomicModel(new_at_list)
-        new_model.set_lat_vectors(3 * self.lat_vector1, 3 * self.lat_vector2, 3 * self.lat_vector3)
+        new_model.set_lat_vectors([3 * self.lat_vector1, 3 * self.lat_vector2, 3 * self.lat_vector3])
         return new_model
 
     def grow_x(self, n: int = 1):
@@ -744,7 +786,7 @@ class AtomicModel(object):
             for atom in copy_of_model.atoms:
                 new_at_list.append(atom)
         new_model = AtomicModel(new_at_list)
-        new_model.set_lat_vectors((1 + n) * self.lat_vector1, self.lat_vector2, self.lat_vector3)
+        new_model.set_lat_vectors([(1 + n) * self.lat_vector1, self.lat_vector2, self.lat_vector3])
         return new_model
 
     def grow_y(self, n: int = 1):
@@ -757,7 +799,7 @@ class AtomicModel(object):
             for atom in copy_of_model.atoms:
                 new_at_list.append(atom)
         new_model = AtomicModel(new_at_list)
-        new_model.set_lat_vectors(self.lat_vector1, (1 + n) * self.lat_vector2, self.lat_vector3)
+        new_model.set_lat_vectors([self.lat_vector1, (1 + n) * self.lat_vector2, self.lat_vector3])
         return new_model
 
     def grow_z(self, n: int = 1):
@@ -770,7 +812,7 @@ class AtomicModel(object):
             for atom in copy_of_model.atoms:
                 new_at_list.append(atom)
         new_model = AtomicModel(new_at_list)
-        new_model.set_lat_vectors(self.lat_vector1, self.lat_vector2, (1 + n) * self.lat_vector3)
+        new_model.set_lat_vectors([self.lat_vector1, self.lat_vector2, (1 + n) * self.lat_vector3])
         return new_model
 
     def types_of_atoms(self):
@@ -819,7 +861,7 @@ class AtomicModel(object):
         self.go_to_positive_array_translate(self.atoms)
 
     def go_to_positive_coordinates(self):
-        d_vec = np.array([self.minX(), self.minY(), self.minZ()])
+        d_vec = np.array([self.min_x(), self.min_y(), self.min_z()])
         self.move_array(self.atoms, d_vec)
         self.go_to_positive_array(self.atoms)
 

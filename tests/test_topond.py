@@ -1,4 +1,4 @@
-from programs.topond import TopondModelCP
+from src_critplot.programs.topond import TopondModelCP
 import numpy as np
 import pytest
 

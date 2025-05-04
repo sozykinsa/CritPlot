@@ -3,10 +3,10 @@
 import os
 from copy import deepcopy
 from core_atomistic import helpers
-from programs.topond import TopondModelCP
-from programs.critic2 import Critic2ModelCP
-from interface.cp_project_file import CritPlotProjectFile
-from models.cp_model import AtomicModelCP
+from src_critplot.programs.topond import TopondModelCP
+from src_critplot.programs.critic2 import Critic2ModelCP
+from src_critplot.interface.cp_project_file import CritPlotProjectFile
+from src_critplot.models.cp_model import AtomicModelCP
 
 
 class ImporterExporter(object):

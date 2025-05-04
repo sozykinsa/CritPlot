@@ -12,6 +12,7 @@ class Atom(object):
         self.xyz = np.array([at_data[0], at_data[1], at_data[2]])
         self.let = at_data[3]
         self.charge = int(at_data[4])
+        self.cluster: int = 0
         self.is_visible: bool = True
         self.selected: bool = False
         self.active: bool = False
@@ -46,7 +47,7 @@ class Atom(object):
 
     @property
     def xyz_string(self) -> str:
-        return "{0:12.6f}    {1:12.6f}    {2:12.6f}".format(self.xyz[0], self.xyz[1], self.xyz[2])
+        return "{0:15.9f}    {1:15.9f}    {2:15.9f}".format(self.xyz[0], self.xyz[1], self.xyz[2])
 
     def set_selected(self, fl):
         self.selected = fl
