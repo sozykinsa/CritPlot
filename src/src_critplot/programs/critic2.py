@@ -8,8 +8,8 @@ import numpy.linalg
 
 from core_atomistic.periodic_table import TPeriodTable
 from core_atomistic import helpers
-from models.cp import CriticalPoint
-from models.cp_model import AtomicModelCP
+from src_critplot.models.cp import CriticalPoint
+from src_critplot.models.cp_model import AtomicModelCP
 
 
 class Critic2ModelCP(AtomicModelCP):
@@ -36,7 +36,7 @@ class Critic2ModelCP(AtomicModelCP):
                                                           math.radians(box_deg[1]),
                                                           math.radians(box_deg[2]))
 
-            self.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
+            self.set_lat_vectors([lat_vectors[0], lat_vectors[1], lat_vectors[2]])
 
             crit_points = self.get_critical_points_info(filename)
 

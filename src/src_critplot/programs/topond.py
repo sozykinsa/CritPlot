@@ -6,8 +6,8 @@ import numpy as np
 from core_atomistic import helpers
 from core_atomistic.periodic_table import TPeriodTable
 from core_atomistic.atom import Atom
-from models.cp import CriticalPoint
-from models.cp_model import AtomicModelCP
+from src_critplot.models.cp import CriticalPoint
+from src_critplot.models.cp_model import AtomicModelCP
 
 
 class TopondModelCP(AtomicModelCP):
@@ -21,7 +21,7 @@ class TopondModelCP(AtomicModelCP):
             lat_vectors = self.get_cell(filename)
             self.add_atoms(filename)
             if lat_vectors is not None:
-                self.set_lat_vectors(lat_vectors[0], lat_vectors[1], lat_vectors[2])
+                self.set_lat_vectors([lat_vectors[0], lat_vectors[1], lat_vectors[2]])
             else:
                 self.set_lat_vectors_default()
             self.parse_cp_data(filename, is_add_translations)

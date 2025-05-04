@@ -13,7 +13,7 @@ from qtpy.QtCore import QCoreApplication, Qt
 from qtpy.QtGui import QIcon
 from qtpy.QtWidgets import QApplication
 
-from qtbased.critplotform import MainForm
+from src_critplot.qtbased.critplotform import MainForm
 
 from qtpy import PYSIDE_VERSION
 from qtpy import PYQT_VERSION

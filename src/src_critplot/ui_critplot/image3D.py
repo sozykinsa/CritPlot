@@ -11,7 +11,7 @@
 from qtpy.QtCore import *
 from qtpy.QtWidgets import *
 
-from qtbased.guiopengl_cp import GuiOpenGLCP
+from src_critplot.qtbased.guiopengl_cp import GuiOpenGLCP
 
 
 class Ui_MainWindow(object):

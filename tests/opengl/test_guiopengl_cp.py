@@ -1,4 +1,4 @@
-from models.cp_model import AtomicModelCP
+from src_critplot.models.cp_model import AtomicModelCP
 
 
 def test_guiopengl(guiopengl_widget):

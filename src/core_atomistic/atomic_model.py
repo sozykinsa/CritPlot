@@ -157,10 +157,6 @@ class AtomicModel(object):
         for atom in self.atoms:
             atom.xyz += dl
 
-    def translate_atom(self, selected_atom, step_x, step_y, step_z):
-        atom = self.atoms[selected_atom]
-        atom.xyz += step_x * self.lat_vector1 + step_y * self.lat_vector2 + step_z * self.lat_vector3
-
     @staticmethod
     def atoms_from_xmol_xyz(filename: str):
         """Import from XMOL xyz file."""
@@ -245,7 +241,8 @@ class AtomicModel(object):
         gam = self.get_angle_gamma()
         return a, b, c, al, bet, gam
 
-    def set_lat_vectors(self, v1, v2, v3):
+    def set_lat_vectors(self, vectors):
+        v1, v2, v3 = vectors[0], vectors[1], vectors[2]
         if (len(v1) == 3) and (len(v2) == 3) and (len(v3) == 3):
             self.lat_vector1 = np.array(v1)
             self.lat_vector2 = np.array(v2)
@@ -279,7 +276,7 @@ class AtomicModel(object):
         dist = 10000
         if min_dist > 0:
             model = AtomicModel(self.atoms)
-            model.set_lat_vectors(self.lat_vector1, self.lat_vector2, self.lat_vector3)
+            model.set_lat_vectors([self.lat_vector1, self.lat_vector2, self.lat_vector3])
             model.add_atom(atom)
             for ind in range(0, len(self.atoms)):
                 r = model.atom_atom_distance(ind, -1)  # len(model.atoms) - 1)
@@ -447,7 +444,7 @@ class AtomicModel(object):
 
     def convert_from_direct_to_cart(self):
         for atom in self.atoms:
-            atom.xyz = np.dot(atom.xyz, self.lat_vectors)
+            atom.xyz = atom.x * self.lat_vector1 + atom.y * self.lat_vector2 + atom.z * self.lat_vector3
 
     def convert_from_cart_to_direct(self):
         obr = np.linalg.inv(self.lat_vectors).transpose()
@@ -636,15 +633,15 @@ class AtomicModel(object):
         return neighbo
 
     def find_clusters(self):
-        clusters = []  # list of lists
-        # inds = range(0, len(self.atoms))  # list of indices of atoms in model
+        clusters = [] # list of lists
+        inds = range(0, len(self.atoms)) # list of indices of atoms in model
         bonds = deepcopy(self.bonds)
         while len(bonds) > 0:
             cluster = [bonds[0][0], bonds[0][1]]
             bonds.remove(bonds[0])
             len_cluster = 2
             len_cluster_old = 0
-            while (len_cluster_old != len_cluster) and (len(bonds) > 0):
+            while (len_cluster_old!= len_cluster) and (len(bonds) > 0):
                 for ind in cluster:
                     for bond in bonds:
                         if (bond[0] == ind) or (bond[1] == ind):
@@ -652,8 +649,8 @@ class AtomicModel(object):
                                 cluster.append(bond[0])
                             if bond[1] not in cluster:
                                 cluster.append(bond[1])
-                            bonds.remove(bond)  # remove bond from list
-                len_cluster_old = len_cluster  # update length of cluster
+                            bonds.remove(bond) # remove bond from list
+                len_cluster_old = len_cluster # update length of cluster
                 len_cluster = len(cluster)
             clusters.append(cluster)
         return clusters
@@ -776,7 +773,7 @@ class AtomicModel(object):
                         for atom in copy_of_model.atoms:
                             new_at_list.append(atom)
         new_model = AtomicModel(new_at_list)
-        new_model.set_lat_vectors(3 * self.lat_vector1, 3 * self.lat_vector2, 3 * self.lat_vector3)
+        new_model.set_lat_vectors([3 * self.lat_vector1, 3 * self.lat_vector2, 3 * self.lat_vector3])
         return new_model
 
     def grow_x(self, n: int = 1):
@@ -789,7 +786,7 @@ class AtomicModel(object):
             for atom in copy_of_model.atoms:
                 new_at_list.append(atom)
         new_model = AtomicModel(new_at_list)
-        new_model.set_lat_vectors((1 + n) * self.lat_vector1, self.lat_vector2, self.lat_vector3)
+        new_model.set_lat_vectors([(1 + n) * self.lat_vector1, self.lat_vector2, self.lat_vector3])
         return new_model
 
     def grow_y(self, n: int = 1):
@@ -802,7 +799,7 @@ class AtomicModel(object):
             for atom in copy_of_model.atoms:
                 new_at_list.append(atom)
         new_model = AtomicModel(new_at_list)
-        new_model.set_lat_vectors(self.lat_vector1, (1 + n) * self.lat_vector2, self.lat_vector3)
+        new_model.set_lat_vectors([self.lat_vector1, (1 + n) * self.lat_vector2, self.lat_vector3])
         return new_model
 
     def grow_z(self, n: int = 1):
@@ -815,7 +812,7 @@ class AtomicModel(object):
             for atom in copy_of_model.atoms:
                 new_at_list.append(atom)
         new_model = AtomicModel(new_at_list)
-        new_model.set_lat_vectors(self.lat_vector1, self.lat_vector2, (1 + n) * self.lat_vector3)
+        new_model.set_lat_vectors([self.lat_vector1, self.lat_vector2, (1 + n) * self.lat_vector3])
         return new_model
 
     def types_of_atoms(self):
@@ -868,7 +865,7 @@ class AtomicModel(object):
         self.move_array(self.atoms, d_vec)
         self.go_to_positive_array(self.atoms)
 
-    def coords_for_export(self, coord_style, units="Ang", is_freez=False):
+    def coords_for_export(self, coord_style, units="Ang"):
         data = ""
         types = self.types_of_atoms()
         if coord_style == "Cartesian":
@@ -889,13 +886,7 @@ class AtomicModel(object):
 
         if coord_style == "POSCAR":
             for i in range(0, len(self.atoms)):
-                fr = ""
-                if is_freez:
-                    if self.atoms[i].fragment1:
-                        fr = " F F F"
-                    else:
-                        fr = " T T T"
-                data += ' ' + self.xyz_string(i) + fr + "\n"
+                data += ' ' + self.xyz_string(i) + "\n"
 
         if coord_style == "Zmatrix Cartesian":
             for i in range(0, len(self.atoms)):
@@ -904,10 +895,7 @@ class AtomicModel(object):
                     if types[j][0] == self.atoms[i].charge:
                         str1 = ' ' + str(j + 1)
                 str2 = '    ' + self.xyz_string(i)
-                if self.atoms[i].selected:
-                    str3 = '      0  0  0'
-                else:
-                    str3 = '      1  1  1'
+                str3 = '      1  1  1'
                 data += str1 + str2 + str3 + "\n"
 
         if coord_style == "FireflyINP":

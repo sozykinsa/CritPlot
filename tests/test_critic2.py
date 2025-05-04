@@ -1,4 +1,4 @@
-from programs.critic2 import Critic2ModelCP
+from src_critplot.programs.critic2 import Critic2ModelCP
 
 
 def test_critic2_model_cp_constructor(tests_path):

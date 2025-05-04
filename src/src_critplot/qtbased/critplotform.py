@@ -17,19 +17,19 @@ from qtpy.QtGui import QAction, QColor, QIcon, QKeySequence, QStandardItem, QSta
 from qtpy.QtWidgets import QListWidgetItem, QDialog, QFileDialog, QMessageBox, QColorDialog
 from qtpy.QtWidgets import QMainWindow, QTableWidgetItem
 
-from qtbased.image3dexporter import Image3Dexporter
+from src_critplot.qtbased.image3dexporter import Image3Dexporter
 
 from core_atomistic.periodic_table import TPeriodTable
 from core_atomistic import helpers
 
-from interface.io import ImporterExporter
+from src_critplot.interface.io import ImporterExporter
 
-from ui_critplot.about import Ui_DialogAbout as Ui_about
+from src_critplot.ui_critplot.about import Ui_DialogAbout as Ui_about
 if sys.platform.startswith('win'):
     #  sys.platform.startswith('linux') or sys.platform.startswith('cygwin')
-    from ui_critplot.form_win import Ui_MainWindow as Ui_form
+    from src_critplot.ui_critplot.form_win import Ui_MainWindow as Ui_form
 else:
-    from ui_critplot.form import Ui_MainWindow as Ui_form
+    from src_critplot.ui_critplot.form import Ui_MainWindow as Ui_form
 
 sys.path.append('')
 

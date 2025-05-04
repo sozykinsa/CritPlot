@@ -1,6 +1,6 @@
-from models.cp_model import AtomicModelCP
-from programs.topond import TopondModelCP
-from programs.critic2 import Critic2ModelCP
+from src_critplot.models.cp_model import AtomicModelCP
+from src_critplot.programs.topond import TopondModelCP
+from src_critplot.programs.critic2 import Critic2ModelCP
 
 
 def test_critical_path_simplifier(tests_path):

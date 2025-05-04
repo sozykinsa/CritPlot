@@ -3,8 +3,8 @@ import os
 import numpy as np
 
 from core_atomistic.project_file import ProjectFile
-from models.cp import CriticalPoint
-from models.cp_model import AtomicModelCP
+from src_critplot.models.cp import CriticalPoint
+from src_critplot.models.cp_model import AtomicModelCP
 
 
 class CritPlotProjectFile(ProjectFile):

@@ -1,4 +1,4 @@
-from interface.io import ImporterExporter
+from src_critplot.interface.io import ImporterExporter
 from core_atomistic import helpers
 
 

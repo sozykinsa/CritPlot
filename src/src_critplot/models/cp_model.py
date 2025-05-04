@@ -10,7 +10,7 @@ from core_atomistic.atom import Atom
 from core_atomistic.atomic_model import AtomicModel
 from core_atomistic import helpers
 
-from models.cp import CriticalPoint
+from src_critplot.models.cp import CriticalPoint
 
 
 class AtomicModelCP(AtomicModel):
